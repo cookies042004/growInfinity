@@ -1,0 +1,73 @@
+.image-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    border: 2px solid black;
+    border-radius: 5px;
+    transition: transform 0.2s;
+}
+
+.image-preview:hover {
+    transform: scale(1.05);
+}
+
+.delete-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #b52525;
+    text-align:center;
+    font-size: x-small;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.delete-image:hover {
+    background: #ff0000;
+    transform: scale(1.1);
+}
+
+/* video part css */
+.preview{
+    width: 50%;
+    height: 50%;
+    border: 2px solid black;
+    object-fit: cover;
+    border-radius: 5px;
+    position: relative;
+    transition: transform 0.2s;
+}
+
+.delete-video {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #b52525;
+    text-align:center;
+    font-size: x-small;
+    color: white;
+    border: none;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.delete-video:hover {
+    background: #ff0000;
+    transform: scale(1.1);
+}

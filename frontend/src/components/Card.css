@@ -1,0 +1,62 @@
+/* Remove default Slick.js arrows */
+.slick-prev:before, .slick-next:before {
+  content: "" !important; /* Remove unwanted text */
+  display: none !important; /* Hide default arrows */
+}
+
+/* Style for the next arrow */
+.slick-next {
+  right: 10px;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white; /* Arrow color */
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.slick-next:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+}
+
+/* Style for the previous arrow */
+.slick-prev {
+  left: 10px;
+  z-index: 10;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  color: white; /* Arrow color */
+  font-size: 20px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.slick-prev:hover {
+  background-color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+}
+
+/* Custom arrow symbols */
+.slick-next::after {
+  font-size: 20px;
+  color: white;
+}
+
+.slick-prev::after {
+  font-size: 20px;
+  color: white;
+}
+
+/* Optional: Style for when arrows are disabled */
+.slick-prev.slick-disabled, .slick-next.slick-disabled {
+  background-color: rgba(0, 0, 0, 0.2); /* Lighter background when disabled */
+  cursor: not-allowed;
+}
