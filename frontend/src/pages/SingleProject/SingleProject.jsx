@@ -27,6 +27,8 @@ export const SingleProject = () => {
       .join(" "); // Join the words back together
   };
 
+  console.log("HELLO WORLD");
+
   return (
     <Layout>
       <div className="projectbanner flex justify-center items-center">
@@ -68,7 +70,9 @@ export const SingleProject = () => {
                     builder={property.builder}
                     unit={property.unit}
                     size={property.size}
+                    sizeUnit={property.sizeUnit}
                     price={property.price}
+                    propertyType={property.propertyType}
                   />
                 </div>
               );

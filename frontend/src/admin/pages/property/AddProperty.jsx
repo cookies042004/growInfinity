@@ -409,7 +409,6 @@ export const AddProperty = () => {
                   display: "flex",
                   flexDirection: "column",
                   gap: 2,
-                  flexDirection: "column",
                   padding: "12px",
                   border: "2px solid #ccc",
                   borderRadius: "8px",

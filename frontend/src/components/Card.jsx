@@ -23,11 +23,10 @@ const CustomNextArrow = ({ onClick }) => (
 export const Card = ({ category }) => {
   const apiUrl = `${process.env.BASE_URL}/api/v1/property`;
   const { data, loading, error } = useFetchData(apiUrl);
-
-  const properties =
-    data?.properties?.filter(
-      (property, index, self) => index === self.findIndex((p) => p._id === property._id)
-    ) || [];
+  const properties = data?.properties || []
+  //   data?.properties?.filter(
+  //     (property, index, self) => index === self.findIndex((p) => p._id === property._id)
+  //   ) || [];
 
   const settings = {
     dots: true,
@@ -47,17 +46,30 @@ export const Card = ({ category }) => {
     ]
   };
 
+  
+  const filteredProperties = (category === "All"
+    ? properties.reduce((acc, property) => {
+    
+      if (!acc.some(item => item?.category?.name === property?.category.name)) {
+        acc.push(property);
+      }
+      return acc;
+    }, []) 
+    : properties.filter((property) => property?.category?.name === category)
+  )
+
+
   return (
     <div className="max-w-[1280px] mx-auto">
       {loading && <div className="flex justify-center"><CircularProgress size="30px" /></div>}
       {error && <p>Error: {error}</p>}
 
       <Slider {...settings}>
-        {properties
-          .filter((property) => property.category?.name === category)
-          .map((property) => (
+        {filteredProperties.map((property) => (
             <div key={property._id}>
               <PropertyCard
+                customcategory={category}  //only for all category
+                category={property?.category?.name}   //only for all category
                 id={property._id}
                 name={property.name}
                 image={property.image[0]}

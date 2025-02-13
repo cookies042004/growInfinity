@@ -47,9 +47,9 @@ export const ProjectDetails = () => {
     });
   }
 
-  console.log("IMAGE IS", images);
+  console.log("IMAGE IN Project Details", images);
 
-  console.log("VIDEO IS", video);
+  console.log("VIDEO IN Project Details", video);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);

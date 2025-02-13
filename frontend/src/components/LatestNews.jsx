@@ -22,6 +22,7 @@ export const LatestNews = () => {
 
   const settings = {
     dots: true,
+    arrows: false,
     infinite: true,
     speed: 500,
     autoplay: true,
@@ -54,7 +55,7 @@ export const LatestNews = () => {
 
   return (
     <div
-      className="bg-latest"
+      className="bg-latestc latestnews"
       style={{
         background: `linear-gradient(#0e1d3499, #0e1d34cc), url(${bgImage})`,
         backgroundPosition: "center",

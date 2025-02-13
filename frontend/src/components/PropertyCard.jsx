@@ -8,6 +8,7 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import DoneIcon from "@mui/icons-material/Done";
 import { Link } from "react-router-dom";
 import { PropertyEnquiryForm } from "./PropertyEnquiryForm";
+import './LatestNews.css'
 
 export const PropertyCard = ({
   id,
@@ -20,6 +21,8 @@ export const PropertyCard = ({
   sizeUnit,
   price,
   propertyType,
+  customcategory,
+  category
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -55,7 +58,7 @@ export const PropertyCard = ({
   }
 
   return (
-    <div className="relative w-full border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-red-700 transition-all duration-300 hover:scale-105">
+    <div className={` relative w-full border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-red-700 transition-all duration-300 hover:scale-105  ${customcategory === "All" ? "cardAll" :""}`}>
       
       {/* Property Image */}
       <div className="relative">
@@ -151,6 +154,14 @@ export const PropertyCard = ({
 
       {/* Property Enquiry Form */}
       <PropertyEnquiryForm id={id} handleClose={handleClose} open={open} />
+
+      {customcategory === "All" && (
+         <Link to={`/property/${category.toLowerCase().replace(/\s+/g, '-')}`}>
+          <div className="card_overlay">
+          <h3 className="category-title">{category} →</h3>
+        </div>
+         </Link>
+      )}
     </div>
   );
 };

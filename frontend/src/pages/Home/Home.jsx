@@ -21,6 +21,7 @@ import home from "../../assets/img/home.png";
 import house from "../../assets/img/house.png";
 import EastIcon from "@mui/icons-material/East";
 import { Card } from "../../components/Card";
+import { PropertyCard1 } from "../../components/PropertyCard1";
 import { Button } from "@mui/material";
 import { Marquee } from "../../components/Marquee";
 import { LatestNews } from "../../components/LatestNews";
@@ -171,11 +172,27 @@ export const Home = () => {
       "
       >
         <h1 className="text-center text-black lg:text-4xl text-2xl font-bold py-8 lg:font-medium">
-          New Launches
+          All Properties
         </h1>
-        <Card category="New Launches" />
+        <div className="flex justify-center gap-6 p-8">
+      <PropertyCard1
+        title="Luxury Living"
+        category="luxury"
+        image="luxury-living.jpg"
+      />
+      <PropertyCard1
+        title="New Launches"
+        category="newLaunches"
+        image="new-launches.jpg"
+      />
+      <PropertyCard1
+        title="Affordable Living"
+        category="affordable"
+        image="affordable.jpg"
+      />
+    </div>
         <div className="flex justify-center py-8">
-          <Link to={"/property/new-launches"}>
+          {/* <Link to={"/property/new-launches"}>
             <Button
               size="large"
               variant="contained"
@@ -188,12 +205,12 @@ export const Home = () => {
             >
               View all
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
 
       {/* Luxury Project */}
-      <div className="bg-white">
+      {/* <div className="bg-white">
         <h1 className="text-center text-black lg:text-4xl text-2xl font-bold py-8 lg:font-medium">
           Luxury Living
         </h1>
@@ -214,7 +231,7 @@ export const Home = () => {
             </Button>
           </Link>
         </div>
-      </div>
+      </div> */}
 
       {/* More than 10 years of experience  */}
       <div className="bg-[#03002e] text-white my-10 experience">
@@ -347,7 +364,7 @@ export const Home = () => {
       {/* Top Properties  */}
       <div className="bg-white">
         <h1 className="text-center text-black  text-2xl lg:text-4xl font-bold py-8 lg:font-medium">
-          Affordable Living
+          Recent Listings
         </h1>
         <Card category="Affordable Living" />
         <div className="flex justify-center py-8">

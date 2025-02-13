@@ -451,7 +451,6 @@ export const UpdateProperty = () => {
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
                   gap: 2,
                   flexDirection: "column",
                   padding: "12px",
