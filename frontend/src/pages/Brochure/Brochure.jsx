@@ -64,7 +64,7 @@ export const Brochure = () => {
         <div className="max-w-[1280px] mx-auto px-6">
           {loading && (
             <div className="flex justify-center">
-              <CircularProgress />
+              <CircularProgr ess />
             </div>
           )}
           {error && <p className="text-center text-red-500">Error: {error.message}</p>}

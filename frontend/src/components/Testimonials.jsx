@@ -2,43 +2,27 @@ import React, { useState } from "react";
 import StarIcon from "@mui/icons-material/Star";
 import quote from "../assets/img/SVG.png";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, Pagination, Navigation } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/effect-flip";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 
 import "./Testimonials.css";
 
-import { EffectFlip, Autoplay } from "swiper/modules";
 import { CircularProgress } from "@mui/material";
 import { useFetchData } from "../hooks/useFetchData";
+import { useRef } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa"; // Import icons
 
 export const Testimonials = () => {
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
   const apiUrl = `${process.env.BASE_URL}/api/v1/testimonials`;
 
-  const { data, loading, error, refetch } = useFetchData(apiUrl);
+  const { data, loading, error } = useFetchData(apiUrl);
   const testimonials = data?.testimonials || [];
-
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [direction, setDirection] = useState("next"); // Determines animation direction
-
-  const handlePrev = () => {
-    setDirection("prev");
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
-    );
-  };
-
-  const handleNext = () => {
-    setDirection("next");
-    setCurrentIndex((prevIndex) =>
-      prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
-    );
-  };
-
-  const currentTestimonial = testimonials[currentIndex];
 
   return (
     <>
@@ -46,7 +30,7 @@ export const Testimonials = () => {
       <div className="bg-[#FFF8F6] lg:py-8 lg:px-16">
         <div className="grid sm:grid-cols-12 gap-5 max-w-[1280px] mx-auto">
           <div className="col-span-12 lg:col-span-6 flex justify-center">
-            <div className="m-3 lg:m-5 px-5 lg:px-7 lg:py-16 font-roboto lg:pe-20 flex flex-col items-center ">
+            <div className="m-3 lg:m-5 px-5 lg:px-7 lg:py-10 font-roboto lg:pe-20 flex flex-col items-center ">
               <h1 className="text-xl lg:text-4xl text-[#1A1A1A] my-4 font-medium">
                 What our customers are saying us?
               </h1>
@@ -107,19 +91,44 @@ export const Testimonials = () => {
               </div>
             )}
 
+            <button
+              ref={prevRef}
+              className="absolute left-20 bottom-1/4 transform -translate-y-1/2 z-10 bg-gray-200 p-3 rounded-full hover:bg-gray-300 transition"
+            >
+              <FaChevronLeft className="text-gray-600" />
+            </button>
             {testimonials && (
-              <Swiper
-                effect={"flip"}
-                grabCursor={true}
-                modules={[EffectFlip, Autoplay]} // Add Autoplay module
-                autoplay={{
-                  delay: 3000, // 3 seconds delay
-                  disableOnInteraction: false, // Keep autoplay even after interaction
-                }}
-                className="mySwiper testimonial-swiper"
-              >
-                {testimonials.map((testimonial) => {
-                  return (
+              <div className="relative">
+                {/* Custom Navigation Arrows */}
+
+                <Swiper
+                  grabCursor={true}
+                  modules={[Autoplay, Pagination, Navigation]}
+                  autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                  }}
+                  pagination={{
+                    clickable: true,
+                    dynamicBullets: true,
+                  }}
+                  navigation={{
+                    prevEl: prevRef.current,
+                    nextEl: nextRef.current,
+                  }}
+                  onSwiper={(swiper) => {
+                    setTimeout(() => {
+                      if (swiper.params.navigation) {
+                        swiper.params.navigation.prevEl = prevRef.current;
+                        swiper.params.navigation.nextEl = nextRef.current;
+                        swiper.navigation.init();
+                        swiper.navigation.update();
+                      }
+                    });
+                  }}
+                  className="mySwiper testimonial-swiper"
+                >
+                  {testimonials.map((testimonial) => (
                     <SwiperSlide key={testimonial._id}>
                       <div className="py-8 lg:py-16 font-roboto lg:ps-26">
                         <div className="flex-col items-center gap-4 testimonial-item">
@@ -149,10 +158,18 @@ export const Testimonials = () => {
                         </div>
                       </div>
                     </SwiperSlide>
-                  );
-                })}
-              </Swiper>
+                  ))}
+                </Swiper>
+
+                {/* Right Arrow */}
+              </div>
             )}
+            <button
+              ref={nextRef}
+              className="absolute right-20 bottom-1/4 transform -translate-y-1/2 z-10 bg-gray-200 p-3 rounded-full hover:bg-gray-300 transition"
+            >
+              <FaChevronRight className="text-gray-600" />
+            </button>
           </div>
         </div>
       </div>

@@ -27,9 +27,9 @@ export const SearchBar = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if(!searchQuery){
+    if (!searchQuery) {
       return alert("Please enter name or location");
-     }
+    }
     try {
       navigate(`/search/${searchQuery}`);
     } catch (error) {
@@ -43,184 +43,272 @@ export const SearchBar = () => {
   };
 
   return (
-    <form onSubmit={handleSearch} style={{ width: "90%", maxWidth: "100%", margin: "auto" }}>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          backgroundColor: "white",
-          padding: "15px",
-          borderRadius: "13px",
-          boxShadow: "0px 16px 33px 0px #0000001A",
-          justifyContent: "space-between",
-          gap: "10px",
-        }}
-      >
-        {/* Property Dropdown */}
-        <div style={{ position: "relative", width: "100%", display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
-          <button
-            style={{
-              backgroundColor: "#F4F4F4",
-              fontSize: "16px",
-              padding: "10px",
-              width: "50%",
-              borderRadius: "17px",
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onClick={() => setProperty(!property)}
-            type="button"
-          >
-            <HomeOutlinedIcon style={{ color: "#03002E" }} />
-            {selectedValue}
-          </button>
-          {property && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: "0",
-                backgroundColor: "white",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                width: "100%",
-                borderRadius: "10px",
-                zIndex: "10",
-              }}
-            >
-              <ul style={{ listStyle: "none", margin: 0, padding: "10px" }}>
-                {options.map((option) => (
-                  <li
-                    key={option}
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                      borderBottom: "1px solid #ddd",
-                    }}
-                    onClick={() => handleOptionClick(option)}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </ul>
+    <form onSubmit={handleSearch} className="w-[90%] lg:w-[80%]">
+      <div className="grid sm:grid-cols-12">
+        <div
+          className="col-span-12 lg:col-span-10 bg-white h-[300] w-[100%] rounded-[13.27px]"
+          style={{ boxShadow: "0px 16.39px 33.56px 0px #0000001A" }}
+        >
+          <div className="grid sm:grid-cols-12 p-5 items-center gap-5">
+            <div className="col-span-6 lg:col-span-2 md:col-span-3">
+              <button
+                id="dropdownDefaultButton"
+                data-dropdown-toggle="dropdown"
+                className="text-black bg-[#F4F4F4] font-medium text-sm px-5 w-full py-1 lg:py-2.5 text-center justify-between lg:justify-start inline-flex items-center rounded-[17.56px]"
+                type="button"
+                onClick={() => setProperty(!property)}
+              >
+                <HomeOutlinedIcon
+                  sx={{ color: "#03002E", marginRight: "8px" }}
+                />{" "}
+                {selectedValue}{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3 flex-end"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+
+              {/* <!-- Dropdown menu --> */}
+              <div
+                id="dropdown"
+                className={
+                  property
+                    ? "absolute mt-3 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                    : "hidden"
+                }
+              >
+                <ul
+                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="dropdownDefaultButton"
+                >
+                  {options.map((option) => (
+                    <li key={option}>
+                      <a
+                        onClick={() => handleOptionClick(option)}
+                        className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+                          selectedValue === option
+                            ? "bg-gray-200 dark:bg-gray-500"
+                            : ""
+                        }`}
+                      >
+                        {option}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          )}
+            <div className="block lg:hidden col-span-6 lg:col-span-2 md:col-span-3">
+              <button
+                id="dropdownBhkButton"
+                data-dropdown-toggle="dropdownBhk"
+                className="text-black w-full bg-[#F4F4F4] font-medium text-sm px-5 py-1 lg:py-2.5 text-center inline-flex justify-between lg:justify-start items-center rounded-[17.56px]"
+                type="button"
+                onClick={() => setBhk(!bhk)}
+              >
+                <HomeIcon sx={{ color: "#03002E", paddingRight: "5px" }} />{" "}
+                {bhkValue}{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
 
-          {/* BHK Dropdown */}
-        <div style={{ position: "relative", width: "50%" }}>
-          <button
-            style={{
-              backgroundColor: "#F4F4F4",
-              fontSize: "16px",
-              padding: "10px",
-              borderRadius: "17px",
-              display: "flex",
-              justifyContent: "space-evenly",
-              width: "100%",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onClick={() => setBhk(!bhk)}
-            type="button"
-          >
-            <HomeIcon style={{ color: "#03002E", marginRight: "8px" }} />
-            {bhkValue}
-          </button>
-          {bhk && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                left: "0",
-                backgroundColor: "white",
-                boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                width: "100%",
-                borderRadius: "10px",
-                zIndex: "10",
-              }}
-            >
-              <ul style={{ listStyle: "none", margin: 0, padding: "10px" }}>
-                {bhkOptions.map((option) => (
-                  <li
-                    key={option}
-                    style={{
-                      padding: "8px",
-                      cursor: "pointer",
-                      borderBottom: "1px solid #ddd",
-                    }}
-                    onClick={() => handleBhkClick(option)}
-                  >
-                    {option}
-                  </li>
-                ))}
-              </ul>
+              {/* BHK Dropdown Menu */}
+              <div
+                id="dropdownBhk"
+                className={
+                  bhk
+                    ? "absolute mt-3 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                    : "hidden"
+                }
+              >
+                <ul
+                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="dropdownBhkButton"
+                >
+                  {bhkOptions.map((option) => (
+                    <li key={option}>
+                      <a
+                        onClick={() => handleBhkClick(option)}
+                        className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+                          bhkValue === option
+                            ? "bg-gray-200 dark:bg-gray-500"
+                            : ""
+                        }`}
+                      >
+                        {option}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          )}
-        </div>
-        </div>
+            <div className="col-span-12 lg:col-span-6 md:col-span-6">
+              <div className="lg:mx-4 mx-0">
+                <input
+                  type="text"
+                  placeholder="Your desired location, project, city goes here"
+                  className="bg-[#F4F4F4] rounded-[17.56px] p-2 lg:p-3 w-full outline-none"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  required
+                />
+              </div>
+            </div>
+            {/* BHK Dropdown */}
+            <div className="hidden lg:block col-span-6 lg:col-span-2 md:col-span-3">
+              <button
+                id="dropdownBhkButton"
+                data-dropdown-toggle="dropdownBhk"
+                className="text-black w-full bg-[#F4F4F4] font-medium text-sm px-5 py-2.5 text-center inline-flex justify-between lg:justify-start items-center rounded-[17.56px]"
+                type="button"
+                onClick={() => setBhk(!bhk)}
+              >
+                <HomeIcon sx={{ color: "#03002E", paddingRight: "5px" }} />{" "}
+                {bhkValue}{" "}
+                <svg
+                  className="w-2.5 h-2.5 ms-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
 
-        {/* Search Input */}
-        <div style={{ width: "100%" }}>
-          <input
-            type="text"
-            placeholder="Your desired location, project, city goes here"
-            style={{
-              backgroundColor: "#F4F4F4",
-              borderRadius: "17px",
-              padding: "10px",
-              outline: "none",
-              border: "none",
-              width: "100%",
-            }}
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            required
-          />
-        </div>
-
-        {/* Price Slider */}
-        <div style={{ width: "100%", padding: "0 20px" }}>
-          <Slider
-            value={value}
-            onChange={handleChange}
-            valueLabelDisplay="auto"
-            min={60}
-            max={1400}
-            sx={{ color: "#03002E" }}
-            valueLabelFormat={(val) =>
-              val < 100 ? `₹${val} Lac` : `₹${(val / 100).toFixed(2)} Cr`
-            }
-            marks={[
-              { value: 60, label: "₹ 60 Lac" },
-              { value: 1400, label: "₹ 14 Cr" },
-            ]}
-          />
-        </div>
-
-        {/* Search Button */}
-        <div style={{ width: "100%", textAlign: "center" }}>
-          <button
-            type="submit"
-            style={{
-              backgroundColor: "#03002E",
-              color: "white",
-              width: "100%",
-              borderRadius: "8px",
-              padding: "10px 20px",
-              boxShadow: "0px 5px 13px 0px #03002E80",
-              transition: "all 0.3s ease-in-out",
-              border: "none",
-              cursor: "pointer",
-            }}
-            onMouseOver={(e) => (e.target.style.transform = "scale(1.05)")}
-            onMouseOut={(e) => (e.target.style.transform = "scale(1)")}
-            onMouseDown={(e) => (e.target.style.transform = "scale(0.95)")}
-            onMouseUp={(e) => (e.target.style.transform = "scale(1)")}
-          >
-            Search
-          </button>
+              {/* BHK Dropdown Menu */}
+              <div
+                id="dropdownBhk"
+                className={
+                  bhk
+                    ? "absolute mt-3 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+                    : "hidden"
+                }
+              >
+                <ul
+                  className="py-2 text-sm text-gray-700 dark:text-gray-200"
+                  aria-labelledby="dropdownBhkButton"
+                >
+                  {bhkOptions.map((option) => (
+                    <li key={option}>
+                      <a
+                        onClick={() => handleBhkClick(option)}
+                        className={`block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white ${
+                          bhkValue === option
+                            ? "bg-gray-200 dark:bg-gray-500"
+                            : ""
+                        }`}
+                      >
+                        {option}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            <div className="hidden lg:block col-span-12 lg:col-span-2 md:col-span-12">
+              <div>
+                <button
+                  onClick={handleSearch}
+                  type="submit"
+                  className="text-white bg-[#03002E]  w-full rounded-[8.59px] py-2 px-10"
+                  style={{ boxShadow: "0px 5.46px 13.27px 0px #03002E80" }}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+            <div className="col-span-2 lg:col-span-2">
+              <button className="bg-[#f4f4f4] w-full py-2 text-xs px-2 lg:text-lg rounded-2xl text-[#03002e] font-medium">
+                Price (₹)
+              </button>
+            </div>
+            <div className="col-span-10 lg:col-span-6 flex justify-center mx-8 items-center">
+              <Slider
+                value={value}
+                onChange={handleChange}
+                valueLabelDisplay="auto"
+                min={60} // Minimum value in lakhs (60 lakhs)
+                max={1400} // Maximum value in lakhs (14 crores = 1400 lakhs)
+                sx={{ color: "#03002e" }}
+                valueLabelFormat={(value) => {
+                  if (value < 100)
+                    return `₹${value} Lac`; // If less than 100, show in Lac
+                  else return `₹${(value / 100).toFixed(2)} Cr`; // Otherwise, show in Cr (crore)
+                }}
+                marks={[
+                  { value: 60, label: "₹ 60 Lac" }, // Minimum value: 60 Lac
+                  { value: 1400, label: "₹ 14 Cr" }, // Maximum value: 14 Cr
+                ]}
+              />
+            </div>
+            <div className="hidden lg:block col-span-12 lg:col-span-4">
+              <div className="grid sm:grid-cols-12 gap-3">
+                <div className="col-span-6 lg:col-span-6">
+                  <p className="text-xs text-center text-gray-700 font-roboto font-medium">
+                    Price Range From:
+                  </p>
+                  <p className="text-md text-center  font-roboto font-medium">
+                    {value[0] < 100
+                      ? `₹ ${value[0]} Lac`
+                      : `₹ ${(value[0] / 100).toFixed(2)} Cr`}
+                  </p>
+                </div>
+                <div className="col-span-6 lg:col-span-6">
+                  <p className="text-xs text-center text-gray-700 font-roboto font-medium">
+                    Price Range To:
+                  </p>
+                  <p className="text-md text-center  font-roboto font-medium">
+                    {value[1] < 100
+                      ? `₹ ${value[1]} Lac`
+                      : `₹ ${(value[1] / 100).toFixed(2)} Cr`}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="block lg:hidden col-span-12 lg:col-span-2 md:col-span-12">
+              <div>
+                <button
+                  onClick={handleSearch}
+                  type="submit"
+                  className="text-white text-sm lg:text-lg bg-[#03002E]  w-full rounded-[8.59px] py-[4px] lg:py-2 px-10"
+                  style={{ boxShadow: "0px 5.46px 13.27px 0px #03002E80" }}
+                >
+                  Search
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </form>

@@ -13,6 +13,7 @@ import './LatestNews.css'
 export const PropertyCard = ({
   id,
   name,
+  slug,
   image,
   location,
   builder,
@@ -63,7 +64,7 @@ export const PropertyCard = ({
       {/* Property Image */}
       <div className="relative">
         <img
-          src={`${process.env.BASE_URL}/${image}`}
+          src={image}
           alt={name}
           className="h-[230px] w-full object-contain"
         />
@@ -99,7 +100,7 @@ export const PropertyCard = ({
         {/* Location */}
         <div className="flex items-center text-sm text-gray-600 mt-2">
           <LocationOnIcon className="text-blue-700 text-lg" />
-          <span className="ml-2">{location}</span>
+          <span className="ml-2">{location}</span>  
         </div>
 
         {/* Additional Info */}
@@ -120,7 +121,7 @@ export const PropertyCard = ({
 
         {/* Action Buttons */}
         <div className="mt-6 flex flex-col sm:flex-row gap-4">
-          <Link to={`/project/${id}`} className="w-full sm:w-1/2">
+          <Link to={`/project/${slug}`} className="w-full sm:w-1/2">
             <Button
               fullWidth
               variant="contained"

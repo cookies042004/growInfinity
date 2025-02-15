@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Layout } from "../../components/Layout";
 import EastIcon from "@mui/icons-material/East";
 import { useParams } from "react-router-dom";
@@ -22,30 +22,56 @@ import { ContactForm } from "../../components/ContactForm";
 import Carousel from "../../components/Carousel";
 
 export const ProjectDetails = () => {
-  const { id } = useParams();
-  console.log("id is", { id });
-  const apiUrl = `${process.env.BASE_URL}/api/v1/property/${id}`;
+  const { slug } = useParams(); // Get slug from URL
+  const decodedSlug = decodeURIComponent(slug); // Decode slug if needed
+
+  const [propertyId, setPropertyId] = useState(null);
+  const [property, setProperty] = useState(null);
+
+  useEffect(() => {
+    const fetchPropertyByName = async () => {
+      try {
+        // Fetch property details using slug
+        const res = await fetch(
+          `${process.env.BASE_URL}/api/v1/property/search-by-name/${decodedSlug}`
+        );
+        const data = await res.json();
+
+        console.log("data is ", data);
+
+        if (data.property) {
+          setProperty(data.property); // Store full property data
+          setPropertyId(data.property._id); // Store ID
+        } else {
+          console.error("Property not found");
+        }
+      } catch (error) {
+        console.error("Error fetching property by name:", error);
+      }
+    };
+
+    fetchPropertyByName();
+  }, [slug]);
+
+  // Fetch full property details using ID (when propertyId is available)
+  const apiUrl = propertyId
+    ? `${process.env.BASE_URL}/api/v1/property/${propertyId}`
+    : null;
   const { data, loading, error, refetch } = useFetchData(apiUrl);
-  const property = data.property;
+
+  useEffect(() => {
+    if (data?.property) {
+      setProperty(data.property);
+    }
+  }, [data]);
+
+  console.log("Property ID:", propertyId);
+  console.log("Property Data:", property);
 
   console.log("property is", property);
 
-  const images = [];
-
-  if (property) {
-    property.image.forEach((item) => {
-      let realImage = `${process.env.BASE_URL}/${item}`;
-      images.push(realImage);
-    });
-  }
-
-  const video = [];
-  if (property) {
-    property.video.forEach((item) => {
-      let realVideo = `${process.env.BASE_URL}/${item}`;
-      video.push(realVideo);
-    });
-  }
+  const images = property?.image ? property.image.map((item) => item) : [];
+  const video = property?.video ? property.video.map((item) => item) : [];
 
   console.log("IMAGE IN Project Details", images);
 

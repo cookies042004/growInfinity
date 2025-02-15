@@ -1,13 +1,17 @@
 import React from "react";
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCoverflow, Autoplay, Navigation } from "swiper/modules";
 
 // Import Swiper styles
 import "swiper/css";
-import "swiper/css/effect-cards";
+import "swiper/css/effect-coverflow";
+import "swiper/css/navigation";
+// import "swiper/css/effect-cards";
+
 
 // import required modules
-import { EffectCards, Autoplay } from "swiper/modules";
+// import { EffectCards, Autoplay } from "swiper/modules";
 import "./AwardComponent.css";
 import { useFetchData } from "../hooks/useFetchData";
 import { CircularProgress } from "@mui/material";
@@ -29,38 +33,42 @@ export const AwardComponent = () => {
         </div>
       )}
       {awards && (
-        <Swiper
-          effect={"cards"}
-          grabCursor={true}
-          centeredSlides={true}
-          slidesPerView={"auto"}
-          loop={true} // Enable infinite loop
-          autoplay={{
-            delay: 2500, // Slide change interval (in milliseconds)
-            disableOnInteraction: false, // Auto play won't stop after interaction
-          }}
-          coverflowEffect={{
-            rotate: 50,
-            stretch: 0,
-            depth: 100,
-            modifier: 1,
-            slideShadows: true,
-          }}
-          pagination={true}
-          modules={[EffectCards, Autoplay]} // Add Autoplay module
-          className="mySwiper awards-swiper"
-        >
-          {awards.map((award, i) => {
-            return (
-              <SwiperSlide key={award._id}>
+        <div className="bg-[#f6c6e8] py-5">
+          <h1 className="text-center text-3xl lg:text-4xl text-black font-medium mb-6">
+            Awards
+          </h1>
+
+          <Swiper
+            effect={"coverflow"}
+            grabCursor={true}
+            centeredSlides={true}
+            slidesPerView={"auto"}
+            loop={true}
+            autoplay={{
+              delay: 2500,
+              disableOnInteraction: false,
+            }}
+            coverflowEffect={{
+              rotate: 0,
+              stretch: 100,
+              depth: 200,
+              modifier: 1.5,
+              slideShadows: false,
+            }}
+            navigation={true}
+            modules={[EffectCoverflow, Autoplay, Navigation]}
+            className="awards-swiper"
+          >
+            {awards.map((award, i) => (
+              <SwiperSlide key={award._id} className="award-slide">
                 <img
                   src={`${process.env.BASE_URL}/${award.image}`}
-                  className="h-[300px] w-[300px] lg:h-[500px] lg:w-[450px]"
+                  className="h-[300px] w-[300px] lg:h-[500px] lg:w-[450px] object-cover rounded-2xl"
                 />
               </SwiperSlide>
-            );
-          })}
-        </Swiper>
+            ))}
+          </Swiper>
+        </div>
       )}
     </div>
   );

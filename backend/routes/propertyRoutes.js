@@ -9,6 +9,7 @@ const {
   getTotalProperties,
   recentProperty,
   updateProperty,
+  getByName
 } = require("../controllers/propertyController");
 
 const router = express.Router();
@@ -18,6 +19,8 @@ router.get("/total-properties", getTotalProperties);
 router.get("/recent-properties", recentProperty);  
 
 router.route("/").get(getProperty).post(upload, createProperty);
+
+router.route("/search-by-name/:slug").get(getByName);
 
 router.route("/:id").get(getSingleProperty).delete(deleteProperty).patch(upload, updateProperty);
 

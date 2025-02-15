@@ -1,8 +1,11 @@
 import { Slider } from "@mui/material";
 import React, { useState, useEffect } from "react";
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import { Link } from "react-router-dom";
 
-export const  Calculator = () => {
+import PhoneIcon from "@mui/icons-material/Phone";
+
+export const Calculator = () => {
   const [loanAmount, setLoanAmount] = useState(10); // Default loan amount in lakhs
   const [loanDuration, setLoanDuration] = useState(10); // Default tenure in years
   const [interestRate, setInterestRate] = useState(7.5); // Default interest rate
@@ -179,13 +182,13 @@ export const  Calculator = () => {
           </div>
         </div>
       </div>
-      
 
       <div className="flex justify-center mt-4 w-full">
-              <button className="bg-blue-950 hover:bg-blue-900 text-white font-medium py-2 px-4 rounded">
-                <WhatsAppIcon /> Contact us
-              </button>
-            </div>
+        <button className="bg-blue-950 hover:bg-blue-900 text-white font-medium py-2 px-4 rounded">
+          <PhoneIcon />
+          <Link to="/"> +91-9990052554</Link>
+        </button>
+      </div>
     </div>
   );
 };

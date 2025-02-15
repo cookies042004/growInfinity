@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const Category = require("../models/category");
-const Amenity = require("../models/amenity");
+const slugify = require("slugify")
 
 const propertySchema = new mongoose.Schema(
   {
@@ -16,6 +15,10 @@ const propertySchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+    },
+    slug: {
+      type: String,
+      unique: true
     },
     builder: {
       type: String,
@@ -75,6 +78,13 @@ const propertySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Property = mongoose.model("Property", propertySchema);
 
+
+propertySchema.pre("save", function (next) {
+  this.slug = slugify(`${this.name}-${this.location}`, { lower: true, strict: true });
+  next();
+});
+
+
+const Property = mongoose.model("Property", propertySchema);
 module.exports = Property;

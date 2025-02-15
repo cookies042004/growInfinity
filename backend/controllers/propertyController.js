@@ -3,6 +3,7 @@ const path = require("path");
 const Property = require("../models/property");
 const Category = require("../models/category");
 const Amenity = require("../models/amenity");
+const slugify = require("slugify")
 
 // Get all Properties
 const getProperty = async (req, res) => {
@@ -10,8 +11,6 @@ const getProperty = async (req, res) => {
     const properties = await Property.find()
       .populate("category", "name")
       .populate("amenities", "name type");
-
-    console.log("Properties:", properties);
 
     res.status(200).json({
       success: true,
@@ -27,6 +26,18 @@ const getProperty = async (req, res) => {
     });
   }
 };
+
+// Get By Name
+const getByName = async(req,res) => {
+  try {
+    const property = await Property.findOne({ slug: req.params.slug });
+    if (!property) return res.status(404).json({ message: "Property not found" });
+
+    res.status(200).json({ property });
+  } catch (error) {
+    res.status(500).json({ message: "Server Error" });
+  }
+}
 
 // Get Single Property
 const getSingleProperty = async (req, res) => {
@@ -363,4 +374,5 @@ module.exports = {
   searchProperty,
   getTotalProperties,
   recentProperty,
+  getByName
 };

@@ -26,51 +26,16 @@ import { Button } from "@mui/material";
 import { Marquee } from "../../components/Marquee";
 import { LatestNews } from "../../components/LatestNews";
 import { Calculator } from "../../components/Calculator";
-import CalculateIcon from "@mui/icons-material/Calculate";
-import FmdGoodIcon from "@mui/icons-material/FmdGood";
 import { SearchBar } from "../../components/SearchBar";
-import CancelIcon from "@mui/icons-material/Cancel";
 import findRealEstate from "../../assets/img/find real estate.jpg";
 import keys from "../../assets/img/keys.jpeg";
 import realtor from "../../assets/img/meet realtor.jpeg";
+import bgImage from "/src/assets/img/img4.jpg";
+import EnquiryHome from "../../components/EnquiryHome";
+import { Awards } from "../Awards/Awards";
+import { AwardComponent } from "../../components/AwardComponent";
 
 export const Home = () => {
-  useEffect(() => {
-    new PureCounter();
-  }, []);
-
-  const [calculator, setCalculator] = useState(false);
-  const [location, setLocation] = useState(false);
-  const [show, setShow] = useState(false);
-
-  useEffect(() => {
-    if (calculator) {
-      document.body.style.overflow = "hidden";
-      setTimeout(() => {
-        setShow(true);
-      }, 500);
-    } else {
-      setShow(false);
-      setTimeout(() => {
-        document.body.style.overflow = "auto";
-      }, 3000);
-    }
-  }, [calculator]);
-
-  useEffect(() => {
-    if (location) {
-      document.body.style.overflow = "hidden";
-      setTimeout(() => {
-        setShow(true);
-      }, 500);
-    } else {
-      setShow(false);
-      setTimeout(() => {
-        document.body.style.overflow = "auto";
-      }, 3000);
-    }
-  }, [location]);
-
   return (
     <Layout>
       {/* Hero  */}
@@ -91,277 +56,150 @@ export const Home = () => {
             prices.
           </p>
         </div>
+        <SearchBar />
 
-        <div className="bg-red-600 lg:block absolute right-0 top-[30%] rounded-lg transition-transform duration-500 ease-in-out">
-          <div className="flex justify-center items-center cursor-pointer gap-40">
-            <div
-              className="bg-white rounded-s-lg"
-              onClick={() => setLocation(true)}
-            >
-              <FmdGoodIcon sx={{ fontSize: "50px", color: "#03002e" }} />
-            </div>
-          </div>
-          {/* Location Model */}
-          {location && (
-            <div
-              className={`fixed inset-0 bg-black backdrop-blur-md z-50
-        bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
-          show ? "opacity-100" : "opacity-0"
-        }`}
-            >
-              <div
-                className={`bg-white p-8 rounded-lg shadow-lg max-w-lg w-full relative transition-transform duration-300 ease-in-out ${
-                  show ? "scale-100 translate-y-0" : "scale-90 translate-y-10 "
-                }`}
-              >
-                <button className="absolute top-2 right-2 text-red-500">
-                  <CancelIcon onClick={() => setLocation(false)} />
-                </button>
-                <SearchBar />
-              </div>
-            </div>
-          )}
-
-          {/* Floating EMI Button */}
-          <div className="hidden lg:block absolute right-0 top-[110%] rounded-lg transition-transform duration-500 ease-in-out">
-            <div className="flex justify-center items-center cursor-pointer">
-              <div
-                className="bg-white rounded-s-lg"
-                onClick={() => setCalculator(true)}
-              >
-                <p
-                  className="font-medium uppercase py-4 px-2"
-                  style={{
-                    writingMode: "vertical-rl",
-                    transform: "rotate(180deg)",
-                  }}
-                >
-                  Calculate EMI
-                </p>
-                <CalculateIcon sx={{ fontSize: "50px", color: "#03002e" }} />
-              </div>
-            </div>
-          </div>
-
-          {/* EMI Calculator Model */}
-          {calculator && (
-            <div
-              className={`fixed inset-0 bg-black backdrop-blur-md z-50
-        bg-opacity-50 flex items-center justify-center transition-opacity duration-300 ${
-          show ? "opacity-100" : "opacity-0"
-        }`}
-            >
-              <div
-                className={`bg-white p-8 rounded-lg shadow-lg max-w-lg w-full relative transition-transform duration-300 ease-in-out ${
-                  show ? "scale-100 translate-y-0" : "scale-90 translate-y-10 "
-                }`}
-              >
-                <button className="absolute top-2 right-2 text-red-500">
-                  <CancelIcon onClick={() => setCalculator(false)} />
-                </button>
-                <Calculator />
-              </div>
-            </div>
-          )}
-        </div>
+        {/* Floating Button to Open Modal */}
+        <EnquiryHome />
       </div>
 
-      {/* Featured Projects  */}
+      <div className="block lg:hidden p-5">
+        <Calculator />
+      </div>
+
+      {/* Explore Our Properties */}
       <div
         className="bg-white
       "
       >
         <h1 className="text-center text-black lg:text-4xl text-2xl font-bold py-8 lg:font-medium">
-          All Properties
+          Explore Our Properties
         </h1>
-        <div className="flex justify-center gap-6 p-8">
-      <PropertyCard1
-        title="Luxury Living"
-        category="luxury"
-        image="luxury-living.jpg"
-      />
-      <PropertyCard1
-        title="New Launches"
-        category="newLaunches"
-        image="new-launches.jpg"
-      />
-      <PropertyCard1
-        title="Affordable Living"
-        category="affordable"
-        image="affordable.jpg"
-      />
-    </div>
-        <div className="flex justify-center py-8">
-          {/* <Link to={"/property/new-launches"}>
-            <Button
-              size="large"
-              variant="contained"
-              endIcon={<EastIcon />}
-              sx={{
-                backgroundColor: "#03002e",
-                color: "white",
-                textTransform: "none",
-              }}
-            >
-              View all
-            </Button>
-          </Link> */}
+        <div className="flex justify-center gap-5 p-8">
+          <PropertyCard1
+            title="Luxury Living"
+            category="luxury"
+            image="luxury-living.jpg"
+          />
+          <PropertyCard1
+            title="New Launches"
+            category="newLaunches"
+            image="new-launches.jpg"
+          />
+          <PropertyCard1
+            title="Affordable Living"
+            category="affordable"
+            image="affordable.jpg"
+          />
+          <PropertyCard1
+            title="Commercial"
+            category="commercial"
+            image="commercial.jpg"
+          />
         </div>
       </div>
 
-      {/* Luxury Project */}
-      {/* <div className="bg-white">
-        <h1 className="text-center text-black lg:text-4xl text-2xl font-bold py-8 lg:font-medium">
-          Luxury Living
-        </h1>
-        <Card category="Luxury Living" />
-        <div className="flex justify-center py-8">
-          <Link to={"/property/luxury-living"}>
-            <Button
-              size="large"
-              variant="contained"
-              endIcon={<EastIcon />}
-              sx={{
-                backgroundColor: "#03002e",
-                color: "white",
-                textTransform: "none",
-              }}
-            >
-              View all
-            </Button>
-          </Link>
-        </div>
-      </div> */}
-
       {/* More than 10 years of experience  */}
-      <div className="bg-[#03002e] text-white my-10 experience">
+      <div
+        className="bg-[#03002e] text-white my-10 experience"
+        style={{
+          background: `linear-gradient(#0e1d3499, #0e1d34cc), url(${bgImage})`,
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
         <div className="max-w-[1280px] mx-auto py-10">
           <h1 className="text-xl text-center lg:text-4xl font-poppins font-bold py-4">
-            More than 10 Years of Experience
+            More than{" "}
+            <span className="text-red-500 transition-transform transform hover:text-200">
+              10 Years
+            </span>{" "}
+            of Experience
           </h1>
-          <p className="text-sm py-3 lg:py-5 text-center lg:text-lg font-poppins font-medium lg:me-10 me-0 px-3 lg:px-0">
-            Over the years, Grow infinity has built a reputation for providing a
-            seamless experience to customers to secure their dream homes.
-          </p>
+          <div className="relative w-full overflow-hidden">
+            <marquee
+              direction="left"
+              className="text-sm py-3 lg:py-5 text-center lg:text-lg font-poppins font-medium lg:me-10 me-0 px-3 lg:px-0"
+            >
+              <span className="transition-all duration-300 hover:text-xl hover:font-bold">
+                Over the years,{" "}
+                <span className="text-red-500">Grow Infinity</span> has built a
+                reputation for providing a{" "}
+                <span className="text-yellow-200">seamless experience</span> to
+                customers to secure their{" "}
+                <span className="text-red-500">dream homes</span>.
+              </span>
+            </marquee>
+          </div>
           <div className="flex flex-wrap justify-center lg:grid sm:grid-cols-12">
-            <div className="basis-1/4 col-span-6 md:col-span-6 lg:col-span-3 rounded-[17.07px] m-8 hover:text-white transition-all ease-in-out experience-card">
-              <div className="flex flex-col items-center justify-center">
-                <ApartmentIcon
-                  sx={{
-                    fontSize: { xs: 50, sm: 75, md: 100 },
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    transition: "color 0.3s ease-in-out",
-                  }}
-                  className="experience-icon"
-                />
-                <div className="flex flex-col gap-1 my-4">
-                  <p className="font-poppins font-semibold text-xl lg:text-2xl text-center">
-                    <span
-                      className="purecounter"
-                      data-purecounter-start="0"
-                      data-purecounter-end="5000"
-                      data-purecounter-duration="3"
-                    >
-                      5000
-                    </span>
-                  </p>
-                  <p className="font-poppins font-medium text-sm lg:text-lg">
-                    Units Sold
-                  </p>
+            {[
+              {
+                Icon: ApartmentIcon,
+                count: 2000,
+                suffix: "+",
+                label: "Units Sold",
+              },
+              {
+                Icon: EmojiEmotionsIcon,
+                count: 1500,
+                suffix: "+",
+                label: "Happy Users",
+                color: "text-yellow-200",
+              },
+              {
+                Icon: AspectRatioIcon,
+                count: 10,
+                suffix: "+",
+                label: "Years of Experience",
+              },
+              {
+                Icon: AccessibilityNewIcon,
+                count: 30,
+                label: "Employees",
+                color: "text-yellow-200",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="basis-1/4 col-span-6 md:col-span-6 lg:col-span-3 rounded-[17.07px] m-8 hover:text-white transition-all ease-in-out experience-card"
+                style={{ animationDelay: `${index * 0.3}s` }}
+              >
+                <div
+                  className="flex flex-col items-center justify-center  animate-move rounded-xl"
+                  style={{ boxShadow: "0px 4px 20px rgba(159, 154, 154, 0.9)" }}
+                >
+                  <item.Icon
+                    sx={{
+                      fontSize: { xs: 50, sm: 75, md: 100 },
+                      paddingTop: "10px",
+                      paddingBottom: "10px",
+                      transition: "color 0.3s ease-in-out",
+                    }}
+                    className={`experience-icon ${item.color}`}
+                  />
+                  <div className="flex flex-col gap-1 my-4">
+                    <p className="font-poppins font-semibold text-xl lg:text-2xl text-center">
+                      <span
+                        className="purecounter"
+                        data-purecounter-start="0"
+                        data-purecounter-end={item.count}
+                        data-purecounter-duration="3"
+                      >
+                        {item.count}
+                      </span>
+                      {item.suffix && <span>{item.suffix}</span>}
+                    </p>
+                    <p className="font-poppins font-medium text-sm lg:text-lg">
+                      {item.label}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div className="basis-1/4 col-span-6 md:col-span-6 lg:col-span-3  rounded-[17.07px] m-8 hover:text-white transition-all ease-in-out experience-card">
-              <div className="flex flex-col items-center justify-center">
-                <EmojiEmotionsIcon
-                  sx={{
-                    fontSize: { xs: 50, sm: 75, md: 100 },
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    transition: "color 0.3s ease-in-out",
-                  }}
-                  className="experience-icon"
-                />
-                <div className="flex flex-col gap-1 my-4">
-                  <p className="font-poppins font-semibold text-xl lg:text-2xl text-center">
-                    <span
-                      className="purecounter"
-                      data-purecounter-start="0"
-                      data-purecounter-end="2000"
-                      data-purecounter-duration="3"
-                    >
-                      2000
-                    </span>
-                  </p>
-                  <p className="font-poppins font-medium text-sm lg:text-lg">
-                    Happy Users
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="basis-1/4 col-span-6 md:col-span-6 lg:col-span-3 rounded-[17.07px] m-8 hover:text-white transition-all ease-in-out experience-card">
-              <div className="flex flex-col items-center justify-center">
-                <AspectRatioIcon
-                  sx={{
-                    fontSize: { xs: 50, sm: 75, md: 100 },
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    transition: "color 0.3s ease-in-out",
-                  }}
-                  className="experience-icon"
-                />
-                <div className="flex flex-col gap-1 my-4">
-                  <p className="font-poppins font-semibold text-xl lg:text-2xl text-center">
-                    <span
-                      className="purecounter"
-                      data-purecounter-start="0"
-                      data-purecounter-end="10"
-                      data-purecounter-duration="3"
-                      data-purecounter-suffix="+"
-                    >
-                      10+
-                    </span>
-                  </p>
-                  <p className="font-poppins font-medium text-center text-sm lg:text-lg">
-                    Year of Experience
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="basis-1/4 col-span-6 md:col-span-6 lg:col-span-3 rounded-[17.07px] m-8 hover:text-white transition-all ease-in-out experience-card">
-              <div className="flex flex-col items-center justify-center">
-                <AccessibilityNewIcon
-                  sx={{
-                    fontSize: { xs: 50, sm: 75, md: 100 },
-                    paddingTop: "10px",
-                    paddingBottom: "10px",
-                    transition: "color 0.3s ease-in-out",
-                  }}
-                  className="experience-icon"
-                />
-                <div className="flex flex-col gap-1 my-4">
-                  <p className="font-poppins font-semibold text-xl lg:text-2xl text-center">
-                    <span
-                      className="purecounter"
-                      data-purecounter-start="0"
-                      data-purecounter-end="30"
-                      data-purecounter-duration="3"
-                    >
-                      30
-                    </span>
-                  </p>
-                  <p className="font-poppins font-medium text-sm lg:text-lg">
-                    Employees
-                  </p>
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Top Properties  */}
+      {/* Recent Listings  */}
       <div className="bg-white">
         <h1 className="text-center text-black  text-2xl lg:text-4xl font-bold py-8 lg:font-medium">
           Recent Listings
@@ -385,6 +223,7 @@ export const Home = () => {
         </div>
       </div>
 
+      {/* How it Works */}
       <div className="mx-auto max-w-[1280px] my-10">
         <div className="grid sm:grid-cols-12">
           <div className="hidden md:flex col-span-12 md:col-span-6 lg:col-span-7 justify-center">
@@ -395,7 +234,7 @@ export const Home = () => {
                     <img
                       src={findRealEstate}
                       alt=""
-                      className="rounded-lg h-[250px] w-[100%] object-fill"
+                      className="rounded-lg h-[250px] w-[1000px] object-fill"
                     />
                   </div>
                 </div>
@@ -406,14 +245,14 @@ export const Home = () => {
                     <img
                       src={realtor}
                       alt=""
-                      className="rounded-lg h-[200px] w-full object-cover"
+                      className="rounded-lg h-[260px] w-full object-cover"
                     />
                   </div>
                   <div className="col-span-5">
                     <img
                       src={keys}
                       alt=""
-                      className="rounded-lg h-[400px] w-full object-fill"
+                      className="rounded-lg h-[260px] w-full object-fill"
                     />
                   </div>
                 </div>
@@ -425,7 +264,7 @@ export const Home = () => {
               How It works? <br />
               Find a perfect home
             </h1>
-            <p className="font-roboto text-md lg:text-lg text-[#1A1A1A] px-5 mt-5">
+            <p className="text-md lg:text-lg px-5 mt-5">
               Discover your ideal home with ease. Browse listings, get expert
               advice, and find the perfect match for your lifestyle.
             </p>
@@ -437,10 +276,10 @@ export const Home = () => {
                     <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[8%]"></div>
                   </div>
                   <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-roboto font-medium text-[#1A1A1A]">
+                    <h1 className="text-lg lg:text-xl font-medium ">
                       Find Real Estate
                     </h1>
-                    <p className="mt-2 text-sm lg:text-lg">
+                    <p className="mt-2 text-sm lg:text-[15px]">
                       Finding your dream property has never been easier. With
                       Grow Infinity Realtors, you access extensive listings, and
                       expert guidance for a seamless real estate journey. Start
@@ -456,10 +295,10 @@ export const Home = () => {
                     <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[10%]"></div>
                   </div>
                   <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-roboto font-medium text-[#1A1A1A]">
+                    <h1 className="text-lg lg:text-xl font-medium">
                       Meet Realtor
                     </h1>
-                    <p className="mt-2 text-sm lg:text-lg">
+                    <p className="mt-2 text-sm lg:text-[15px]">
                       Connect with trusted real estate professionals who
                       understand your needs and priorities.
                     </p>
@@ -473,10 +312,10 @@ export const Home = () => {
                     <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[10%]"></div>
                   </div>
                   <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-roboto font-medium text-[#1A1A1A]">
+                    <h1 className="text-lg lg:text-xl font-medium">
                       Take the keys
                     </h1>
-                    <p className="mt-2 text-sm lg:text-lg">
+                    <p className="mt-2 text-sm lg:text-[15px]">
                       Unlock your future with confidence. Take the Home Keys and
                       step into your new beginning with expert guidance and
                       support.
@@ -492,17 +331,78 @@ export const Home = () => {
       <Testimonials />
       <Choose />
 
-      <LatestNews />
+      {/* Awards Segment  */}
+      <div
+        className="bg-latest py-10"
+        style={{
+          background: `linear-gradient(#0e1d3499, #0e1d34cc), url(${bgImage})`,
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="max-w-[1400px] mx-auto">
+          <h1 className="text-center text-3xl lg:text-4xl text-white font-medium">
+            Awards
+          </h1>
+          <div className="grid sm:grid-cols-12 overflow-hidden">
+            <div className="col-span-12 lg:col-span-6 flex justify-center lg:justify-start">
+              <AwardComponent />
+            </div>
+            <div className="col-span-12 lg:col-span-6  flex items-center ">
+              <div className="text-white text-lg text-justify px-12">
+                <p className="text-sm lg:text-lg">
+                  At Grow Infinity Realtors, we believe that our dedication to
+                  excellence speaks volumes, and it’s a privilege to see this
+                  dedication acknowledged by the real estate community and our
+                  valued clients. Each award we receive is a reflection of the
+                  trust and confidence that clients place in us, motivating us
+                  to continuously raise the bar in service and results.
+                </p>
+                <p className="text-sm lg:text-lg mt-3">
+                  These awards are more than just accolades; they are milestones
+                  that reinforce our mission to serve with integrity,
+                  innovation, and unmatched expertise. At Grow Infinity
+                  Realtors, your trust fuels our ambition, and we remain
+                  steadfast in our journey to redefine excellence in real
+                  estate.
+                </p>
+              </div>
+            </div>
+          </div>
 
+          <div className="flex justify-center mt-4">
+            <Link to="/awards">
+              <Button
+                size="large"
+                variant="contained"
+                endIcon={<EastIcon />}
+                sx={{
+                  backgroundColor: "white",
+                  color: "#03002e",
+                  textTransform: "none",
+                }}
+              >
+                View all
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Both Boxes */}
       <div className="max-w-[1280px] mx-auto my-10">
         <div className="grid sm:grid-cols-12">
+          {/* Box 1 - Looking for a new home */}
           <div className="col-span-12 lg:col-span-6 m-5">
-            <div className="bg-[#F9F9F9] font-roboto p-8 lg:p-14 rounded-lg">
+            <div
+              className="bg-[#F9F9F9] font-roboto p-8 lg:p-14 rounded-lg 
+                      transition-all duration-500 hover:translate-x-4 hover:shadow-lg hover:scale-[1.02]"
+            >
               <div className="grid sm:grid-cols-12">
                 <div className="col-span-12 lg:col-span-9">
                   <div className="flex flex-col gap-4">
                     <h4 className="font-medium text-lg lg:text-2xl">
-                      Looking for the new home?
+                      Looking for a new home?
                     </h4>
                     <p className="hidden lg:block text-sm lg:text-lg font-normal lg:pe-20 text-justify">
                       Let us help you find the perfect place to suit your needs
@@ -513,10 +413,17 @@ export const Home = () => {
                         Let us help you find the perfect place to suit your
                         needs and lifestyle.
                       </p>
-                      <img src={home} alt="" className="w-[80px] h-[80px]" />
+                      <img
+                        src={home}
+                        alt="Home"
+                        className="w-[80px] h-[80px]"
+                      />
                     </div>
                     <Link to={"/contact"}>
-                      <button className="bg-[#1F4B43] rounded-lg text-white w-[50%] lg:w-[150px] text-sm py-1 lg:py-3 flex items-center justify-center gap-2 mt-8">
+                      <button
+                        className="bg-[#1F4B43] rounded-lg text-white w-[50%] lg:w-[150px] text-sm py-1 lg:py-3 
+                                    flex items-center justify-center gap-2 mt-8 transition-all duration-300 hover:scale-105"
+                      >
                         Contact us
                         <EastIcon size="small" sx={{ fontSize: "15px" }} />
                       </button>
@@ -524,13 +431,18 @@ export const Home = () => {
                   </div>
                 </div>
                 <div className="col-span-12 lg:col-span-3 hidden lg:flex items-end">
-                  <img src={home} alt="" className="w-[130px] h-[130px]" />
+                  <img src={home} alt="Home" className="w-[130px] h-[130px]" />
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Box 2 - Want to sell your home? */}
           <div className="col-span-12 lg:col-span-6 m-5">
-            <div className="bg-[#FFF8F6] font-roboto p-8 lg:p-14 rounded-lg">
+            <div
+              className="bg-[#FFF8F6] font-roboto p-8 lg:p-14 rounded-lg 
+                      transition-all duration-300 hover:translate-x-4 hover:shadow-lg hover:scale-[1.02]"
+            >
               <div className="grid sm:grid-cols-12">
                 <div className="col-span-12 lg:col-span-9">
                   <div className="flex flex-col gap-4">
@@ -546,10 +458,17 @@ export const Home = () => {
                         Let our experts help you get the best price with a
                         seamless selling experience.
                       </p>
-                      <img src={house} alt="" className="w-[80px] h-[80px]" />
+                      <img
+                        src={house}
+                        alt="House"
+                        className="w-[80px] h-[80px]"
+                      />
                     </div>
                     <Link to={"/contact"}>
-                      <button className="bg-[#1F4B43] rounded-lg text-white w-[50%] lg:w-[150px] text-sm py-1 lg:py-3 flex items-center justify-center gap-2 mt-8">
+                      <button
+                        className="bg-[#1F4B43] rounded-lg text-white w-[50%] lg:w-[150px] text-sm py-1 lg:py-3 
+                                    flex items-center justify-center gap-2 mt-8 transition-all duration-300 hover:scale-105"
+                      >
                         Contact us
                         <EastIcon size="small" sx={{ fontSize: "15px" }} />
                       </button>
@@ -557,7 +476,11 @@ export const Home = () => {
                   </div>
                 </div>
                 <div className="col-span-12 lg:col-span-3 hidden lg:flex items-end">
-                  <img src={house} alt="" className="w-[130px] h-[130px]" />
+                  <img
+                    src={house}
+                    alt="House"
+                    className="w-[130px] h-[130px]"
+                  />
                 </div>
               </div>
             </div>

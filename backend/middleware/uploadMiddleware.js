@@ -1,69 +1,52 @@
 const multer = require("multer");
-const path = require("path");
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
 
-// Set up the storage engine
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    let uploadPath;
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Set up Cloudinary storage
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    let folderName = "uploads"; // Default folder
 
     if (req.originalUrl.includes("/api/v1/news")) {
-      uploadPath = "uploads/news/";
+      folderName = "news";
     } else if (req.originalUrl.includes("/api/v1/properties")) {
-      uploadPath = "uploads/properties/";
+      folderName = "properties";
     } else if (req.originalUrl.includes("/api/v1/amenities")) {
-      uploadPath = "uploads/amenities/";
+      folderName = "amenities";
     } else if (req.originalUrl.includes("/api/v1/brochures")) {
-      uploadPath = "uploads/brochures/";
-    } else if (req.originalUrl.includes("/api/v1/property")) {
-      uploadPath = "uploads/property/";
+      folderName = "brochures";
     } else if (req.originalUrl.includes("/api/v1/events")) {
-      uploadPath = "uploads/events/";
+      folderName = "events";
     } else if (req.originalUrl.includes("/api/v1/awards")) {
-      uploadPath = "uploads/awards/";
+      folderName = "awards";
     } else if (req.originalUrl.includes("/api/v1/testimonials")) {
-      uploadPath = "uploads/testimonials/";
-    } else {
-      uploadPath = "uploads/";
+      folderName = "testimonials";
     }
 
-    cb(null, uploadPath); // Set the destination folder
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // File name
+    return {
+      folder: folderName,
+      resource_type: file.mimetype.startsWith("video/") ? "video" : "auto",
+    };
   },
 });
 
-// File filter to accept images and PDFs
-const fileFilter = (req, file, cb) => {
-  if (
-    file.mimetype === "image/jpeg" ||
-    file.mimetype === "image/jpg" ||
-    file.mimetype === "image/png" || 
-    file.mimetype === "video/mp4" || 
-    file.mimetype === "application/pdf" // Allow PDF
-  ) {
-    cb(null, true); // Accept the file
-  } else {
-    cb(
-      new Error("Only image types (jpeg, jpg, png) and PDF files are allowed!"),
-      false
-    ); // Reject other file types
-  }
-};
-
-// Set up multer middleware to handle both image and PDF
 const upload = multer({
   storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 100, // Limit files to 100MB
-  },
-  fileFilter: fileFilter,
+  limits: { fileSize: 1024 * 1024 * 100 }, // Limit files to 100MB
 }).fields([
-  {name: "images", maxCount: 10},
-  {name: "video", maxCount: 1},
-  {name: "pdf", maxCount: 1},
-  {name: "image", maxCount: 10},
-  ]);
+  { name: "images", maxCount: 10 },
+  { name: "video", maxCount: 1 },
+  { name: "pdf", maxCount: 1 },
+  { name: "image", maxCount: 10 },
+]);
 
 module.exports = upload;
