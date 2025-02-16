@@ -21,9 +21,9 @@ export const AddAmenity = () => {
   const [formData, setFormData] = useState({
     type: "",
     name: "",
-    selectedFile: null,
   });
   const [loading, setLoading] = useState(false);
+  const [uploadedImage, setUploadedImage] = useState([]);
   const imageInputRef = useRef();
 
   const apiUrl = `${process.env.BASE_URL}/api/v1/amenities`;
@@ -36,12 +36,50 @@ export const AddAmenity = () => {
     });
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    setFormData({
-      ...formData,
-      selectedFile: file,
+  // Handler for image uploading
+  const handleImageUpload = (event) => {
+    const files = Array.from(event.target.files);
+    const maxSize = 1 * 1024 * 1024; // 2 MB
+
+    const validFiles = files.filter((file) => {
+      if (file.size > maxSize) {
+        toast.error(`Image size should be less than 2Mb.`);
+        return false;
+      }
+      return true;
     });
+
+    setUploadedImage((prevImages) => [...prevImages, ...validFiles]);
+  };
+
+  // Function to remove image
+  const removeImage = (index) => {
+    setUploadedImage((prevImages) =>
+      prevImages.filter((image, i) => i !== index)
+    );
+  };
+
+  // Image Preview
+  const renderImagePreviews = () => {
+    return uploadedImage.map((image, index) => (
+      <div
+        key={index}
+        style={{ position: "relative", display: "inline-block" }}
+      >
+        <img
+          src={URL.createObjectURL(image)}
+          alt="Preview"
+          className="image-preview"
+        />
+        <button
+          type="button"
+          className="delete-image"
+          onClick={() => removeImage(index)}
+        >
+          X
+        </button>
+      </div>
+    ));
   };
 
   const handleSubmit = async (e) => {
@@ -50,7 +88,13 @@ export const AddAmenity = () => {
     const formDataToSend = new FormData();
     formDataToSend.append("type", formData.type);
     formDataToSend.append("name", formData.name);
-    formDataToSend.append("image", formData.selectedFile);
+
+    // Append uploaded images
+    uploadedImage.forEach((image) => {
+      formDataToSend.append("image", image);
+    });
+
+    console.log("Frontend Amenity ", uploadedImage);
 
     try {
       const response = await axios.post(apiUrl, formDataToSend, {
@@ -70,8 +114,8 @@ export const AddAmenity = () => {
       setFormData({
         type: "",
         name: "",
-        selectedFile: null,
       });
+      setUploadedImage([]);
       // Reset the file input after submission
       if (imageInputRef.current) {
         imageInputRef.current.value = ""; // Reset the file input
@@ -144,7 +188,7 @@ export const AddAmenity = () => {
                       style={{ display: "none" }}
                       id="upload-button-file"
                       type="file"
-                      onChange={handleFileChange}
+                      onChange={handleImageUpload}
                     />
                     <label htmlFor="upload-button-file">
                       <Button
@@ -157,12 +201,10 @@ export const AddAmenity = () => {
                         Choose File
                       </Button>
                     </label>
-                    {/* Show selected file name */}
-                    {formData.selectedFile && (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        {formData.selectedFile.name}
-                      </Typography>
-                    )}
+
+                    <div className="flex flex-wrap mt-2">
+                      {renderImagePreviews()}
+                    </div>
                   </Box>
                 </div>
               </div>

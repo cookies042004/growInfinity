@@ -151,11 +151,6 @@ export const AddNews = () => {
                         Choose File
                       </Button>
                     </label>
-                    {formData.image && (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        {formData.image.name}
-                      </Typography>
-                    )}
 
                     {/* Image Preview */}
                     {imagePreview && (
@@ -163,15 +158,40 @@ export const AddNews = () => {
                         <Typography variant="body2" gutterBottom>
                           Image Preview:
                         </Typography>
-                        <img
-                          src={imagePreview}
-                          alt="Preview"
+                        <div
                           style={{
-                            maxWidth: "100%",
-                            height: "auto",
-                            borderRadius: "8px",
+                            position: "relative",
+                            display: "inline-block",
                           }}
-                        />
+                        >
+                          <img
+                            src={imagePreview}
+                            alt="Preview"
+                            style={{
+                              maxWidth: "100%",
+                              height: "auto",
+                              borderRadius: "8px",
+                            }}
+                          />
+                          <button
+                            onClick={() => setImagePreview(null)} // Remove preview
+                            style={{
+                              position: "absolute",
+                              top: "5px",
+                              right: "5px",
+                              background: "red",
+                              color: "white",
+                              border: "none",
+                              borderRadius: "50%",
+                              width: "20px",
+                              height: "20px",
+                              cursor: "pointer",
+                              fontSize: "12px",
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
                       </Box>
                     )}
                   </Box>

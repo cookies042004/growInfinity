@@ -136,7 +136,7 @@ export const ViewAwards = () => {
                             <TableCell>
                               <Box className="flex gap-2">
                                 <img
-                                  src={`${process.env.BASE_URL}/${award.image}`} // Assuming it's an array with only one image.
+                                  src={award.image} // Assuming it's an array with only one image.
                                   alt={`Award Image`}
                                   style={{
                                     height: "70px",

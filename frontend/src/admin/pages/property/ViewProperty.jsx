@@ -59,7 +59,7 @@ export const ViewProperty = () => {
             onClick={() => setSelectedProperty(property)}
           >
             <img
-              src={property.image?.[0] ? `${process.env.BASE_URL}/${property.image[0]}` : "/placeholder.jpg"}
+              src={property.image?.[0] ? property.image?.[0] : "/placeholder.jpg"}
               alt={property.name}
               style={{ width: "100%", height: "180px", objectFit: "cover" }}
             />
@@ -92,7 +92,7 @@ export const ViewProperty = () => {
           >
             <Typography variant="h5" style={{ fontWeight: "bold", marginBottom: "10px" }}>{selectedProperty.name}</Typography>
             <img
-              src={selectedProperty.image?.[0] ? `${process.env.BASE_URL}/${selectedProperty.image[0]}` : "/placeholder.jpg"}
+              src={selectedProperty.image?.[0] ? selectedProperty.image?.[0] : "/placeholder.jpg"}
               alt={selectedProperty.name}
               style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
             />

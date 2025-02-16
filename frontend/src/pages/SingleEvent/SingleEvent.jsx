@@ -46,7 +46,7 @@ export const SingleEvent = () => {
               return (
                 <div className="col-span-12 md:col-span-6 lg:col-span-4 m-5">
                   <img
-                    src={`${process.env.BASE_URL}/${item}`}
+                    src={item}
                     alt=""
                     className="h-[250px] lg:h-[300px] object-fill rounded-lg"
                   />

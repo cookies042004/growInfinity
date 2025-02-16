@@ -158,7 +158,7 @@ export const ViewAmenity = () => {
                             <TableCell>
                               <Box className="flex gap-2">
                                 <img
-                                  src={`${process.env.BASE_URL}/${amenity.image}`} // Assuming it's an array with only one image.
+                                  src={amenity.image} // Assuming it's an array with only one image.
                                   alt={`Amenity Image`}
                                   style={{
                                     height: "70px",

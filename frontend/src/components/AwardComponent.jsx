@@ -62,7 +62,7 @@ export const AwardComponent = () => {
             {awards.map((award, i) => (
               <SwiperSlide key={award._id} className="award-slide">
                 <img
-                  src={`${process.env.BASE_URL}/${award.image}`}
+                  src={award.image}
                   className="h-[300px] w-[300px] lg:h-[500px] lg:w-[450px] object-cover rounded-2xl"
                 />
               </SwiperSlide>

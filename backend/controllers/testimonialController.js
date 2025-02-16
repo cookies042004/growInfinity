@@ -80,9 +80,8 @@ const updateTestimonial = async (req, res) => {
     const testimonialId = req.params.id;
     const { name, role, review } = req.body;
 
-    // Fetch the current news document
+    // Fetch the existing testimonial
     const existingTestimonial = await Testimonials.findById(testimonialId);
-
     if (!existingTestimonial) {
       return res.status(404).json({
         success: false,
@@ -90,53 +89,44 @@ const updateTestimonial = async (req, res) => {
       });
     }
 
-    let updatedFields = {
-      name,
-      role,
-      review,
-    };
+    // Prepare updated fields
+    let updatedFields = {};
+    if (name) updatedFields.name = name;
+    if (role) updatedFields.role = role;
+    if (review) updatedFields.review = review;
 
     // Check if a new image was uploaded
-    if (req.files) {
-      const imagePath = req.files && req.files[0]?.path;
+    if (req.files?.image?.[0]) {
+      const imagePath = req.files.image[0].path;
       updatedFields.image = imagePath;
 
-      // Delete the old image if it exists
+      // Delete old image if it exists
       if (existingTestimonial.image) {
-        const oldImagePath = path.join(
-          __dirname,
-          "..",
-          existingTestimonial.image
-        ); // Construct the full path
+        const oldImagePath = path.resolve(__dirname, "..", existingTestimonial.image);
         fs.unlink(oldImagePath, (err) => {
-          if (err) {
-            console.error(`Error deleting old image: ${err.message}`);
-          }
+          if (err) console.error(`Error deleting old image: ${err.message}`);
         });
       }
     }
 
-    // Update the news item
+    // Update the testimonial
     const updatedTestimonial = await Testimonials.findByIdAndUpdate(
       testimonialId,
-      updatedFields,
-      {
-        new: true, // Return the updated document
-      }
+      { $set: updatedFields },
+      { new: true }
     );
 
-    // Send success response
     res.status(200).json({
       success: true,
       message: "Record updated successfully",
       testimonial: updatedTestimonial,
     });
   } catch (err) {
-    console.log(err);
+    console.error("Update Error:", err);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      error: err,
+      error: err.message,
     });
   }
 };

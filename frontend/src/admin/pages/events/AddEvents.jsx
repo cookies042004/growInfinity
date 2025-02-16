@@ -25,7 +25,7 @@ export const AddEvents = () => {
 
   const [imagePreviews, setImagePreviews] = useState([]);
   const [loading, setLoading] = useState(false);
-  
+
   const handleFileChange = (event) => {
     const file = Array.from(event.target.files);
     setFormData({ ...formData, images: file });
@@ -38,6 +38,13 @@ export const AddEvents = () => {
     const { name, value } = event.target;
     setFormData({ ...formData, [name]: value });
   };
+
+  const handleRemoveImage = (index) => {
+    const newPreviews = imagePreviews.filter((_, i) => i !== index);
+    setImagePreviews(newPreviews);
+    const newImages = formData.images.filter((_, i) => i !== index);
+    setFormData({ ...formData, images: newImages });
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -166,18 +173,37 @@ export const AddEvents = () => {
                         }}
                       >
                         {imagePreviews.map((preview, index) => (
-                          <img
-                            key={index}
-                            src={preview}
-                            alt={`Preview ${index + 1}`}
-                            style={{
-                              width: "100px",
-                              height: "100px",
-                              objectFit: "cover",
-                              borderRadius: "8px",
-                              boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                            }}
-                          />
+                          <div key={index} style={{ position: "relative" }}>
+                            <img
+                              src={preview}
+                              alt={`Preview ${index + 1}`}
+                              style={{
+                                width: "100px",
+                                height: "100px",
+                                objectFit: "cover",
+                                borderRadius: "8px",
+                                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+                              }}
+                            />
+                            <button
+                              onClick={() => handleRemoveImage(index)}
+                              style={{
+                                position: "absolute",
+                                top: "5px",
+                                right: "5px",
+                                background: "red",
+                                color: "white",
+                                border: "none",
+                                borderRadius: "50%",
+                                width: "20px",
+                                height: "20px",
+                                cursor: "pointer",
+                                fontSize: "12px",
+                              }}
+                            >
+                              ✕
+                            </button>
+                          </div>
                         ))}
                       </Box>
                     )}

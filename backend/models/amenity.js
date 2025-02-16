@@ -10,10 +10,10 @@ const amenitySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  image: {
+  image: [{
     type: String,
     required: true,
-  },
+  }],
 });
 
 const Amenity = mongoose.model("Amenity", amenitySchema);

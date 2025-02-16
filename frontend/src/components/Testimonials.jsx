@@ -134,7 +134,7 @@ export const Testimonials = () => {
                         <div className="flex-col items-center gap-4 testimonial-item">
                           <div className="flex items-center gap-5">
                             <img
-                              src={`${process.env.BASE_URL}/${testimonial.image}`}
+                              src={testimonial.image}
                               alt={testimonial.name}
                               className="w-[50px] lg:w-[90px] rounded-[50%] h-[50px] lg:h-[90px] object-cover object-top"
                             />

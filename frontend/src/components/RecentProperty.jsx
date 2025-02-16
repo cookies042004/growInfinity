@@ -19,7 +19,7 @@ export const RecentProperty = () => {
                 <Link to={`/project/${property._id}`}>
                   <div className="flex gap-3">
                     <img
-                      src={`${process.env.BASE_URL}/${property.image[0]}`}
+                      src={property.image[0]}
                       alt=""
                       className="h-[40px] w-[40px] rounded"
                     />

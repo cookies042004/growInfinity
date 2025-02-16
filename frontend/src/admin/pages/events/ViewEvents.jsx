@@ -129,7 +129,7 @@ export const ViewEvents = () => {
                                 {event.image.map((img, index) => (
                                   <img
                                     key={index}
-                                    src={`${process.env.BASE_URL}/${img}`}
+                                    src={img}
                                     alt={`${event.title} Image ${index + 1}`}
                                     style={{
                                       height: "100px",

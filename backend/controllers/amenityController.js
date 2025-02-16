@@ -6,14 +6,25 @@ const Property = require("../models/property");
 // Create a Amenity
 const createAmenity = async (req, res) => {
   try {
-    const imagePath =  req.files && req.files[0]?.path;
     const { type, name } = req.body;
+
+    const image = [];
+
+    if(req.files['image']){
+      req.files['image'].forEach((file) => {
+        image.push(file.path);
+      })
+    }
+
+    const imageToSave = image.length > 0 ? image[0] : null;
 
     const amenity = new Amenity({
       type,
       name,
-      image: imagePath,
+      image: imageToSave
     });
+
+    console.log("Amenity Image is ",image);
 
     await amenity.save();
 
@@ -79,9 +90,8 @@ const updateAmenity = async (req, res) => {
     const amenityId = req.params.id;
     const { type, name } = req.body;
 
-    // Fetch the current news document
+    // Fetch the existing amenity document
     const existingAmenity = await Amenity.findById(amenityId);
-
     if (!existingAmenity) {
       return res.status(404).json({
         success: false,
@@ -89,37 +99,33 @@ const updateAmenity = async (req, res) => {
       });
     }
 
-    let updatedFields = {
-      type,
-      name,
-    };
+    let updatedFields = { type, name };
 
-    // Check if a new image was uploaded
-    if (req.files) {
-      const imagePath = req.files && req.files[0]?.path;
-      updatedFields.image = imagePath;
+    // Handle new images
+    if (req.files && req.files["image"]) {
+      let newImages = req.files["image"].map((file) => file.path);
 
-      // Delete the old image if it exists
-      if (existingAmenity.image) {
-        const oldImagePath = path.join(__dirname, "..", existingAmenity.image); // Construct the full path
-        fs.unlink(oldImagePath, (err) => {
-          if (err) {
-            console.error(`Error deleting old image: ${err.message}`);
+      // Delete old images if they exist and are local
+      if (existingAmenity.image && existingAmenity.image.length > 0) {
+        existingAmenity.image.forEach((img) => {
+          if (!img.startsWith("http")) {
+            const oldImagePath = path.join(__dirname, "..", img);
+            if (fs.existsSync(oldImagePath)) {
+              fs.unlink(oldImagePath, (err) => {
+                if (err) console.error(`Error deleting old image: ${err.message}`);
+              });
+            }
           }
         });
       }
+
+      // Update the image field with new images
+      updatedFields.image = newImages;
     }
 
-    // Update the news item
-    const updatedAmenity = await Amenity.findByIdAndUpdate(
-      amenityId,
-      updatedFields,
-      {
-        new: true, // Return the updated document
-      }
-    );
+    // Update the amenity item
+    const updatedAmenity = await Amenity.findByIdAndUpdate(amenityId, updatedFields, { new: true });
 
-    // Send success response
     res.status(200).json({
       success: true,
       message: "Record updated successfully",
@@ -130,7 +136,7 @@ const updateAmenity = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      error: err,
+      error: err.message,
     });
   }
 };

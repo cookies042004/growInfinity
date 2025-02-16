@@ -82,7 +82,7 @@ const updateNews = async (req, res) => {
     const newsId = req.params.id;
     const { title, url } = req.body;
 
-    // Fetch the current news document
+    // Fetch the existing news document
     const existingNews = await News.findById(newsId);
     if (!existingNews) {
       return res.status(404).json({
@@ -97,19 +97,20 @@ const updateNews = async (req, res) => {
     };
 
     // Check if a new image was uploaded
-    if (req.files) {
-      const imagePath = req.files && req.files[0]?.path;
+    if (req.files && req.files["image"]) {
+      const imagePath = req.files["image"][0].path; // Assuming `image` is the field name
       updatedFields.image = imagePath;
 
-      // Delete the old image if it exists
-      if (existingNews.image) {
+      // Delete the old image if it's a local file
+      if (existingNews.image && !existingNews.image.startsWith("http")) {
         const oldImagePath = path.join(__dirname, "..", existingNews.image);
 
-        fs.unlink(oldImagePath, (err) => {
-          if (err) {
-            console.error(`Error deleting old image: ${err.message}`);
-          }
-        });
+        try {
+          await fs.promises.unlink(oldImagePath);
+          console.log("Old image deleted successfully");
+        } catch (unlinkError) {
+          console.error(`Error deleting old image: ${unlinkError.message}`);
+        }
       }
     }
 
@@ -129,7 +130,7 @@ const updateNews = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      error: err,
+      error: err.message,
     });
   }
 };

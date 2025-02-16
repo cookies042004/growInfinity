@@ -154,7 +154,7 @@ export const UpdateTestimonial = () => {
                         Current Testimonial Image:
                       </Typography>
                       <img
-                        src={`${process.env.BASE_URL}/${data.testimonial.image}`}
+                        src={data.testimonial.image }
                         alt="Current Amenity Image"
                         style={{
                           height: "100px",

@@ -6,10 +6,6 @@ import {
   Box,
   Button,
   CircularProgress,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -23,6 +19,7 @@ export const AddTestimonial = () => {
     role: "",
     review: "",
     selectedFile: null,
+    imagePreview: null, // ✅ Added state for preview
   });
   const [loading, setLoading] = useState(false);
   const imageInputRef = useRef();
@@ -31,18 +28,30 @@ export const AddTestimonial = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    setFormData({
-      ...formData,
-      selectedFile: file,
-    });
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setFormData((prev) => ({
+        ...prev,
+        selectedFile: file,
+        imagePreview: previewUrl, // ✅ Store preview URL
+      }));
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedFile: null,
+      imagePreview: null, // ✅ Reset preview
+    }));
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -56,33 +65,29 @@ export const AddTestimonial = () => {
 
     try {
       const response = await axios.post(apiUrl, formDataToSend, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       if (response.data.success) {
         toast.success(response.data.message);
-        setLoading(false);
+        setFormData({
+          name: "",
+          role: "",
+          review: "",
+          selectedFile: null,
+          imagePreview: null, // ✅ Reset preview
+        });
+        if (imageInputRef.current) {
+          imageInputRef.current.value = "";
+        }
       } else {
-        setLoading(false);
-        toast.error("Failed to add amenity");
-      }
-
-      setFormData({
-        name: "",
-        role: "",
-        review: "",
-        selectedFile: null,
-      });
-      // Reset the file input after submission
-      if (imageInputRef.current) {
-        imageInputRef.current.value = ""; // Reset the file input
+        toast.error("Failed to add testimonial");
       }
     } catch (error) {
-      setLoading(false);
       console.error(error);
       toast.error("An error occurred while adding the testimonial");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,50 +105,47 @@ export const AddTestimonial = () => {
               <div className="flex flex-wrap my-5">
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
-                    id="outlined-basic"
                     label="Enter Reviewer Name*"
                     variant="outlined"
                     color="secondary"
                     size="small"
-                    name="name" // Changed to "name"
-                    value={formData.name} // Controlled by formData
+                    name="name"
+                    value={formData.name}
                     fullWidth
                     onChange={handleChange}
                   />
                 </div>
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
-                    id="outlined-basic"
                     label="Enter Reviewer Role*"
                     variant="outlined"
                     color="secondary"
                     size="small"
-                    name="role" // Changed to "name"
-                    value={formData.role} // Controlled by formData
+                    name="role"
+                    value={formData.role}
                     fullWidth
                     onChange={handleChange}
                   />
                 </div>
                 <div className="w-full mb-4 p-2">
                   <TextField
-                    id="outlined-basic"
                     label="Enter Review*"
                     variant="outlined"
                     color="secondary"
                     size="small"
-                    name="review" // Changed to "name"
-                    value={formData.review} // Controlled by formData
+                    name="review"
+                    value={formData.review}
                     fullWidth
                     multiline
                     onChange={handleChange}
                   />
                 </div>
-                {/* File input for image upload */}
+
+                {/* ✅ File Input Section */}
                 <div className="w-full p-2">
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body1" gutterBottom>
-                      Upload Reviewer Image - (Only jpeg, jpg, png files are
-                      allowed Max size: 1 mb)
+                      Upload Reviewer Image - (jpeg, jpg, png | Max size: 1MB)
                     </Typography>
                     <input
                       ref={imageInputRef}
@@ -154,39 +156,75 @@ export const AddTestimonial = () => {
                       onChange={handleFileChange}
                     />
                     <label htmlFor="upload-button-file">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        component="span"
-                        size="small"
-                        style={{ textTransform: "none" }}
-                      >
+                      <Button variant="outlined" color="primary" component="span" size="small">
                         Choose File
                       </Button>
                     </label>
-                    {/* Show selected file name */}
-                    {formData.selectedFile && (
-                      <Typography variant="body2" sx={{ mt: 1 }}>
-                        {formData.selectedFile.name}
-                      </Typography>
+                    
+                    {/* ✅ Image Preview */}
+                    {formData.imagePreview && (
+                      <Box sx={{ mt: 2, textAlign: "center" }}>
+                        <Typography variant="body2" gutterBottom>
+                          Image Preview:
+                        </Typography>
+                        <div
+                          style={{
+                            position: "relative",
+                            display: "inline-block",
+                            border: "2px solid #ddd",
+                            padding: "5px",
+                            borderRadius: "8px",
+                            background: "#f9f9f9",
+                          }}
+                        >
+                          <img
+                            src={formData.imagePreview}
+                            alt="Preview"
+                            style={{
+                              maxWidth: "250px",
+                              height: "auto",
+                              borderRadius: "8px",
+                            }}
+                          />
+                          <button
+                            onClick={handleRemoveImage}
+                            style={{
+                              position: "absolute",
+                              top: "-10px",
+                              right: "-10px",
+                              background: "red",
+                              color: "white",
+                              border: "none",
+                              borderRadius: "50%",
+                              width: "25px",
+                              height: "25px",
+                              cursor: "pointer",
+                              fontSize: "16px",
+                              fontWeight: "bold",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </Box>
                     )}
                   </Box>
                 </div>
               </div>
+
               <div className="p-2">
                 <Button
                   variant="contained"
                   color="secondary"
                   startIcon={!loading && <AddCircleIcon />}
-                  type="submit" // Changed to submit the form
+                  type="submit"
                   size="small"
                   style={{ textTransform: "none", width: "150px" }}
                 >
-                  {loading ? (
-                    <CircularProgress size="25px" sx={{ color: "white" }} />
-                  ) : (
-                    "Add Testimonial"
-                  )}
+                  {loading ? <CircularProgress size="25px" sx={{ color: "white" }} /> : "Add Testimonial"}
                 </Button>
               </div>
             </form>

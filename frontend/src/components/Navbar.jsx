@@ -39,7 +39,7 @@ export const Navbar = ({ mobileMenu, setMobileMenu }) => {
   const navItems = [
     { name: "Home", path: "/" },
     { name: "About us", path: "/about" },
-    { name: "Events", path: "/events" },
+    { name: "Events", path: "/event" },
     { name: "Services", path: "/services" },
     { name: "News", path: "/news" },
     { name: "Contact us", path: "/contact" },

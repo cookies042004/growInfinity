@@ -126,7 +126,7 @@ export const ViewNews = () => {
                             <TableCell>{article.url}</TableCell>
                             <TableCell>
                               <img
-                                src={`${process.env.BASE_URL}/${article.image}`}
+                                src={article.image}
                                 alt={article.title}
                                 style={{
                                   height: "100px",

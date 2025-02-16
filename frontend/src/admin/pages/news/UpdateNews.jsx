@@ -121,7 +121,7 @@ export const UpdateNews = () => {
                         Current News Image:
                       </Typography>
                       <img
-                        src={`${process.env.BASE_URL}/${data.news.image}`}
+                        src={data.news.image}
                         alt="Current News"
                         style={{
                           height: "100px",

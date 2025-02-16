@@ -45,7 +45,7 @@ export const Event = () => {
           {events &&
             events.map((event) => {
               const imageUrl =
-                `${process.env.BASE_URL}/${event.image[0]}`.replace(/\\/g, "/");
+                `${event.image[0]}`.replace(/\\/g, "/");
               return (
                 <div
                   className="col-span-12 md:col-span-6 lg:col-span-4 m-5"

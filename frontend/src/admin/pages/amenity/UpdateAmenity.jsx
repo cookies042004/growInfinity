@@ -148,7 +148,7 @@ export const UpdateAmenity = () => {
                         Current Amenity Image:
                       </Typography>
                       <img
-                        src={`${process.env.BASE_URL}/${data.amenity.image}`}
+                        src={data.amenity.image}
                         alt="Current Amenity Image"
                         style={{
                           height: "100px",

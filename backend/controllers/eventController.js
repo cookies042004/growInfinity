@@ -15,12 +15,10 @@ const createEvent = async (req, res) => {
     } = req.body;
     const image = [];
 
-    if (req.files && req.files.image) {
-      req.files.image.forEach((file) => {
+    if(req.files['images']){
+      req.files['images'].forEach((file) => {
         image.push(file.path);
-      });
-    } else {
-      console.log("Image file is required");
+      })
     }
 
     console.log("Image Path:", image);

@@ -65,17 +65,9 @@ export const ProjectDetails = () => {
     }
   }, [data]);
 
-  console.log("Property ID:", propertyId);
-  console.log("Property Data:", property);
-
-  console.log("property is", property);
-
   const images = property?.image ? property.image.map((item) => item) : [];
   const video = property?.video ? property.video.map((item) => item) : [];
 
-  console.log("IMAGE IN Project Details", images);
-
-  console.log("VIDEO IN Project Details", video);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFading, setIsFading] = useState(false);
@@ -325,7 +317,7 @@ export const ProjectDetails = () => {
                               >
                                 <div className="flex items-center gap-3 p-3 lg:p-5">
                                   <img
-                                    src={`${process.env.BASE_URL}/${item.image}`}
+                                    src={item.image}
                                     alt={item.name}
                                     className="h-[30px] w-[30px]"
                                   />
@@ -355,7 +347,7 @@ export const ProjectDetails = () => {
                               >
                                 <div className="flex items-center gap-3 p-3 lg:p-5">
                                   <img
-                                    src={`${process.env.BASE_URL}/${item.image}`}
+                                    src={item.image}
                                     alt={item.name}
                                     className="h-[30px] w-[30px]"
                                   />
@@ -389,7 +381,7 @@ export const ProjectDetails = () => {
                               >
                                 <div className="flex items-center gap-3 p-3 lg:p-5">
                                   <img
-                                    src={`${process.env.BASE_URL}/${item.image}`}
+                                    src={item.image}
                                     alt={item.name}
                                     className="h-[30px] w-[30px]"
                                   />
