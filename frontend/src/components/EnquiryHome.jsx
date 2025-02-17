@@ -1,8 +1,72 @@
 import React, { useState } from "react";
 import { Cancel } from "@mui/icons-material";
+import { Button, Typography, Modal, Box } from "@mui/material";
+import PersonIcon from "@mui/icons-material/Person";
+import PhoneIcon from "@mui/icons-material/Phone";
+import MessageIcon from '@mui/icons-material/Message';
+import MarkunreadIcon from "@mui/icons-material/Markunread";
+import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
 
-function EnquiryHome() {
+export const EnquiryHome = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (
+      !formData.firstName ||
+      !formData.lastName ||
+      !formData.email ||
+      !formData.phone ||
+      !formData.message
+    ) {
+      setError("All fields are required.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${process.env.BASE_URL}/api/v1/contact`,
+        {
+          name: `${formData.firstName} ${formData.lastName}`,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+        }
+      );
+      if (response.data.success) {
+        toast.success("Enquiry submitted successfully.");
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          phone: "",
+          otp: "",
+          message: "",
+        });
+        setOtpSent(false);
+        setVerified(false);
+        handleClose();
+      } else {
+        setError("There was an issue. Please try again.");
+      }
+    } catch (error) {
+      setError("Network error. Try again.");
+    }
+  };
+
   return (
     <>
       {/* Floating Button to Open Modal */}
@@ -53,50 +117,86 @@ function EnquiryHome() {
 
             {/* Form Fields */}
             <div className="mt-4">
-              <form>
-                <div className="grid grid-cols-2 gap-2">
-                  <input
-                    type="text"
-                    placeholder="First Name"
-                    className="p-2 border rounded-2xl w-full"
-                    required
-                  />
-                  <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="p-2 border rounded-2xl w-full"
-                    required
-                  />
-                </div>
+              <form className="mx-3 lg:mx-8 mt-6" onSubmit={handleSubmit}>
+                <div className="grid sm:grid-cols-12 gap-3">
+                  <div className="col-span-6">
+                    <div className="flex border rounded-lg items-center bg-white">
+                      <PersonIcon sx={{ color: "gray", margin: 1 }} />
+                      <input
+                        type="text"
+                        name="firstName"
+                        className="outline-none p-3 rounded-lg w-full"
+                        placeholder="First Name"
+                        value={formData.firstName}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-6">
+                    <input
+                      type="text"
+                      name="lastName"
+                      className="outline-none p-3 rounded-lg w-full border bg-white"
+                      placeholder="Last Name"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="col-span-12">
+                    <div className="flex border rounded-lg items-center bg-white">
+                      <PhoneIcon sx={{ color: "gray", margin: 1 }} />
+                      <input
+                        type="text"
+                        name="phone"
+                        className="outline-none p-3 rounded-lg w-full"
+                        placeholder="Phone Number"
+                        value={formData.phone}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="col-span-12">
+                    <div className="flex border rounded-lg items-center bg-white">
+                      <MarkunreadIcon sx={{ color: "gray", margin: 1 }} />
+                      <input
+                        type="email"
+                        name="email"
+                        className="outline-none p-3 rounded-lg w-full"
+                        placeholder="Email Address"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                      />
+                    </div>
+                  </div>
 
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  className="p-2 border rounded-2xl w-full mt-3"
-                  required
-                />
-                <input
-                  type="tel"
-                  placeholder="Phone"
-                  className="p-2 border rounded-2xl w-full mt-3"
-                  required
-                />
-                <textarea
-                  placeholder="Message"
-                  className="p-2 border rounded-2xl w-full mt-3"
-                  rows="3"
-                  required
-                ></textarea>
-
-                {/* Submit Button */}
-                <div className="mt-4 flex justify-center">
-                  <button
-                    type="submit"
-                    className="bg-[#03002E] text-white px-6 py-2 rounded-lg"
-                    style={{ boxShadow: "0px 5.46px 13.27px 0px #00000080" }}
-                  >
-                    Send
-                  </button>
+                  <div className="col-span-12">
+                    <div className="flex border rounded-lg items-center bg-white">
+                      <MessageIcon sx={{ color: "gray", margin: 1 }} />
+                    <textarea
+                      name="message"
+                      className="outline-none p-3 rounded-lg w-full"
+                      placeholder="Message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      required
+                    />
+                    </div>
+                  </div>
+                  <div className="col-span-12">
+                    <Button
+                      variant="contained"
+                      sx={{ backgroundColor: "#03002E" }}
+                      size="large"
+                      fullWidth
+                      type="submit"
+                    >
+                      Send
+                    </Button>
+                  </div>
                 </div>
               </form>
             </div>
@@ -105,6 +205,6 @@ function EnquiryHome() {
       </div>
     </>
   );
-}
+};
 
 export default EnquiryHome;

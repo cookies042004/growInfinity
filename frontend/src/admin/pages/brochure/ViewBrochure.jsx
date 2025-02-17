@@ -110,7 +110,7 @@ export const ViewBrochure = () => {
                             </TableCell>
                             <TableCell>
                               <img
-                                src={`${process.env.BASE_URL}/${brochure.image}`}
+                                src={brochure.image}
                                 alt={brochure.name}
                                 style={{
                                   height: "100px",

@@ -22,7 +22,6 @@ export const UpdateBrochure = () => {
 
   const { data, loading, error, refetch } = useFetchData(apiUrl);
 
-  console.log(data);
 
   // Load data into formData when the brochure is fetched
   useEffect(() => {
@@ -131,7 +130,7 @@ export const UpdateBrochure = () => {
                         Current Brochure Image:
                       </Typography>
                       <img
-                        src={`${process.env.BASE_URL}/${data.brochure.image}`}
+                        src={data.brochure.image}
                         alt="Current Brochure"
                         style={{
                           height: "100px",

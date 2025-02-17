@@ -23,7 +23,6 @@ const CustomNextArrow = ({ onClick }) => (
 export const Card = ({ category }) => {
   const apiUrl = `${process.env.BASE_URL}/api/v1/property`;
   const { data, loading, error } = useFetchData(apiUrl);
-  console.log(data, "lllllllllllllllllllll");
   const properties = data?.properties || [];
   // data?.properties?.filter(
   //   (property, index, self) => index === self.findIndex((p) => p._id === property._id)
@@ -73,12 +72,13 @@ export const Card = ({ category }) => {
       <Slider {...settings}>
         {filteredProperties.map((property) => (
           <div key={property._id}>
-            {console.log(property, ";;;;;;;;;;;;;;;;;;;;;;;;;;;;")}
+            {console.log("property in card.jsx file is ",property)}
             <PropertyCard
               customcategory={category} //only for all category
               category={property?.category?.name} //only for all category
               id={property._id}
               name={property.name}
+              slug={property.slug}
               image={property.image[0]}
               location={property.location}
               builder={property.builder}

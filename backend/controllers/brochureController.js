@@ -1,6 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 const Brochure = require("../models/brochure");
+const cloudinary = require("cloudinary").v2;
+
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 // Create brochure
 const createBrochure = async (req, res) => {
@@ -94,67 +102,51 @@ const deleteBrochure = async (req, res) => {
       });
     }
 
-    const imagePath = path.join(
-      __dirname,
-      "..",
-      "uploads/brochures",
-      path.basename(deletedBrochure.image)
-    );
+    // Helper function to extract Cloudinary public ID
+    const getPublicId = (url) => {
+      return url.split("/").slice(-2).join("/").split(".")[0]; // Extracts "brochures/hpah6bzrdsyij8zlqpbv"
+    };
 
-    // Check if the image file exists before deleting it
-    fs.access(imagePath, fs.constants.F_OK, (err) => {
-      if (!err) {
-        // If file exists, delete it
-        fs.unlink(imagePath, (err) => {
-          if (err) {
-            console.error("Failed to delete image file:", err);
-          } else {
-            console.log("Image file deleted:", imagePath);
-          }
-        });
-      } else {
-        console.log(err);
-      }
-    });
+    // Delete image from Cloudinary
+    if (deletedBrochure.image) {
+      const oldImagePublicId = getPublicId(deletedBrochure.image);
+      cloudinary.uploader.destroy(oldImagePublicId, (err, result) => {
+        if (err) {
+          console.error(`Error deleting old image from Cloudinary: ${err.message}`);
+        } else {
+          console.log(`Cloudinary delete result (image): ${result}`);
+        }
+      });
+    }
 
-    const pdfPath = path.join(
-      __dirname,
-      "..",
-      "uploads/brochures",
-      path.basename(deletedBrochure.pdf)
-    );
+    // Delete PDF from Cloudinary
+    if (deletedBrochure.pdf) {
+      const oldPdfPublicId = getPublicId(deletedBrochure.pdf);
+      cloudinary.uploader.destroy(oldPdfPublicId, { resource_type: "raw" }, (err, result) => {
+        if (err) {
+          console.error(`Error deleting old PDF from Cloudinary: ${err.message}`);
+        } else {
+          console.log(`Cloudinary delete result (PDF): ${result}`);
+        }
+      });
+    }
 
-    // Check if the pdf file exists before deleting it
-    fs.access(pdfPath, fs.constants.F_OK, (err) => {
-      if (!err) {
-        fs.unlink(pdfPath, (err) => {
-          if (err) {
-            console.error("Failed to delete PDF file:", err);
-          } else {
-            console.log("PDF file deleted:", pdfPath);
-          }
-        });
-      } else {
-        console.log("PDF file not found:", pdfPath);
-      }
-    });
-
-    const brochure = await Brochure.find();
+    const brochures = await Brochure.find(); // Fetch remaining brochures
 
     res.status(200).json({
       success: true,
       message: "Brochure deleted successfully",
-      brochure,
+      brochures,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).json({
       success: false,
       message: "Internal Server Error",
-      error: error,
+      error,
     });
   }
 };
+
 
 // Update Brochure
 const updateBrochure = async (req, res) => {
@@ -174,16 +166,24 @@ const updateBrochure = async (req, res) => {
 
     let updatedFields = { name, location };
 
+    // Helper function to extract Cloudinary public ID
+    const getPublicId = (url) => {
+      return url.split("/").slice(-2).join("/").split(".")[0]; // Extracts "brochures/hpah6bzrdsyij8zlqpbv"
+    };
+
     // Handle image upload
     if (req.files && req.files.image) {
       const imagePath = req.files.image[0].path;
       updatedFields.image = imagePath;
 
+      // Delete old image from Cloudinary
       if (existingBrochure.image) {
-        const oldImagePath = path.join(__dirname, "..", existingBrochure.image);
-        fs.unlink(oldImagePath, (err) => {
+        const oldImagePublicId = getPublicId(existingBrochure.image);
+        cloudinary.uploader.destroy(oldImagePublicId, (err, result) => {
           if (err) {
-            console.error(`Error deleting old image: ${err.message}`);
+            console.error(`Error deleting old image from Cloudinary: ${err.message}`);
+          } else {
+            console.log(`Cloudinary delete result (image): ${result}`);
           }
         });
       }
@@ -194,11 +194,14 @@ const updateBrochure = async (req, res) => {
       const pdfPath = req.files.pdf[0].path;
       updatedFields.pdf = pdfPath;
 
+      // Delete old PDF from Cloudinary
       if (existingBrochure.pdf) {
-        const oldPdfPath = path.join(__dirname, "..", existingBrochure.pdf);
-        fs.unlink(oldPdfPath, (err) => {
+        const oldPdfPublicId = getPublicId(existingBrochure.pdf);
+        cloudinary.uploader.destroy(oldPdfPublicId, { resource_type: "raw" }, (err, result) => {
           if (err) {
-            console.error(`Error deleting old PDF: ${err.message}`);
+            console.error(`Error deleting old PDF from Cloudinary: ${err.message}`);
+          } else {
+            console.log(`Cloudinary delete result (PDF): ${result}`);
           }
         });
       }
@@ -226,6 +229,7 @@ const updateBrochure = async (req, res) => {
     });
   }
 };
+
 
 module.exports = {
   createBrochure,

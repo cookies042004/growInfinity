@@ -11,12 +11,9 @@ export const EnquiryForm = ({ handleClose, open }) => {
     lastName: "",
     email: "",
     phone: "",
-    otp: "",
     message: "",
   });
   const [error, setError] = useState("");
-  const [otpSent, setOtpSent] = useState(false);
-  const [verified, setVerified] = useState(false);
 
   const style = {
     position: "absolute",
@@ -37,53 +34,6 @@ export const EnquiryForm = ({ handleClose, open }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const requestOtp = async () => {
-    if (!formData.email) {
-      toast.error("Please enter an email.");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${process.env.BASE_URL}/api/v1/email/send-otp`,
-        {
-          email: formData.email,
-        }
-      );
-      if (response.data.success) {
-        setOtpSent(true);
-        toast.success("OTP sent to your email.");
-      } else {
-        toast.error("Failed to send OTP.");
-      }
-    } catch (error) {
-      toast.error("Error sending OTP. Try again.");
-    }
-  };
-
-  const verifyOtp = async () => {
-    if (!formData.otp) {
-      toast.error("Please enter the OTP.");
-      return;
-    }
-    try {
-      const response = await axios.post(
-        `${process.env.BASE_URL}/api/v1/email/verify-otp`,
-        {
-          email: formData.email,
-          otp: formData.otp,
-        }
-      );
-      if (response.data.success) {
-        setVerified(true);
-        toast.success("OTP verified!");
-      } else {
-        toast.error("Invalid OTP.");
-      }
-    } catch (error) {
-      toast.error("OTP verification failed.");
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
@@ -91,16 +41,12 @@ export const EnquiryForm = ({ handleClose, open }) => {
       !formData.lastName ||
       !formData.email ||
       !formData.phone ||
-      !formData.message ||
-      !formData.otp
+      !formData.message
     ) {
       setError("All fields are required.");
       return;
     }
-    if (!verified) {
-      setError("Please verify OTP before submitting.");
-      return;
-    }
+
     try {
       const response = await axios.post(
         `${process.env.BASE_URL}/api/v1/contact`,
@@ -193,35 +139,9 @@ export const EnquiryForm = ({ handleClose, open }) => {
                     onChange={handleChange}
                     required
                   />
-                  <button
-                    type="button"
-                    onClick={requestOtp}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    {otpSent ? "Resend OTP" : "Send OTP"}
-                  </button>
                 </div>
               </div>
-              {otpSent && (
-                <div className="col-span-12">
-                  <input
-                    type="number"
-                    name="otp"
-                    className="outline-none p-3 rounded-lg w-full border bg-white"
-                    placeholder="Enter OTP"
-                    value={formData.otp}
-                    onChange={handleChange}
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={verifyOtp}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2"
-                  >
-                    Verify OTP
-                  </button>
-                </div>
-              )}
+              
               <div className="col-span-12">
                 <textarea
                   name="message"
