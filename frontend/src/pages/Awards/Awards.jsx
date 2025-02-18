@@ -45,7 +45,7 @@ export const Awards = () => {
             {awards?.map((award, i) => {
               return (
                 <div key={award._id} className="col-span-12 md:col-span-6 lg:col-span-4 m-5">
-                  <img src={`${process.env.BASE_URL}/${award.image}`} alt="" />
+                  <img src={award.image} alt="" />
                 </div>
               );
             })}

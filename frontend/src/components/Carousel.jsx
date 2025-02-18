@@ -1,67 +1,58 @@
 import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Carousel = ({ galleryImages }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(null);
-  const [isExpanded,setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
-    if(isExpanded){
-      document.body.style.overflow = "hidden"
-    }
-    else{
-      document.body.style.overflow = "auto"
-    }
-
+    document.body.style.overflow = isExpanded ? "hidden" : "auto";
     return () => {
-      document.body.style.overflow =  "auto"
-    }
-  },[isExpanded])
+      document.body.style.overflow = "auto";
+    };
+  }, [isExpanded]);
 
-  // Handle next slide
   const nextSlide = () => {
-    setActiveIndex((prevIndex) => (prevIndex + 1) % galleryImages.length);
+    setActiveIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
-  // Handle previous slide
   const prevSlide = () => {
-    setActiveIndex((prevIndex) =>
-      prevIndex === 0 ? galleryImages.length - 1 : prevIndex - 1
+    setActiveIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
     );
   };
 
-  // Open modal with selected image
   const openModal = (index) => {
+    console.log("Opening modal for index:", index);
     setModalImageIndex(index);
     setIsModalOpen(true);
     setIsExpanded(true);
   };
 
-  // Close modal
   const closeModal = () => {
     setIsModalOpen(false);
     setModalImageIndex(null);
     setIsExpanded(false);
   };
 
-  // Modal Next Slide
   const nextModalSlide = (e) => {
-    e.stopPropagation(); // Prevent closing modal when clicking the button
-    setModalImageIndex((prevIndex) => (prevIndex + 1) % galleryImages.length);
+    e.stopPropagation();
+    setModalImageIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
-  // Modal Previous Slide
   const prevModalSlide = (e) => {
     e.stopPropagation();
-    setModalImageIndex((prevIndex) =>
-      prevIndex === 0 ? galleryImages.length - 1 : prevIndex - 1
+    setModalImageIndex((prev) =>
+      prev === 0 ? galleryImages.length - 1 : prev - 1
     );
   };
 
   return (
-    <div className="grid sm:grid-cols-12 gap-4"> 
-      {/* Main Carousel */}
+    <div className="grid sm:grid-cols-12 gap-4">
+      {/* Main Image Slider */}
       <div className="lg:col-span-8 relative">
         <div className="relative w-full border rounded-xl overflow-hidden transition transform duration-500 hover:scale-105">
           <div className="relative overflow-hidden h-[280px] md:h-[350px] lg:h-[402px]">
@@ -70,10 +61,14 @@ const Carousel = ({ galleryImages }) => {
               style={{ transform: `translateX(-${activeIndex * 100}%)` }}
             >
               {galleryImages.map((image, index) => (
-                <div key={index} className="w-full flex-shrink-0" style={{ flex: "0 0 100%" }}>
+                <div
+                  key={index}
+                  className="w-full flex-shrink-0"
+                  style={{ flex: "0 0 100%" }}
+                >
                   <img
                     src={image}
-                    className="block h-[28px] md:h-[350px] lg:h-[400px] w-full rounded-xl shadow-lg object-contain cursor-pointer"
+                    className="block h-[280px] md:h-[350px] lg:h-[400px] w-full rounded-xl shadow-lg object-contain cursor-pointer"
                     alt={`Slide ${index + 1}`}
                     onClick={() => openModal(index)}
                   />
@@ -81,24 +76,10 @@ const Carousel = ({ galleryImages }) => {
               ))}
             </div>
           </div>
-
-          {/* Slider Controls
-          <button
-            className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg z-30"
-            onClick={prevSlide}
-          >
-            ◀
-          </button>
-          <button
-            className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg z-30"
-            onClick={nextSlide}
-          >
-            ▶
-          </button> */}
         </div>
       </div>
 
-      {/* Side Thumbnails */}
+      {/* Side Thumbnail Preview */}
       <div className="hidden rounded-xl lg:block lg:col-span-4">
         <div className="flex flex-col gap-3 border rounded-xl">
           <img
@@ -124,44 +105,66 @@ const Carousel = ({ galleryImages }) => {
         </div>
       </div>
 
-      {/* Modal for Image Expansion */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
-          onClick={closeModal}
+      {/* Image Modal */}
+      {isModalOpen && modalImageIndex !== null && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-50">
+    {/* Background Overlay to ensure proper layout */}
+    <div className="absolute inset-0 flex justify-center items-center">
+      <motion.img
+        key={modalImageIndex}
+        src={galleryImages[modalImageIndex]}
+        alt={`Image ${modalImageIndex + 1}`}
+        className="w-full h-full object-contain"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      />
+    </div>
+
+    {/* Navigation Buttons */}
+    <button
+      onClick={prevModalSlide}
+      className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-3 rounded-full"
+    >
+      <ChevronLeft size={32} />
+    </button>
+    <button
+      onClick={nextModalSlide}
+      className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-3 rounded-full"
+    >
+      <ChevronRight size={32} />
+    </button>
+
+    {/* Thumbnail Previews */}
+    <div className="absolute bottom-8 right-8 flex gap-3">
+      {galleryImages.map((img, index) => (
+        <motion.div
+          key={index}
+          className={`relative w-20 h-16 rounded-lg cursor-pointer overflow-hidden ${
+            modalImageIndex === index ? "border-2 border-white" : ""
+          }`}
+          whileHover={{ scale: 1.1 }}
+          onClick={() => setModalImageIndex(index)}
         >
-          <div className="relative p-4">
-            {/* Close Button */}
-            <button
-              className="absolute top-2 right-2 bg-white text-black p-2 rounded-full shadow-lg"
-              onClick={closeModal}
-            >
-              ✖
-            </button>
+          <img
+            src={img}
+            alt={`Thumbnail ${index + 1}`}
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+      ))}
+    </div>
 
-            {/* Modal Image */}
-            <img
-              src={galleryImages[modalImageIndex]}
-              className="max-w-[90vw] max-h-[90vh] object-contain"
-              alt="Expanded"
-            />
+    {/* Close Button */}
+    <button
+      className="absolute top-6 right-6 md:top-4 md:right-4 bg-white/70 p-3 rounded-full z-[60]"
+      onClick={closeModal}
+    >
+      ✖
+    </button>
+  </div>
+)}
 
-            {/* Modal Navigation Buttons */}
-            <button
-              className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg"
-              onClick={prevModalSlide}
-            >
-              ◀
-            </button>
-            <button
-              className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white text-black p-2 rounded-full shadow-lg"
-              onClick={nextModalSlide}
-            >
-              ▶
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
