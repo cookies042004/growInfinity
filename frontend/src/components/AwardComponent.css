@@ -1,49 +1,84 @@
-.awards-swiper {
-  width: 100%;
-  height: 500px;
+/* Award Section Styling */
+.main {
   position: relative;
-  overflow: hidden; 
-}
-
-
-.award-slide {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: transform 0.3s ease-in-out;
-  height: 100%;
-}
-
-.award-slide img {  
   width: 100%;
-  height: 100%; 
-  object-fit: cover;
-  transition: transform 0.5s, box-shadow 0.5s;
-  transform: scale(0.7);
-}
-
-.award-slide:hover img {
-  transform: scale(1.1);
-  box-shadow: 0px 15px 30px rgba(33, 31, 31, 0.3);
-}
-
-.swiper-slide {
-  width: auto;
-  max-width: 500px;
-}
-
-.swiper-wrapper {
+  height: 50vh;
+  overflow: hidden;
+  background-color: #0e1d34;
   display: flex;
-  flex-wrap: nowrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
-  .panorama-3d-swiper {
-    height: 300px;
-  }
+/* Curved Background Effect (Inside Curve) */
+.main::before,
+.main::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  width: 120%;
+  height: 250px; /* Adjust for better curve */
+  background-color: #737fa1;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
 
-  .swiper-slide img {
-    width: 80%;
-    height: auto;
+/* Top Curve (Push Downwards) */
+.main::before {
+  top: -200px;
+  box-shadow: 0px -10px 20px rgba(0, 0, 0, 0.2); /* Shadow for depth */
+}
+
+/* Bottom Curve (Push Upwards) */
+.main::after {
+  bottom: -170px;
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.outer{
+  display: flex;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.outer::-webkit-scrollbar{
+  display: none;
+}
+
+.inner{
+  flex: 0 0 33%;
+  width: 33%;
+}
+
+.slide{
+  width: 100%;
+  height: 100%;
+  border: 10px solid #060606;
+  scroll-snap-align: center;
+}
+
+.slide img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main {
+    height: 40vh;
+  }
+  
+  .main::before {
+    top: -80px;
+    height: 180px;
+  }
+  
+  .main::after {
+    bottom: -80px;
+    height: 180px;
   }
 }

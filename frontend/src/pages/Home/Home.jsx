@@ -344,29 +344,10 @@ export const Home = () => {
           <h1 className="text-center text-3xl lg:text-4xl text-white font-medium mb-6">
             Awards
           </h1>
-          <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="grid sm:grid-cols-1 lg:grid gap-8">
             {/* Award Images Section */}
-            <div className="flex justify-center lg:justify-start perspective-[100px]">
+            <div className="flex justify-center lg:justify-start">
               <AwardComponent />
-            </div>
-
-            {/* Award Content Section */}
-            <div className="text-white text-lg text-justify lg:px-12">
-              <p className="text-sm lg:text-lg mb-3">
-                At Grow Infinity Realtors, we believe that our dedication to
-                excellence speaks volumes, and it’s a privilege to see this
-                dedication acknowledged by the real estate community and our
-                valued clients. Each award we receive is a reflection of the
-                trust and confidence that clients place in us, motivating us to
-                continuously raise the bar in service and results.
-              </p>
-              <p className="text-sm lg:text-lg mt-3">
-                These awards are more than just accolades; they are milestones
-                that reinforce our mission to serve with integrity, innovation,
-                and unmatched expertise. At Grow Infinity Realtors, your trust
-                fuels our ambition, and we remain steadfast in our journey to
-                redefine excellence in real estate.
-              </p>
             </div>
           </div>
 

@@ -1,8 +1,5 @@
 import React from "react";
-// Import Swiper React components
-import { Swiper, SwiperSlide } from "swiper/react";
-// Import Swiper modules
-import { Autoplay, Navigation, EffectCoverflow } from "swiper/modules";
+import { useRef } from "react";
 
 // Import Swiper styles
 import "swiper/css";
@@ -18,6 +15,18 @@ export const AwardComponent = () => {
   const { data, loading, error } = useFetchData(apiUrl);
   const awards = data?.awards || [];
 
+  const scrollContainer = useRef(null);
+
+  const scroll = (direction) => {
+    if (direction === "prev") {
+      scrollContainer.current.scrollLeft -= 200;
+    } else {
+      scrollContainer.current.scrollLeft += 200;
+    }
+  }
+
+
+
   return (
     <div className="my-10">
       {loading && (
@@ -31,37 +40,53 @@ export const AwardComponent = () => {
         </div>
       )}
       {awards && (
-        <div >
-          <Swiper
-            effect={"coverflow"} // 3D Effect
-            grabCursor={true}
-            centeredSlides={true}
-            slidesPerView={'auto'}
-            loop={true}  
-            autoplay={{
-              delay: 300, // Auto-slide every 3 seconds
-              disableOnInteraction: false, // Keep autoplay even when interacting
-            }}
-            coverflowEffect={{
-              rotate: 0,
-              stretch: 100,
-              depth: 100,
-              modifier: 2,
-              slideShadows: false,
-            }}
-            modules={[Autoplay, Navigation, EffectCoverflow]} // Enable modules
-            className="awards-swiper"
-          >
-            {awards.map((award) => (
-              <SwiperSlide key={award._id} className="award-slide">
-                <img
-                  src={award.image}
-                  className="h-[300px] w-[300px] lg:h-[500px] lg:w-[450px] object-cover"
-                />
-              </SwiperSlide>
+        // <div>
+        //   <Swiper
+        //     effect={"coverflow"}
+        //     grabCursor={true}
+        //     centeredSlides={true}
+        //     slidesPerView={'auto'}
+        //     loop={true}
+        //     autoplay={{
+        //       delay: 30000,
+        //       disableOnInteraction: false,
+        //     }}
+        //     coverflowEffect={{
+        //       rotate: 0,
+        //       stretch: 100,
+        //       depth: 100,
+        //       modifier: 2,
+        //       slideShadows: false,
+        //     }}
+        //     modules={[Autoplay, Navigation, EffectCoverflow]}
+        //     className="awards-swiper"
+        //   >
+        //     {awards.map((award) => (
+        //       <SwiperSlide key={award._id} className="award-slide">
+        //         <img
+        //           src={award.image}
+        //           className="award-image" // Add a specific class for the image
+        //         />
+        //       </SwiperSlide>
+        //     ))}
+        //   </Swiper>
+        // </div>
+        <section className="main">
+          <div className="outer">
+            {awards.map((image, index) => (
+              <div className="inner" key={index}>
+                <div className="slide">
+                  <img src={image.image} alt={`Slide ${index + 1}`} />
+                </div>
+              </div>
             ))}
-          </Swiper>
-        </div>
+          </div>
+
+          <div className="button-container">
+            <button className="scroll-btn" onClick={() => scroll("prev")}>‹ Prev</button>
+            <button className="scroll-btn" onClick={() => scroll("next")}>Next ›</button>
+          </div>
+        </section>
       )}
     </div>
   );
