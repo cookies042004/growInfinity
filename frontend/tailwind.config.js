@@ -8,8 +8,10 @@ export default {
         poppins: ["Poppins", "sans-serif"],
         inter: ["Inter", "sans-serif"],
         roboto: ["Roboto", "sans-serif"],
-
       },
+      colors:{
+        darkBlue: "#03002a",
+      }
     },
   },
   plugins: [

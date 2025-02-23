@@ -27,11 +27,19 @@ export const Testimonials = () => {
   return (
     <>
       {/* Testimonial  */}
-      <div className="bg-[#FFF8F6] lg:py-8 lg:px-16">
+      <div className="bg-[#FFF8F6] py-2 lg:py-4 lg:px-16 px-10">
+        <h1 className="flex justify-center items-center text-2xl lg:text-5xl my-4 font-medium">
+          <hr className="border-t-4 border-black my-4 w-[200px] h-[2px]" />{" "}
+          &nbsp; Testimonals &nbsp;
+          <hr className="border-t-4 border-black my-4 w-[200px] h-[2px]" />
+        </h1>
+        <h1 className="flex justify-center items-center text-xl lg:text-3xl lg:my-6">
+          Words That Speak Louder Than Promises.
+        </h1>
         <div className="grid sm:grid-cols-12 gap-5 max-w-[1280px] mx-auto">
           <div className="col-span-12 lg:col-span-6 flex justify-center">
             <div className="m-3 lg:m-5 px-5 lg:px-7 lg:py-10 font-roboto lg:pe-20 flex flex-col items-center ">
-              <h1 className="text-xl lg:text-4xl text-[#1A1A1A] my-4 font-medium">
+              <h1 className="text-2xl lg:text-4xl text-[#1A1A1A] my-4 font-medium">
                 What our customers are saying us?
               </h1>
               <p className="text-[#1A1A1A] text-md lg:text-lg text-justify my-5 lg:pe-20">
@@ -42,13 +50,13 @@ export const Testimonials = () => {
                 trusted choice for all your real estate needs.
               </p>
               <div className="flex justify-end lg:justify-start gap-10 w-full">
-                <div className="flex-col mt-5 lg:mt-10">
+                <div className="flex-col mt-5 lg:mt-5">
                   <h3 className="font-medium text-[#1A1A1A] text-sm lg:text-2xl">
                     10m+
                   </h3>
                   <p className="text-xs lg:text-lg">Happy People</p>
                 </div>
-                <div className="flex-col mt-5 lg:mt-10">
+                <div className="flex-col mt-5 lg:mt-5">
                   <h3 className="font-medium text-[#1A1A1A] text-sm lg:text-2xl">
                     4.88
                   </h3>
@@ -79,7 +87,7 @@ export const Testimonials = () => {
               </div>
             </div>
           </div>
-          <div className="col-span-12 lg:col-span-6 flex justify-center testimonial-container">
+          <div className="lg:my-4 lg:p-5 col-span-12 lg:col-span-6 flex justify-center testimonial-container pb-20 lg:h-[500px] shadow-[0px_0px_20px_rgba(0,0,0,0.3)]">
             {loading && (
               <div className="flex items-center justify-center">
                 <CircularProgress size="30px" />
@@ -93,9 +101,9 @@ export const Testimonials = () => {
 
             <button
               ref={prevRef}
-              className="absolute left-20 bottom-1/4 transform -translate-y-1/2 z-10 bg-gray-200 p-3 rounded-full hover:bg-gray-300 transition"
+              className="absolute left-32 lg:left-40 bottom-[75px] lg:bottom-[35px] transform -translate-y-[-1px] lg:-translate-y-[1px] z-10 bg-gray-200 p-1 lg:p-3 rounded-full hover:bg-gray-300 transition"
             >
-              <FaChevronLeft className="text-gray-600" />
+              <FaChevronLeft className="text-black" />
             </button>
             {testimonials && (
               <div className="relative">
@@ -130,7 +138,7 @@ export const Testimonials = () => {
                 >
                   {testimonials.map((testimonial) => (
                     <SwiperSlide key={testimonial._id}>
-                      <div className="py-8 lg:py-16 font-roboto lg:ps-26">
+                      <div className="py-8 px-10 lg:py-16 font-roboto lg:ps-26">
                         <div className="flex-col items-center gap-4 testimonial-item">
                           <div className="flex items-center gap-5">
                             <img
@@ -166,9 +174,9 @@ export const Testimonials = () => {
             )}
             <button
               ref={nextRef}
-              className="absolute right-20 bottom-1/4 transform -translate-y-1/2 z-10 bg-gray-200 p-3 rounded-full hover:bg-gray-300 transition"
+              className="absolute right-32 lg:right-40 bottom-[75px] lg:bottom-[35px] transform -translate-y-[-1px] lg:-translate-y-[1px] z-10 bg-gray-200 p-1 lg:p-3 rounded-full hover:bg-gray-300 transition"
             >
-              <FaChevronRight className="text-gray-600" />
+              <FaChevronRight className="text-black" />
             </button>
           </div>
         </div>

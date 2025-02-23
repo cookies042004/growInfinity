@@ -35,26 +35,26 @@ export const PropertyCard = ({
   function toINRCr(amount) {
     // writing code for converting amount in lakhs and crores
     if (amount < 10000000) {
-      return (amount / 100000).toFixed(1) + " Lakhs";
+      return (amount / 100000).toFixed(1) + " Lac";
     } else {
-      return (amount / 10000000).toFixed(1) + " Crore";
+      return (amount / 10000000).toFixed(1) + " Cr";
     }
   }
 
   // function for unit selection on the basis of sizeUnit
   function selectUnit(sizeUnit) {
     if (sizeUnit === "sqFt") {
-      return size + " sqFt";
+      return size + " sq.ft.";
     } else if (sizeUnit === "yard") {
-      return size + " yard";
+      return size + " sq.yd.";
     }
   }
 
   function divide(sizeUnit) {
     if (sizeUnit === "sqFt") {
-      return Math.trunc(price / size) + " /  sqFt";
+      return Math.trunc(price / size) + " /  sq.ft.";
     } else if (sizeUnit === "yard") {
-      return Math.trunc(price / size) + " / yard";
+      return Math.trunc(price / size) + " / sq.yd.";
     }
   }
 

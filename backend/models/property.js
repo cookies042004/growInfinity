@@ -73,7 +73,23 @@ const propertySchema = new mongoose.Schema(
     video: {
       type: [String]  ,
       required: false,
-    }
+    },
+    dp:{
+      type: [String],
+      required: false,
+    },
+    projectSize:{
+      type: String,
+      required: false,
+    },
+    projectStatus:{
+      type: String,
+      required: false,
+    },
+    totalUnits:{
+      type: Number,
+      required: false,
+    },
   },
   { timestamps: true }
 );

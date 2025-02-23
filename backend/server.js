@@ -20,6 +20,7 @@ const propertyEnquiryRoutes = require("./routes/propertyEnquiryRoutes");
 const awardsRoutes = require("./routes/awardsRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
 const emailRoutes = require("./routes/emailRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 
 // Middleware
 const corsOptions = {
@@ -48,6 +49,7 @@ app.use("/api/v1/property-enquiry", propertyEnquiryRoutes);
 app.use("/api/v1/awards", awardsRoutes);
 app.use("/api/v1/testimonials", testimonialRoutes);
 app.use("/api/v1/email", emailRoutes);
+app.use("/api/reviews",reviewRoutes);
 
 
 app.listen(process.env.PORT, () => {

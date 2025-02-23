@@ -1,14 +1,12 @@
-import React from "react";
-import { useRef } from "react";
+import React, { useRef } from "react";
+import { CircularProgress } from "@mui/material";
+import { useFetchData } from "../hooks/useFetchData";
 
-// Import Swiper styles
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/effect-coverflow";
 
 import "./AwardComponent.css";
-import { useFetchData } from "../hooks/useFetchData";
-import { CircularProgress } from "@mui/material";
 
 export const AwardComponent = () => {
   const apiUrl = `${process.env.BASE_URL}/api/v1/awards`;
@@ -18,14 +16,14 @@ export const AwardComponent = () => {
   const scrollContainer = useRef(null);
 
   const scroll = (direction) => {
-    if (direction === "prev") {
-      scrollContainer.current.scrollLeft -= 200;
-    } else {
-      scrollContainer.current.scrollLeft += 200;
+    if (scrollContainer.current) {
+      if (direction === "prev") {
+        scrollContainer.current.scrollLeft -= 400;
+      } else {
+        scrollContainer.current.scrollLeft += 400;
+      }
     }
-  }
-
-
+  };
 
   return (
     <div className="my-10">
@@ -39,52 +37,34 @@ export const AwardComponent = () => {
           <p>Something went wrong while loading the awards.</p>
         </div>
       )}
-      {awards && (
-        // <div>
-        //   <Swiper
-        //     effect={"coverflow"}
-        //     grabCursor={true}
-        //     centeredSlides={true}
-        //     slidesPerView={'auto'}
-        //     loop={true}
-        //     autoplay={{
-        //       delay: 30000,
-        //       disableOnInteraction: false,
-        //     }}
-        //     coverflowEffect={{
-        //       rotate: 0,
-        //       stretch: 100,
-        //       depth: 100,
-        //       modifier: 2,
-        //       slideShadows: false,
-        //     }}
-        //     modules={[Autoplay, Navigation, EffectCoverflow]}
-        //     className="awards-swiper"
-        //   >
-        //     {awards.map((award) => (
-        //       <SwiperSlide key={award._id} className="award-slide">
-        //         <img
-        //           src={award.image}
-        //           className="award-image" // Add a specific class for the image
-        //         />
-        //       </SwiperSlide>
-        //     ))}
-        //   </Swiper>
-        // </div>
+      {awards.length > 0 && (
         <section className="main">
-          <div className="outer">
-            {awards.map((image, index) => (
+          <div className="button-container transform -translate-y-[-80px] lg:-translate-y-[-150px] z-10 left-[130px] lg:left-[580px]">
+            <button
+              className="scroll-btn left-arrow"
+              onClick={() => scroll("prev")}
+            >
+              ‹
+            </button>
+          </div>
+
+          <div className="outer" ref={scrollContainer}>
+            {awards.map((award, index) => (
               <div className="inner" key={index}>
                 <div className="slide">
-                  <img src={image.image} alt={`Slide ${index + 1}`} />
+                  <img src={award.image} alt={`Award ${index + 1}`} />
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="button-container">
-            <button className="scroll-btn" onClick={() => scroll("prev")}>‹ Prev</button>
-            <button className="scroll-btn" onClick={() => scroll("next")}>Next ›</button>
+          <div className="button-container transform -translate-y-[-80px] lg:-translate-y-[-150px] z-10 right-[130px] lg:right-[580px]">
+            <button
+              className="scroll-btn right-arrow"
+              onClick={() => scroll("next")}
+            >
+              ›
+            </button>
           </div>
         </section>
       )}

@@ -19,29 +19,42 @@
 
 .navbar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  background-color: #1e293b; /* Dark Slate */
-  padding: 10px 0;
+  grid-template-columns: repeat(6, 1fr);
   text-align: center;
   transition: all 0.3s ease-in-out;
-  position: sticky;
-  border-radius: 10px;
+  border-bottom: 3px solid #03002a;
+}
+
+.navbar.sticky{
+  background-color: white;
+  position: fixed;  
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 15%;
+  z-index: 1000;
+  border-bottom: none;
+  padding: 10px;
 }
 
 .navbar a {
   text-decoration: none;
-  color: #facc15; /* Yellow */
+  color: #03002a;
   font-size: 1rem;
   font-weight: 600;
   padding: 10px;
   display: block;
-  transition: color 0.3s ease-in-out;
+  width: 100%;
+  transition: all 0.3s ease-in-out;
 }
 
 .navbar a:hover {
-  color: #fde047; /* Lighter Yellow */
+  color: #fff;
+  background-color: #03002a;
   transform: scale(1.05);
+  border-radius: 5px;
 }
+
 
 @media (max-width: 768px) {
   .navbar {

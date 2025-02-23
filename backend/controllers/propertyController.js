@@ -86,10 +86,14 @@ const createProperty = async (req, res) => {
       address,
       furnishType,
       amenities,
+      projectStatus,
+      projectSize,
+      totalUnits
     } = req.body;
 
     const image = [];
     const video = [];
+    const dp = [];
 
     if(req.files['images']){
       req.files['images'].forEach((file) => {
@@ -102,6 +106,14 @@ const createProperty = async (req, res) => {
         video.push(file.path);
       })
     }
+
+    if(req.files['image']){
+      req.files['image'].forEach((file) => {
+        dp.push(file.path);
+      })
+    }
+
+    console.log("dp", dp);
 
     // const propertyImages = req.files.propertyImages.map((file) => file.path);
     // const brochure = req.files.brochure[0].path;
@@ -121,10 +133,16 @@ const createProperty = async (req, res) => {
       furnishType,
       amenities,
       image,
-      video
+      video,
+      dp,
+      projectStatus,
+      projectSize,
+      totalUnits
     });
 
     await newProperty.save();
+
+    console.log("Property created successfully", newProperty);
 
     res.status(201).json({
       success: true,

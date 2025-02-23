@@ -55,7 +55,7 @@ export const Calculator = () => {
   };
 
   return (
-    <div className="max-w-[1280px] mx-auto my-5 bg-white rounded-lg shadow-lg p-8 lg:p-10 border">
+    <div className="max-w-[1280px] mx-auto my-5 bg-white rounded-lg shadow-lg shadow-gray- p-8 lg:p-10 border">
       <div className="grid grid-cols-1">
         {/* Header Section */}
         <div className="col-span-2 mb-6">

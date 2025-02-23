@@ -20,17 +20,21 @@
   transform: translateX(100%);
 }
 
+.testimonial-swiper {
+  width: 100% !important;
+  max-width: 600px;
+}
+
 @media screen and (max-width: 900px) {
   .testimonial-swiper {
     width: 400px !important;
-    height: 400px !important;
+    height: auto !important;
   }
-
 }
+
 @media screen and (max-width: 430px) {
   .testimonial-swiper {
     width: 300px !important;
-    height: 300px !important;
+    height: auto !important;
   }
-
 }

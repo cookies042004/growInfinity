@@ -21,7 +21,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import "./AddProperty.css";
-import {toWords} from "number-to-words";
+import { toWords } from "number-to-words";
 
 export const AddProperty = () => {
   document.title = "Add Property";
@@ -64,6 +64,9 @@ export const AddProperty = () => {
     flatAmenities: [],
     locationAdvantages: [],
     propertyType: "",
+    projectStatus: "",
+    projectSize: "",
+    totalUnits: "",
   });
 
   // State to manage select all
@@ -75,10 +78,13 @@ export const AddProperty = () => {
   const [uploadedImages, setUploadedImages] = useState([]);
   // State to track uploaded video
   const [uploadedVideos, setUploadedVideos] = useState(null);
+  // State to track uploaded dp image
+  const [uploadedDpImage, setUploadedDpImage] = useState(null);
 
   // Ref to the file input element
   const imageInputRef = useRef();
   const videoInputRef = useRef();
+  const dpInputRef = useRef();
 
   // Handle form input changes
   const handleChange = (event) => {
@@ -201,11 +207,35 @@ export const AddProperty = () => {
     }
   };
 
+  const handleDescriptionUpload = (event) => {
+    const file = event.target.files[0];
+    let maxSize = 1024 * 1024 * 2; // 2Mb max
+    if (file.size > maxSize) {
+      toast.error(`Dp size should be less than 2Mb`);
+    } else {
+      if (
+        file &&
+        (file.type === "image/jpeg" ||
+          file.type === "image/png" ||
+          file.type === "image/jpg" ||
+          file.type === "image/webp")
+      ) {
+        setUploadedDpImage(file);
+      } else {
+        toast.error(`Invalid image file.`);
+      }
+    }
+  };
+
   // Function to remove image
   const removeImage = (index) => {
     setUploadedImages((prevImages) =>
       prevImages.filter((image, i) => i !== index)
     );
+  };
+
+  const removeDpImage = () => {
+    setUploadedDpImage(null);
   };
 
   const removeVideo = () => {
@@ -254,6 +284,25 @@ export const AddProperty = () => {
     ) : null;
   };
 
+  const renderDescriptionPreview = () => {
+    return uploadedDpImage ? (
+      <div className="preview">
+        <img
+          src={URL.createObjectURL(uploadedDpImage)}
+          alt="Preview"
+          className="image-preview"
+        />
+        <button
+          type="button"
+          className="delete-image"
+          onClick={() => removeDpImage()}
+        >
+          X
+        </button>
+      </div>
+    ) : null;
+  };
+
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -291,6 +340,8 @@ export const AddProperty = () => {
 
     formDataToSend.append("video", uploadedVideos);
 
+    formDataToSend.append("image", uploadedDpImage);
+
     try {
       const response = await axios.post(
         `${process.env.BASE_URL}/api/v1/property`,
@@ -319,6 +370,9 @@ export const AddProperty = () => {
           flatAmenities: [],
           locationAdvantages: [],
           propertyType: "",
+          projectStatus: "",
+          projectSize: "",
+          totalUnits: "",
         });
         setSizeUnit("sqFt");
         setSelectAllFlat(false);
@@ -326,6 +380,7 @@ export const AddProperty = () => {
         setSelectAllSociety(false);
         setUploadedVideos(false);
         setUploadedImages([]);
+        setUploadedDpImage("");
 
         // Reset the file input after submission
         if (imageInputRef.current) {
@@ -342,7 +397,7 @@ export const AddProperty = () => {
 
   const inWords = (num) => {
     const price = Number(num);
-    
+
     const ones = [
       "Zero",
       "One",
@@ -383,15 +438,43 @@ export const AddProperty = () => {
       if (num === 0) return "";
       if (num < 10) return ones[num];
       if (num < 20) return teens[num - 10];
-      if (num < 100) return tens[Math.floor(num / 10) - 2] + " " + toWords(num % 10);
-      if (num < 1000) return ones[Math.floor(num / 100)] + " " + suffixes[1] + " " + toWords(num % 100);
-      if (num < 100000) return toWords(Math.floor(num / 1000)) + " " + suffixes[2] + " " + toWords(num % 1000);
-      if (num < 10000000) return toWords(Math.floor(num / 100000)) + " " + suffixes[3] + " " + toWords(num % 100000);
-      return toWords(Math.floor(num / 10000000)) + " " + suffixes[4] + " " + toWords(num % 10000000);
+      if (num < 100)
+        return tens[Math.floor(num / 10) - 2] + " " + toWords(num % 10);
+      if (num < 1000)
+        return (
+          ones[Math.floor(num / 100)] +
+          " " +
+          suffixes[1] +
+          " " +
+          toWords(num % 100)
+        );
+      if (num < 100000)
+        return (
+          toWords(Math.floor(num / 1000)) +
+          " " +
+          suffixes[2] +
+          " " +
+          toWords(num % 1000)
+        );
+      if (num < 10000000)
+        return (
+          toWords(Math.floor(num / 100000)) +
+          " " +
+          suffixes[3] +
+          " " +
+          toWords(num % 100000)
+        );
+      return (
+        toWords(Math.floor(num / 10000000)) +
+        " " +
+        suffixes[4] +
+        " " +
+        toWords(num % 10000000)
+      );
     };
 
     return toWords(price);
-  }
+  };
 
   return (
     <>
@@ -435,7 +518,7 @@ export const AddProperty = () => {
                   </Select>
                 </FormControl>
                 <TextField
-                  label="Enter Type of Property"
+                  label="Enter Type of Property like Rera etc."
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -513,7 +596,7 @@ export const AddProperty = () => {
               >
                 <TextField
                   type="string"
-                  label="Enter Unit (in BHK)*"
+                  label="Enter Unit (in BHK-bhk should be capital written)*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -524,7 +607,7 @@ export const AddProperty = () => {
                 />
                 <TextField
                   type="number"
-                  label="Enter Size"
+                  label="Enter Size of Porperty (in digits)*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -559,7 +642,8 @@ export const AddProperty = () => {
                   fullWidth
                 />
                 <Typography variant="body2">
-                Price in words: {formData.price ? inWords(Number(formData.price)) : "N/A"}
+                  Price in words:{" "}
+                  {formData.price ? inWords(Number(formData.price)) : "N/A"}
                 </Typography>
               </Box>
 
@@ -576,7 +660,57 @@ export const AddProperty = () => {
                   backgroundColor: "#f9f9f9",
                 }}
               >
+                <h2 className="text-center text-2xl font-semibold">
+                  Project Details
+                </h2>
+                <TextField
+                  type="string"
+                  label="Enter Project Size With Measurements like acres etc."
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="projectSize"
+                  value={formData.projectSize}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  type="string"
+                  label="Enter Project Status like under construction, completed etc."
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="projectStatus"
+                  value={formData.projectStatus}
+                  onChange={handleChange}
+                  fullWidth
+                />
+                <TextField
+                  type="string"
+                  label="Enter Total Units"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="totalUnits"
+                  value={formData.totalUnits}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Box>
 
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 2,
+                  mt: 2,
+                  flexDirection: "column",
+                  padding: "12px",
+                  border: "2px solid #ccc",
+                  borderRadius: "8px",
+                  backgroundColor: "#f9f9f9",
+                }}
+              >
                 {/* Furnish Type */}
                 <FormControl
                   style={{
@@ -706,7 +840,7 @@ export const AddProperty = () => {
                     </div>
                   </RadioGroup>
                 </FormControl>
-                
+
                 {/* Flat Amenities */}
                 <FormControl component="fieldset">
                   <FormLabel color="secondary">Flat Amenities</FormLabel>
@@ -898,13 +1032,40 @@ export const AddProperty = () => {
                   </Typography>
                 </FormControl>
 
+                <FormControl>
+                  <FormLabel id="description-upload">
+                    Upload Property Description
+                  </FormLabel>
+                  <input
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="description-input-upload"
+                    type="file"
+                    ref={dpInputRef}
+                    onChange={handleDescriptionUpload}
+                  />
+                  <label htmlFor="description-input-upload">
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      size="small"
+                      style={{ textTransform: "none" }}
+                    >
+                      Enter Property DP
+                    </Button>
+                  </label>
+                  <div className="flex flex-wrap mt-2">
+                    {renderDescriptionPreview()}
+                  </div>
+                </FormControl>
+
                 <Button
                   variant="contained"
                   color="secondary"
                   startIcon={!loading && <AddCircleIcon />} // Conditional rendering for the icon
                   type="submit"
                   size="small"
-                  style={{textTransform: "none", width: "130px"}}
+                  style={{ textTransform: "none", width: "130px" }}
                 >
                   {loading ? (
                     <CircularProgress size="25px" sx={{ color: "white" }} />
