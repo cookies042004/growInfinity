@@ -59,110 +59,98 @@ export const PropertyCard = ({
   }
 
   return (
-    <div className={` relative w-full border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-red-700 transition-all duration-300 hover:scale-105  ${customcategory === "All" ? "cardAll" :""}`}>
-      
+    <div className="border relative p-2 hover:shadow-2xl bg-white transition-all duration-300">
       {/* Property Image */}
-      <div className="relative">
+      <div className="flex justify-center">
         <img
           src={image}
           alt={name}
-          className="h-[230px] w-full object-contain"
+          className="h-[230px] w-full object-cover"
         />
-        {/* Property Type Badge */}
-        <div className="absolute top-3 left-3">
-          <Button
-            size="small"
-            variant="contained"
-            color="success"
-            sx={{ borderRadius: "4px", height: "24px", fontSize: "0.75rem" }}
-            endIcon={<DoneIcon />}
-          >
-            {propertyType}
-          </Button>
+      </div>
+  
+      {/* Property Details */}
+      <div className="mt-3 font-roboto text-sm flex justify-between">
+        <p className="font-semibold ps-3 text-sm">
+          {name} <br />
+          <span className="text-gray-700 font-normal text-xs">By {builder}</span>
+        </p>
+        <p className="font-semibold text-[#EB664E] text-lg">
+          ₹{toINRCr(price)}*
+        </p>
+      </div>
+  
+      {/* Location */}
+      <div className="flex items-center mt-3">
+        <LocationOnIcon
+          sx={{ color: "darkblue", fontSize: "18px", paddingBottom: "3px" }}
+        />
+        <p className="text-xs">{location}</p>
+      </div>
+  
+      {/* Additional Info */}
+      <div className="flex gap-3 justify-between mt-5 font-roboto">
+        <div className="flex gap-1 items-center">
+          <HomeIcon sx={{ color: "darkblue", fontSize: "18px" }} />
+          <p className="text-xs">{unit}</p>
+        </div>
+        <div className="flex gap-1 items-center">
+          <SquareFootIcon sx={{ color: "darkblue", fontSize: "18px" }} />
+          <p className="text-xs">{selectUnit(sizeUnit)}</p>
+        </div>
+        <div className="flex gap-1 items-center">
+          <CurrencyRupeeIcon sx={{ color: "darkblue", fontSize: "18px" }} />
+          <p className="text-xs">{divide(sizeUnit)}</p>
         </div>
       </div>
-
-      {/* Property Details */}
-      <div className="p-5">
-        {/* Title & Price */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="font-semibold text-lg leading-tight text-gray-900">
-              {name}
-            </h3>
-            <p className="text-gray-500 text-sm">By {builder}</p>
-          </div>
-          <p className="font-bold text-[#EB664E] text-xl">
-            ₹{toINRCr(price)}*
-          </p>
-        </div>
-
-        {/* Location */}
-        <div className="flex items-center text-sm text-gray-600 mt-2">
-          <LocationOnIcon className="text-blue-700 text-lg" />
-          <span className="ml-2">{location}</span>  
-        </div>
-
-        {/* Additional Info */}
-        <div className="mt-4 grid grid-cols-3 gap-3 text-sm text-gray-700">
-          <div className="flex items-center">
-            <HomeIcon className="text-blue-700 mr-1" />
-            <span className="font-medium">{unit}</span>
-          </div>
-          <div className="flex items-center">
-            <SquareFootIcon className="text-blue-700 mr-1" />
-            <span className="font-medium">{selectUnit(sizeUnit)}</span>
-          </div>
-          <div className="flex items-center">
-            <CurrencyRupeeIcon className="text-blue-700 mr-1" />
-            <span className="font-medium">{divide(sizeUnit)}</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-4">
-          <Link to={`/project/${slug}`} className="w-full sm:w-1/2">
+  
+      {/* Action Buttons */}
+      <div className="mt-5 flex gap-3">
+        <div className="flex-1">
+          <Link to={`/project/${slug}`}>
             <Button
               fullWidth
-              variant="contained"
+              variant="outlined"
               sx={{
                 backgroundColor: "#03002e",
                 color: "#fff",
                 textTransform: "none",
-                fontSize: "0.9rem",
-                padding: "8px 0",
               }}
             >
               View Details
             </Button>
           </Link>
+        </div>
+        <div className="flex-1">
           <Button
             onClick={handleOpen}
             fullWidth
             variant="contained"
             color="success"
             startIcon={<CallIcon />}
-            sx={{
-              textTransform: "none",
-              fontSize: "0.9rem",
-              padding: "8px 0",
-            }}
+            sx={{ color: "#fff", textTransform: "none" }}
           >
             Enquiry
           </Button>
         </div>
       </div>
-
+  
       {/* Property Enquiry Form */}
       <PropertyEnquiryForm id={id} handleClose={handleClose} open={open} />
-
-      {customcategory === "All" && (
-         <Link to={`/property/${category.toLowerCase().replace(/\s+/g, '-')}`}>
-          <div className="card_overlay">
-          <h3 className="category-title">{category} →</h3>
-        </div>
-         </Link>
-      )}
+  
+      {/* Property Type Badge */}
+      <div className="absolute top-[20px]">
+        <Button
+          endIcon={<DoneIcon />}
+          size="small"
+          variant="contained"
+          color="success"
+          sx={{ borderRadius: "0px", height: "25px" }}
+        >
+          {propertyType}
+        </Button>
+      </div>
     </div>
   );
+  
 };
