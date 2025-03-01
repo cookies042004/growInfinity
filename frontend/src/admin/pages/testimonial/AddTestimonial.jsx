@@ -215,7 +215,7 @@ export const AddTestimonial = () => {
                 </div>
               </div>
 
-              <div className="p-2">
+              <div className="p-2 text-center">
                 <Button
                   variant="contained"
                   color="secondary"

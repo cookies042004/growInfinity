@@ -100,136 +100,114 @@ export const AddEvents = () => {
       <ToastContainer />
       <AdminLayout />
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
-          <div className="container mx-auto">
-            <h2 className="text-xl font-bold p-2 text-center sm:text-left">
-              Add Events
-            </h2>
-            <form onSubmit={handleSubmit}>
-              <div className="flex flex-wrap my-5">
-                <div className="w-full mb-4 p-2">
-                  <TextField
-                    label="Enter Event Title"
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    name="title"
-                    value={formData.title}
-                    fullWidth
-                    required
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="w-full mb-4 p-2">
-                  <TextField
-                    label="Enter Event Description"
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    name="description"
-                    value={formData.description}
-                    fullWidth
-                    required
-                    multiline
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="w-full p-2">
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body1" gutterBottom>
-                      Upload Event Images - (Only jpeg, jpg, png files are
-                      allowed Max size: 1 mb)
-                    </Typography>
-                    <input
-                      ref={imageInputRef}
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      id="upload-button-file"
-                      type="file"
-                      multiple
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="upload-button-file">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        component="span"
-                        size="small"
-                        style={{ textTransform: "none" }}
-                      >
-                        Choose Files
-                      </Button>
-                    </label>
-
-                    {/* Image Previews */}
-                    {imagePreviews.length > 0 && (
-                      <Box
-                        sx={{
-                          mt: 2,
-                          display: "flex",
-                          gap: 2,
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {imagePreviews.map((preview, index) => (
-                          <div key={index} style={{ position: "relative" }}>
-                            <img
-                              src={preview}
-                              alt={`Preview ${index + 1}`}
-                              style={{
-                                width: "100px",
-                                height: "100px",
-                                objectFit: "cover",
-                                borderRadius: "8px",
-                                boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                              }}
-                            />
-                            <button
-                              onClick={() => handleRemoveImage(index)}
-                              style={{
-                                position: "absolute",
-                                top: "5px",
-                                right: "5px",
-                                background: "red",
-                                color: "white",
-                                border: "none",
-                                borderRadius: "50%",
-                                width: "20px",
-                                height: "20px",
-                                cursor: "pointer",
-                                fontSize: "12px",
-                              }}
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        ))}
-                      </Box>
-                    )}
-                  </Box>
-                </div>
-              </div>
-              <div className="p-2">
-                <Button
-                  variant="contained"
+      <div className="p-6 border-2 border-gray-300 border-dashed rounded-lg mt-20 bg-white shadow-md">
+        <div className="container mx-auto">
+          <h2 className="text-2xl font-bold p-2 text-center sm:text-left text-gray-800">
+            Add Events
+          </h2>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex flex-col space-y-4">
+              {/* Event Title */}
+              <div className="w-full">
+                <TextField
+                  label="Enter Event Title"
+                  variant="outlined"
                   color="secondary"
-                  startIcon={!loading && <AddCircleIcon />}
-                  type="submit"
                   size="small"
-                  style={{ textTransform: "none", width: "130px" }}
-                >
-                  {loading ? (
-                    <CircularProgress size="25px" sx={{ color: "white" }} />
-                  ) : (
-                    "Add Events"
-                  )}
-                </Button>
+                  name="title"
+                  value={formData.title}
+                  fullWidth
+                  required
+                  onChange={handleChange}
+                />
               </div>
-            </form>
-          </div>
+
+              {/* Event Description */}
+              <div className="w-full">
+                <TextField
+                  label="Enter Event Description"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="description"
+                  value={formData.description}
+                  fullWidth
+                  required
+                  multiline
+                  onChange={handleChange}
+                />
+              </div>
+
+              {/* File Upload */}
+              <div className="w-full">
+                <Typography variant="body1" className="text-gray-700 font-medium">
+                  Upload Event Images (JPEG, JPG, PNG, Max size: 1MB)
+                </Typography>
+                <input
+                  ref={imageInputRef}
+                  accept="image/*"
+                  className="hidden"
+                  id="upload-button-file"
+                  type="file"
+                  multiple
+                  onChange={handleFileChange}
+                />
+                <label htmlFor="upload-button-file">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    component="span"
+                    size="small"
+                    className="capitalize"
+                  >
+                    Choose Files
+                  </Button>
+                </label>
+
+                {/* Image Previews */}
+                {imagePreviews.length > 0 && (
+                  <Box className="mt-4 flex flex-wrap gap-3">
+                    {imagePreviews.map((preview, index) => (
+                      <div key={index} className="relative w-24 h-24">
+                        <img
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          className="w-full h-full object-cover rounded-lg shadow-md"
+                        />
+                        <button
+                          onClick={() => handleRemoveImage(index)}
+                          className="absolute top-1 right-1 bg-red-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs hover:bg-red-700 transition"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                  </Box>
+                )}
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="text-center">
+              <Button
+                variant="contained"
+                color="secondary"
+                startIcon={!loading && <AddCircleIcon />}
+                type="submit"
+                size="small"
+                className="w-32 capitalize"
+              >
+                {loading ? (
+                  <CircularProgress size="20px" className="text-white" />
+                ) : (
+                  "Add Event"
+                )}
+              </Button>
+            </div>
+          </form>
         </div>
       </div>
+    </div>
     </>
   );
 };

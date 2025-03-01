@@ -10,8 +10,8 @@ const createAdmin = async () => {
   await connectDb();
 
   // Admin details
-  const email = "admin@gmail.com"; // Replace with your email
-  const password = "admin123";    // Replace with your password
+  const email = "growadmin@gmail.com"; // Replace with your email
+  const password = "grow9211";    // Replace with your password
 
   try {
     // Check if admin already exists

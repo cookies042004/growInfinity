@@ -28,7 +28,7 @@ import { RecentProperty } from "../../components/RecentProperty";
 import { ContactForm } from "../../components/ContactForm";
 import Carousel from "../../components/Carousel";
 
-export const ProjectDetails = () => {
+export const CommercialDetails = () => {
   const { slug } = useParams(); // Get slug from URL
   const decodedSlug = decodeURIComponent(slug); // Decode slug if needed
 
@@ -40,7 +40,7 @@ export const ProjectDetails = () => {
       try {
         // Fetch property details using slug
         const res = await fetch(
-          `${process.env.BASE_URL}/api/v1/property/search-by-name/${decodedSlug}`
+          `${process.env.BASE_URL}/api/v1/commercial/search-by-name/${decodedSlug}`
         );
         const data = await res.json();
 
@@ -64,7 +64,7 @@ export const ProjectDetails = () => {
 
   // Fetch full property details using ID (when propertyId is available)
   const apiUrl = propertyId
-    ? `${process.env.BASE_URL}/api/v1/property/${propertyId}`
+    ? `${process.env.BASE_URL}/api/v1/commercial/${propertyId}`
     : null;
   const { data, loading, error, refetch } = useFetchData(apiUrl);
 
@@ -135,7 +135,7 @@ export const ProjectDetails = () => {
   const truncatedDescription =
     fullDescription.length > 200
       ? fullDescription.slice(0, 500) + "..."
-      : fullDescription;
+      : fullDescription; // If less than 200 characters, no truncation
 
   const handleAnchorClick = (e) => {
     e.preventDefault(); // Prevent default anchor behavior
@@ -144,7 +144,7 @@ export const ProjectDetails = () => {
 
     if (targetElement) {
       window.scrollTo({
-        top: targetElement.offsetTop - 180, // Adjust to navbar height
+        top: targetElement.offsetTop - 200, // Adjust to navbar height
         behavior: "smooth",
       });
     }
@@ -186,29 +186,29 @@ export const ProjectDetails = () => {
         <div className="container mx-auto">
           <div className="flex flex-col lg:grid sm:grid-cols-12 gap-6 max-w-[1280px] mt-3 lg:mt-8 mx-auto">
             <div className="col-span-12 lg:col-span-9 bg-white px-3 lg:px-12 py-4 lg:py-8">
-              <div className="shadow-[0px_0px_10px_rgba(0,0,0,0.3)] pb-2 mb-10">
+              <div className="shadow-lg pb-2 shadow-gray-400 mb-10">
                 <div className="pt-10 px-10">
                   <Carousel galleryImages={images} />
                 </div>
 
-                <div className="border border-gray-300 m-10 mt-5 mb-1 flex flex-col lg:flex-row gap-8 p-1">
+                <div className="border border-black m-10 mt-5 mb-10 flex flex-col lg:flex-row gap-8 p-3">
                   {/* Left Section */}
-                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-3 w-full">
+                  <div className="flex flex-col lg:flex-row items-center lg:items-start gap-4 w-full lg:w-2/3">
                     <img
                       src={property?.dp}
                       alt="dealer"
-                      className="h-20 w-20 object-cover"
+                      className="h-28 w-28 object-cover"
                     />
                     <div className="flex flex-col">
                       <h1 className="font-bold text-[#03002a] text-lg lg:text-2xl truncate w-full max-w-[250px]">
                         {property?.name}
                       </h1>
-                      <p className="text-sm text-[#03002a] lg:text-base">
+                      <p className="text-sm text-[#03002a] lg:text-base mt-2">
                         By {property?.builder}
                       </p>
-                      <div className="flex items-center ">
+                      <div className="flex items-center mt-3">
                         <LocationOnIcon className="text-red-600" />
-                        <p className="text-md text-[#03002a]">
+                        <p className="text-md text-[#03002a] ml-1">
                           {property?.location}
                         </p>
                       </div>
@@ -217,22 +217,22 @@ export const ProjectDetails = () => {
 
                   {/* Right Section */}
                   <div className="flex flex-col items-center lg:items-end w-full lg:w-2/3">
-                    <h5 className="font-semibold text-[#03002a] text-2xl lg:text-4xl">
+                    <h5 className="font-roboto font-semibold text-[#03002a] text-2xl lg:text-4xl mb-4">
                       ₹{toINRCr(property?.price)}*
                     </h5>
 
-                    <div className="flex gap-3 w-full lg:w-auto py-1">
+                    <div className="flex gap-3 w-full lg:w-auto">
                       <Link to={`/brochure`}>
-                        <Button
-                          startIcon={<PictureAsPdfIcon />}
-                          variant="outlined"
-                          size="small"
-                          color="error"
-                          sx={{ textTransform: "none" }}
-                          className="w-full lg:w-auto"
-                        >
-                          Request PDF
-                        </Button>
+                      <Button
+                        startIcon={<PictureAsPdfIcon />}
+                        variant="outlined"
+                        size="small"
+                        color="error"
+                        sx={{ textTransform: "none" }}
+                        className="w-full lg:w-auto"
+                      >
+                        Request PDF
+                      </Button>
                       </Link>
 
                       <Button
@@ -254,70 +254,70 @@ export const ProjectDetails = () => {
                 </div>
               </div>
 
-              <div className={`navbar`}>
+              <div className={`navbar ${isSticky ? "sticky" : ""}`}>
                 <div>
-                  <Link href="#description" onClick={handleAnchorClick}>
+                  <a href="#description" onClick={handleAnchorClick}>
                     Description
-                  </Link>
+                  </a>
                 </div>
                 <div>
-                  <Link href="#Overview" onClick={handleAnchorClick}>
+                  <a href="#Overview" onClick={handleAnchorClick}>
                     Overview
-                  </Link>
+                  </a>
                 </div>
                 <div>
-                  <Link href="#Project Amenities" onClick={handleAnchorClick}>
+                  <a href="#Project Amenities" onClick={handleAnchorClick}>
                     Project Amenities
-                  </Link>
+                  </a>
                 </div>
                 <div>
-                  <Link href="#location" onClick={handleAnchorClick}>
+                  <a href="#location" onClick={handleAnchorClick}>
                     Location Benefits
-                  </Link>
+                  </a>
                 </div>
                 <div>
-                  <Link href="#video" onClick={handleAnchorClick}>
+                  <a href="#video" onClick={handleAnchorClick}>
                     Video Tour
-                  </Link>
+                  </a>
                 </div>
                 <div>
-                  <Link href="#emi" onClick={handleAnchorClick}>
+                  <a href="#emi" onClick={handleAnchorClick}>
                     EMI Calculator
-                  </Link>
+                  </a>
                 </div>
               </div>
+
               <div className="grid sm:grid-cols-12 lg:mx-3 mt-8 gap-8">
-                {/* Description */}
                 <div
-                  className="col-span-12 bg-white p-8 shadow-[0px_0px_10px_rgba(0,0,0,0.3)]"
+                  className="col-span-12 bg-white p-3 shadow-lg shadow-gray-400"
                   id="description"
                 >
                   <h3 className="text-xl border-b-2 pb-2 font-poppins font-semibold">
                     Description
                   </h3>
-                  <div className="mt-4 text-gray-500 text-md lg:leading-[1.2]">
-                    {/* Container for smooth scroll animation */}
+                  <div className="mt-4 text-gray-500 text-md lg:leading-9">
+                    {/* Container for description text with transition */}
                     <div
-                      className="overflow-hidden transition-all duration-500 ease-in-out"
+                      className={`overflow-hidden transition-all duration-500 ease-in-out`}
                       style={{
-                        maxHeight: isExpanded ? "500px" : "100px", // Expands on click
+                        maxHeight: isExpanded ? "9999px" : "500px", // Use a large value for expanded state
                       }}
                     >
-                      <p>{fullDescription}</p>
+                      <p>
+                        {isExpanded ? fullDescription : truncatedDescription}
+                      </p>
                     </div>
 
-                    {/* Read More / Read Less Button */}
                     <Button
                       variant="contained"
                       color="secondary"
                       size="small"
                       sx={{
-                        borderRadius: "5px",
+                        borderRadius: "2px",
                         textTransform: "none",
+                        display: "inline-block",
                         marginTop: "10px",
                         backgroundColor: "#5BC0EB",
-                        transition: "all 0.3s ease",
-                        "&:hover": { backgroundColor: "#3A99D8" },
                       }}
                       onClick={toggleDescription}
                     >
@@ -326,9 +326,8 @@ export const ProjectDetails = () => {
                   </div>
                 </div>
 
-                {/* Overview */}
                 <div
-                  className="col-span-12 bg-white p-8 shadow-[0px_0px_10px_rgba(0,0,0,0.3)]"
+                  className="col-span-12 bg-white p-6 shadow-lg shadow-gray-400 rounded-lg"
                   id="Overview"
                 >
                   <h3 className="text-2xl border-b-2 font-poppins font-semibold pb-3 text-gray-900">
@@ -417,9 +416,8 @@ export const ProjectDetails = () => {
                   </div>
                 </div>
 
-                {/* Project Amenities */}
                 <div
-                  className="col-span-12 bg-white p-8 shadow-[0px_0px_10px_rgba(0,0,0,0.3)]"
+                  className="col-span-12 bg-white p-8 shadow-lg shadow-gray-400 rounded-lg"
                   id="Project Amenities"
                 >
                   <h3 className="text-3xl border-b-2 font-poppins font-semibold pb-3 text-gray-900">
@@ -427,58 +425,20 @@ export const ProjectDetails = () => {
                   </h3>
 
                   {/* Society Amenities */}
-                  <div className="p-4 bg-gray-50 mt-5 shadow-[0px_0px_3px_rgba(0,0,0,0.3)]">
+                  <div className="p-6 bg-gray-50 shadow-md mt-5">
                     <h3 className="text-2xl lg:text-2xl text-center font-roboto font-semibold text-gray-800">
                       Society Amenities
                     </h3>
-                  </div>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
-                    {property?.amenities?.some(
-                      (item) => item.type === "society_amenity"
-                    ) ? (
-                      property.amenities
-                        .filter((item) => item.type === "society_amenity")
-                        .map((item) => (
-                          <div
-                            key={item._id}
-                            className="flex items-center gap-4 p-2 border bg-white hover:shadow-md transition-all"
-                          >
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="h-7 w-7"
-                            />
-                            <p className="text-lg font-semibold text-gray-700">
-                              {item.name}
-                            </p>
-                          </div>
-                        ))
-                    ) : (
-                      <div className="col-span-full text-center">
-                        <p className="text-gray-500">
-                          No society amenities is there
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Flat Amenities */}
-                  <div className="col-span-12 mt-8">
-                    <div className="p-4 bg-gray-50 shadow-[0px_0px_3px_rgba(0,0,0,0.3)]">
-                      <h3 className="text-2xl lg:text-2xl text-center font-roboto font-semibold text-gray-800">
-                        Flat Amenities
-                      </h3>
-                    </div>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
                       {property?.amenities?.some(
-                        (item) => item.type === "flat_amenity"
+                        (item) => item.type === "society_amenity"
                       ) ? (
                         property.amenities
-                          .filter((item) => item.type === "flat_amenity")
+                          .filter((item) => item.type === "society_amenity")
                           .map((item) => (
                             <div
                               key={item._id}
-                              className="flex items-center gap-4 p-2 border bg-white hover:shadow-md transition-all"
+                              className="flex items-center gap-4 p-2 border rounded-xl shadow-md bg-white hover:shadow-lg transition-all"
                             >
                               <img
                                 src={item.image}
@@ -493,17 +453,54 @@ export const ProjectDetails = () => {
                       ) : (
                         <div className="col-span-full text-center">
                           <p className="text-gray-500">
-                            No flat amenities is there
+                            No society amenities is there
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
+
+                  {/* Flat Amenities */}
+                  <div className="col-span-12 mt-8">
+                    <div className="p-6 bg-gray-50 shadow-md">
+                      <h3 className="text-2xl lg:text-2xl text-center font-roboto font-semibold text-gray-800">
+                        Flat Amenities
+                      </h3>
+                      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mt-6">
+                        {property?.amenities?.some(
+                          (item) => item.type === "flat_amenity"
+                        ) ? (
+                          property.amenities
+                            .filter((item) => item.type === "flat_amenity")
+                            .map((item) => (
+                              <div
+                                key={item._id}
+                                className="flex items-center gap-4 p-2 border rounded-xl shadow-md bg-white hover:shadow-lg transition-all"
+                              >
+                                <img
+                                  src={item.image}
+                                  alt={item.name}
+                                  className="h-7 w-7"
+                                />
+                                <p className="text-lg font-semibold text-gray-700">
+                                  {item.name}
+                                </p>
+                              </div>
+                            ))
+                        ) : (
+                          <div className="col-span-full text-center">
+                            <p className="text-gray-500">
+                              No flat amenities is there
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Location Benefits */}
                 <div
-                  className="col-span-12 bg-white p-6 shadow-[0px_0px_10px_rgba(0,0,0,0.3)]"
+                  className="col-span-12 bg-white p-6 shadow-lg shadow-gray-400 rounded-lg"
                   id="location"
                 >
                   <h3 className="text-2xl border-b-2 mb-5 font-poppins font-semibold pb-2 text-gray-900">
@@ -511,41 +508,41 @@ export const ProjectDetails = () => {
                   </h3>
 
                   {/* Location Advantages */}
-
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-                    {property?.amenities?.some(
-                      (item) => item.type === "location_advantages"
-                    ) ? (
-                      property.amenities
-                        .filter((item) => item.type === "location_advantages")
-                        .map((item) => (
-                          <div
-                            key={item._id}
-                            className="flex items-center gap-4 p-2 border bg-white hover:shadow-md transition-all"
-                          >
-                            <img
-                              src={item.image}
-                              alt={item.name}
-                              className="h-5 w-5"
-                            />
-                            <p className="text-lg font-semibold text-gray-700">
-                              {item.name}
-                            </p>
-                          </div>
-                        ))
-                    ) : (
-                      <div className="col-span-full text-center">
-                        <p className="text-gray-500">
-                          No location advantages is there
-                        </p>
-                      </div>
-                    )}
+                  <div className="shadow-md p-4 bg-gray-50">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
+                      {property?.amenities?.some(
+                        (item) => item.type === "location_advantages"
+                      ) ? (
+                        property.amenities
+                          .filter((item) => item.type === "location_advantages")
+                          .map((item) => (
+                            <div
+                              key={item._id}
+                              className="flex items-center gap-2 p-2 border rounded-xl shadow-sm bg-white hover:shadow-md transition-all"
+                            >
+                              <img
+                                src={item.image}
+                                alt={item.name}
+                                className="h-5 w-5"
+                              />
+                              <p className="text-lg font-semibold text-gray-700">
+                                {item.name}
+                              </p>
+                            </div>
+                          ))
+                      ) : (
+                        <div className="col-span-full text-center">
+                          <p className="text-gray-500">
+                            No location benefits is there
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
-                {/* Video Tour */}
                 <div
-                  className="col-span-12 bg-white p-6 shadow-[0px_0px_10px_rgba(0,0,0,0.3)]"
+                  className="col-span-12 bg-white p-6 shadow-lg shadow-gray-400 rounded-lg"
                   id="video"
                 >
                   <h3 className="text-3xl border-b-2 font-poppins font-semibold">
@@ -582,8 +579,10 @@ export const ProjectDetails = () => {
                   <p className="py-3 text-md">{property?.address}</p>
                 </div> */}
 
-                {/* Calculator */}
-                <div className="col-span-12" id="emi">
+                <div
+                  className="col-span-12 bg-white p-6 shadow-lg shadow-gray-400 rounded-lg"
+                  id="emi"
+                >
                   <Calculator />
                 </div>
               </div>
@@ -601,7 +600,7 @@ export const ProjectDetails = () => {
       {/* Featured Projects  */}
       <div className="bg-gray-100 p-3">
         <h1 className="text-center text-black lg:text-4xl text-2xl font-bold py-8 lg:font-medium">
-          Recent Listings
+          New Launches
         </h1>
         <Card category="New Launches" />
         <div className="flex justify-center my-3">
@@ -614,7 +613,6 @@ export const ProjectDetails = () => {
                 backgroundColor: "#03002e",
                 color: "white",
                 textTransform: "none",
-                borderBottom: "2px solid orange",
               }}
             >
               View all

@@ -18,8 +18,28 @@ import EastIcon from "@mui/icons-material/East";
 import { Link } from "react-router-dom";
 
 import bgImage from "../../assets/img/img4.jpg";
+import findRealEstate from "../../assets/img/find real estate.jpg";
+import realtor from "../../assets/img/meet realtor.jpeg";
+import keys from "../../assets/img/keys.jpeg";
+import Icon1 from "../../assets/img/Icon.png";
+import Icon2 from "../../assets/img/Icon (1).png";
+import Icon3 from "../../assets/img/Icon (2).png";
 
 export const About = () => {
+  const teamMembers = [
+    {
+      name: "Ankit Goyal",
+      role: "Founder",
+      image: founder,
+      tagline: "Leading with vision, redefining modern living through innovation, creativity, and integrity. We strive to build a smarter, more connected world, transforming ideas into impactful solutions. Our commitment to excellence drives progress, inspires change, and shapes a future where passion, purpose, and innovation create lasting success for generations to come.",
+    },
+    {
+      name: "Tushar Gupta",
+      role: "Co-Founder",
+      image: coFounder,
+      tagline: "Driving innovation and excellence in real estate by redefining spaces, enhancing communities, and setting new industry benchmarks. Through visionary leadership and a commitment to quality, we create transformative environments that inspire, elevate lifestyles, and shape the future of modern living with integrity, sustainability, and excellence.",
+    },
+  ];
   return (
     <Layout>
       {/* About Hero  */}
@@ -122,7 +142,7 @@ export const About = () => {
               className="col-span-6 md:col-span-6 lg:col-span-4 p-5"
               key={item.number}
             >
-              <div className="text-[#042651] hover:text-white p-6 lg:p-10 font-roboto text-center border-2 rounded-xl flex flex-col items-center justify-center cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-2xl hover:bg-gradient-to-r from-[#042651] to-[#076bcd]">
+              <div className="text-[#042651] hover:text-white p-6 lg:p-10 font-roboto text-center border-2 rounded-xl flex flex-col items-center justify-center cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 shadow-lg hover:shadow-2xl hover:bg-gradient-to-r from-indigo-900 to-black">
                 <h5 className="text-2xl lg:text-4xl font-bold mb-2">
                   {item.number}
                 </h5>
@@ -173,105 +193,100 @@ export const About = () => {
         </div>
       </div>
       {/* Mission  */}
-      <div className="bg-gradient-to-r from-[#0e1d3499] to-[#0e1d34cc] text-white mt-10 mb-10 py-5 px-8">
-        <div className="grid sm:grid-cols-12 flex-col-reverse max-w-[1280px] mx-auto my-8">
-          <div className="col-span-12 lg:col-span-6 flex flex-col justify-start">
-            <h2 className="font-inter font-semibold text-center text-3xl lg:text-left lg:text-4xl mb-4 flex items-center justify-center lg:justify-start">
-              Our Mission
-            </h2>
-            <p className="font-inter font-normal text-sm lg:text-lg lg:leading-9 my-3 text-justify">
-              Our mission is to deliver seamless, rewarding experiences for
-              every client, ensuring that each real estate transaction is not
-              only smooth but also transparent and successful. We believe that
-              buying, selling, or renting a property should be an exciting and
-              stress-free journey, which is why we go above and beyond to make
-              the process as effortless as possible. Trust, integrity, and
-              professionalism are the foundation of our company, and these core
-              values guide everything we do.
-            </p>
-            <p className="font-inter font-normal text-sm lg:text-lg lg:leading-9 my-3 text-justify">
-              We prioritize building meaningful, long-term relationships with
-              our clients, ensuring that their needs are always met with honesty
-              and respect. By maintaining an unwavering commitment to excellence
-              and exceeding expectations at every turn, we aim to foster lasting
-              connections that continue well beyond a single transaction. Our
-              ultimate goal is to be the trusted partner clients can rely on for
-              all their real estate needs, today and in the future.
-            </p>
+      <div className="mx-auto max-w-[1280px] my-16 px-6 lg:px-12">
+            <div className="grid sm:grid-cols-12 gap-12 items-center">
+              {/* Left Section - Images */}
+              <div className="hidden md:flex col-span-12 md:col-span-6 lg:col-span-7 justify-center">
+                <div className="grid sm:grid-cols-12 gap-6">
+                  <div className="col-span-12 flex justify-center">
+                    <img src={findRealEstate} alt="Find Real Estate" className="rounded-lg object-cover shadow-lg w-full max-h-[300px]" />
+                  </div>
+                  <div className="col-span-12 grid sm:grid-cols-2 gap-6">
+                    <img src={realtor} alt="Realtor" className="rounded-lg object-cover shadow-md w-full max-h-[250px]" />
+                    <img src={keys} alt="Keys" className="rounded-lg object-cover shadow-md w-full max-h-[215px]" />
+                  </div>
+                </div>
+              </div>
+      
+              {/* Right Section - Text Content */}
+              <div className="col-span-12 md:col-span-6 lg:col-span-5 text-center lg:text-left">
+                <h1 className="text-3xl lg:text-3xl font-bold text-gray-900 leading-tight">
+                  How It Works?
+                  <br /> Find Your Perfect Home
+                </h1>
+                <p className="text-lg text-gray-600 mt-4">
+                  Discover your ideal home with ease. Browse listings, get expert advice, and find the perfect match for your lifestyle.
+                </p>
+      
+                {/* Steps List */}
+                <div className="mt-8 space-y-6">
+                  {[{ icon: Icon1, title: "Find Real Estate", description: "Access extensive listings and expert guidance for a seamless real estate journey." },
+                    { icon: Icon2, title: "Meet Realtor", description: "Connect with trusted real estate professionals who understand your needs and priorities." },
+                    { icon: Icon3, title: "Take the Keys", description: "Unlock your future with confidence. Step into your new beginning with expert support." }
+                  ].map((step, index) => (
+                    <div key={index} className="flex items-start gap-4">
+                      <div className="relative w-12 h-12 flex justify-center items-center bg-[#e7c873b8] rounded-full">
+                        <img src={step.icon} alt={step.title} className="w-8 h-8" />
+                      </div>
+                      <div>
+                        <h3 className="text-xl font-semibold text-gray-900">{step.title}</h3>
+                        <p className="text-gray-600 text-md mt-1">{step.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="col-span-12 lg:col-span-6 lg:flex items-center justify-end mt-3">
-            <img
-              src={aboutImg2}
-              alt="About us"
-              className="h-[250px] lg:h-[400px] w-full lg:w-[503px] border-4 border-white shadow-lg transition-transform transform hover:scale-105"
-            />
-          </div>
-        </div>
-      </div>
 
       <Choose />
 
       {/* Meet our directors  */}
-      <div className="bg-[#fff8f6] py-8">
-        <div className="my-5 mx-auto max-w-[1280px]">
-          <h1 className="text-center text-[#03002e] text-3xl lg:text-4xl font-bold pb-10">
-            Get to Know Our Team
-          </h1>
+      <div className="bg-[#fff8f6] py-12 px-4 md:px-8">
+      <div className="max-w-[1280px] mx-auto">
+        <h1 className="text-center text-[#03002e] text-3xl md:text-4xl font-bold pb-10">
+          Get to Know Our Team
+        </h1>
 
-          <div className="grid sm:grid-cols-12 gap-8 mx-auto">
-            {[
-              {
-                name: "Ankit Goyal",
-                role: "Founder",
-                image: founder,
-                tagline: "Leading the vision to redefine modern living.",
-              },
-              {
-                name: "Tushar Gupta",
-                role: "Co-Founder",
-                image: coFounder,
-                tagline: "Driving innovation and excellence in real estate.",
-              },
-            ].map((member, index) => (
-              <div
-                className="col-span-12 md:col-span-6 lg:col-span-6 p-5"
-                key={index}
-              >
-                <div className="director-card bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                  <div
-                    className={`flex items-center ${
-                      index % 2 === 0 ? "flex-row" : "flex-row-reverse"
-                    } gap-8 p-6`}
-                  >
-                    {/* Image Section */}
-                    <div className="relative">
-                      <img
-                        src={member.image}
-                        alt={member.name}
-                        className="rounded-3xl h-[200px] lg:h-[400px] w-[180px] lg:w-[250px] max-w-full object-top object-cover transform hover:scale-105 transition-transform duration-300"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 hover:opacity-30 rounded-3xl transition-opacity duration-300"></div>
-                    </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mx-auto">
+          {teamMembers.map((member, index) => (
+            <div
+              className="p-4 md:p-6"
+              key={index}
+            >
+              <div className="director-card bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300 overflow-hidden">
+                <div
+                  className={`flex flex-col md:flex-row items-center md:items-start gap-6 p-6`}
+                >
+                  {/* Image Section */}
+                  <div className="relative w-full md:w-auto">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="rounded-3xl h-[220px] lg:h-[350px] w-full md:w-[220px] lg:w-[250px] object-cover transform hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black opacity-0 hover:opacity-30 rounded-3xl transition-opacity duration-300"></div>
+                  </div>
 
-                    {/* Text Section */}
-                    <div className="flex-1">
-                      <h3 className="text-[#03002e] text-lg lg:text-2xl py-3 font-bold font-roboto text-center lg:text-left">
-                        {member.name}
-                      </h3>
-                      <h5 className="text-gray-500 text-center lg:text-left text-sm lg:text-md pb-3 font-roboto">
-                        {member.role}
-                      </h5>
-                      <p className="hidden lg:block text-gray-600 text-center lg:text-left text-sm lg:text-md font-light">
-                        {member.tagline}
-                      </p>
-                    </div>
+                  {/* Text Section */}
+                  <div className="flex-1 md:text-left">
+                    <h3 className="text-[#03002e] text-lg lg:text-2xl font-bold font-roboto">
+                      {member.name}
+                    </h3>
+                    <h5 className="text-gray-500 text-sm lg:text-md pb-3 font-roboto">
+                      {member.role}
+                    </h5>
+                    <p className="hidden md:block text-gray-600 text-sm lg:text-md font-light">
+                      {member.tagline}
+                    </p>
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </div>
+    </div>
 
       <div
         className="bg-latest py-10"
@@ -281,37 +296,18 @@ export const About = () => {
           backgroundAttachment: "fixed",
         }}
       >
-        <div className="max-w-[1280px] mx-auto">
-          <h1 className="text-center text-3xl lg:text-4xl text-white font-medium">
+        <div className="max-w-[1400px] mx-auto px-4">
+          <h1 className="text-center text-3xl lg:text-4xl text-white font-medium mb-6">
             Awards
           </h1>
-          <div className="grid sm:grid-cols-12 overflow-hidden">
-            <div className="col-span-12 lg:col-span-6 flex justify-center lg:justify-start">
+          <div className="grid sm:grid-cols-1 lg:grid gap-8">
+            {/* Award Images Section */}
+            <div className="flex justify-center lg:justify-start">
               <AwardComponent />
-            </div>
-            <div className="col-span-12 lg:col-span-6  flex items-center ">
-              <div className="text-white text-lg text-justify px-5">
-                <p className="text-sm lg:text-lg">
-                  At Grow Infinity Realtors, we believe that our dedication to
-                  excellence speaks volumes, and it’s a privilege to see this
-                  dedication acknowledged by the real estate community and our
-                  valued clients. Each award we receive is a reflection of the
-                  trust and confidence that clients place in us, motivating us
-                  to continuously raise the bar in service and results.
-                </p>
-                <p className="text-sm lg:text-lg mt-3">
-                  These awards are more than just accolades; they are milestones
-                  that reinforce our mission to serve with integrity,
-                  innovation, and unmatched expertise. At Grow Infinity
-                  Realtors, your trust fuels our ambition, and we remain
-                  steadfast in our journey to redefine excellence in real
-                  estate.
-                </p>
-              </div>
             </div>
           </div>
 
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-center mt-6">
             <Link to="/awards">
               <Button
                 size="large"
@@ -321,6 +317,7 @@ export const About = () => {
                   backgroundColor: "white",
                   color: "#03002e",
                   textTransform: "none",
+                  borderBottom: "2px solid #03002e",
                 }}
               >
                 View all

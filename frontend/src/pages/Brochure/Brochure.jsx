@@ -1,7 +1,7 @@
 import React from "react";
 import { useFetchData } from "../../hooks/useFetchData";
 import { Layout } from "../../components/Layout";
-import DownloadIcon from "@mui/icons-material/Download";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import CircularProgress from "@mui/material/CircularProgress";
 import "./Brochure.css";
 
@@ -92,8 +92,8 @@ export const Brochure = () => {
                       onClick={() => handleDownload(pdfs[index])} // Pass the PDF URL
                       className="bg-white text-black px-4 py-2 rounded-md flex items-center gap-2"
                     >
-                      <DownloadIcon />
-                      Download PDF
+                      <PictureAsPdfIcon size={30} color="red" />
+                      Request PDF
                     </button>
                   </div>
 

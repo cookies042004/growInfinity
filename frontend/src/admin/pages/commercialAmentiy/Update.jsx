@@ -16,29 +16,25 @@ import { useParams } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
 import axios from "axios";
 
-export const UpdateTestimonial = () => {
+export const Update = () => {
   document.title = "Update Amenity";
 
   const { id } = useParams();
 
-  const apiUrl = `${process.env.BASE_URL}/api/v1/testimonials/${id}`;
+  const apiUrl = `${process.env.BASE_URL}/api/v1/commercial-amenities/${id}`;
 
   const { data, loading, error, refetch } = useFetchData(apiUrl);
 
   const [formData, setFormData] = useState({
     name: "",
-    role: "",
-    review: "",
     selectedFile: null,
   });
 
   // Load data into formData when amenity is fetched
   useEffect(() => {
-    if (data?.testimonial) {
+    if (data?.amenity) {
       setFormData({
-        name: data.testimonial.name || "",
-        role: data.testimonial.role || "",
-        review: data.testimonial.review || "",
+        name: data.amenity.name || "",
         selectedFile: null,
       });
     }
@@ -62,10 +58,9 @@ export const UpdateTestimonial = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     const formDataToSend = new FormData();
     formDataToSend.append("name", formData.name);
-    formDataToSend.append("role", formData.role);
-    formDataToSend.append("review", formData.review);
     if (formData.selectedFile) {
       formDataToSend.append("image", formData.selectedFile); // Only append file if it exists
     }
@@ -86,7 +81,7 @@ export const UpdateTestimonial = () => {
     } catch (error) {
       console.error(error);
       if (error.response && error.response.status === 404) {
-        toast.error("Testimonial not found. Please check the URL or ID.");
+        toast.error("Amenity not found. Please check the URL or ID.");
       } else {
         toast.error("An error occurred while updating the amenity.");
       }
@@ -101,14 +96,14 @@ export const UpdateTestimonial = () => {
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
           <div className="container mx-auto">
             <h2 className="text-xl font-bold p-2 text-center sm:text-left">
-              Update Testimonial
+              Update Amenity
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap my-5">
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
                     id="outlined-basic"
-                    label="Enter Reviewer Name*"
+                    label="Enter Amenity Name*"
                     variant="outlined"
                     color="secondary"
                     size="small"
@@ -118,43 +113,16 @@ export const UpdateTestimonial = () => {
                     onChange={handleChange}
                   />
                 </div>
-                <div className="w-full sm:w-1/2 mb-4 p-2">
-                  <TextField
-                    id="outlined-basic"
-                    label="Enter Reviewer Role*"
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    name="role" // Changed to "name"
-                    value={formData.role} // Controlled by formData
-                    fullWidth
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="w-full mb-4 p-2">
-                  <TextField
-                    id="outlined-basic"
-                    label="Enter Review*"
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    name="review" // Changed to "name"
-                    value={formData.review} // Controlled by formData
-                    fullWidth
-                    multiline
-                    onChange={handleChange}
-                  />
-                </div>
 
                 {/* Image Preview */}
                 <div className="w-full p-2">
-                  {data?.testimonial?.image && (
+                  {data?.amenity?.image && (
                     <Box sx={{ mt: 2 }}>
                       <Typography variant="body1" gutterBottom>
-                        Current Testimonial Image:
+                        Current Amenity Image:
                       </Typography>
                       <img
-                        src={data.testimonial.image }
+                        src={data.amenity.image}
                         alt="Current Amenity Image"
                         style={{
                           height: "100px",
@@ -171,7 +139,7 @@ export const UpdateTestimonial = () => {
                 <div className="w-full p-2">
                   <Box sx={{ mt: 1 }}>
                     <Typography variant="body1" gutterBottom>
-                      Upload New Testimonial Image*
+                      Upload New Amenity Image*
                     </Typography>
                     <input
                       accept="image/*"
@@ -209,7 +177,7 @@ export const UpdateTestimonial = () => {
                   size="small"
                   style={{ textTransform: "none" }}
                 >
-                  Update Testimonial
+                  Update Commercial Amenity
                 </Button>
               </div>
             </form>

@@ -10,7 +10,12 @@ export const PropertyCard1 = ({ title }) => {
   const navigate = useNavigate();
 
   const submitHandler = () => {
-    navigate(`/property/${title}`);
+    if(title ===  "Commercial") {
+      navigate(`/commercial/${title}`);
+    } else {  
+      console.log("title is:",title)
+      navigate(`/property/${title}`);
+    }
   };
 
   const getImage =

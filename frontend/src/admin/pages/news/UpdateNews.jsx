@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Box, Typography } from "@mui/material";
+import { Button, TextField, Box, Typography, CircularProgress } from "@mui/material";
 import ArrowCircleUpIcon from "@mui/icons-material/ArrowCircleUp";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,6 +20,8 @@ export const UpdateNews = () => {
 
   const apiUrl = `${process.env.BASE_URL}/api/v1/news/${id}`;
 
+  const [buttonLoading, setButtonLoading] = useState(false);
+
   const { data, loading, error, refetch } = useFetchData(apiUrl);
 
   // Load data into formData when news is fetched
@@ -28,7 +30,7 @@ export const UpdateNews = () => {
       setFormData({
         url: data.news.url || "",
         title: data.news.title || "",
-        selectedFile: null, 
+        selectedFile: null,
       });
     }
   }, [data]);
@@ -51,6 +53,7 @@ export const UpdateNews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setButtonLoading(true);
     const formDataToSend = new FormData();
     formDataToSend.append("url", formData.url);
     formDataToSend.append("title", formData.title);
@@ -65,11 +68,14 @@ export const UpdateNews = () => {
 
       if (response.data.success) {
         toast.success(response.data.message);
+        setButtonLoading(false);
         refetch();
       } else {
         toast.error("Failed to update news");
+        setButtonLoading(false);
       }
     } catch (error) {
+      setButtonLoading(false);
       console.error(error);
       toast.error("An error occurred while updating the news");
     }
@@ -89,30 +95,31 @@ export const UpdateNews = () => {
               <div className="flex flex-wrap my-5">
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
-                    id="outlined-basic"
+                    id="news-title"
                     label="Enter News Title*"
                     variant="outlined"
                     color="secondary"
                     size="small"
                     name="title"
-                    value={formData.title} // Controlled by formData
+                    value={formData.title}
                     fullWidth
                     onChange={handleChange}
                   />
                 </div>
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
-                    id="outlined-basic"
+                    id="news-url"
                     label="Enter News URL*"
                     variant="outlined"
                     color="secondary"
                     size="small"
                     name="url"
-                    value={formData.url} // Controlled by formData
+                    value={formData.url}
                     fullWidth
                     onChange={handleChange}
                   />
                 </div>
+
                 {/* Image Preview */}
                 <div className="w-full p-2">
                   {data?.news?.image && (
@@ -124,17 +131,17 @@ export const UpdateNews = () => {
                         src={data.news.image}
                         alt="Current News"
                         style={{
-                          height: "100px",
-                          width: "200px",
-                          objectFit: "contain",
-                          objectPosition: "center",
+                          maxWidth: "10%",
+                          height: "auto",
+                          borderRadius: "8px",
+                          boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
                         }}
                       />
                     </Box>
                   )}
                 </div>
 
-                {/* File input for image upload */}
+                {/* File Upload */}
                 <div className="w-full p-2">
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="body1" gutterBottom>
@@ -158,7 +165,8 @@ export const UpdateNews = () => {
                         Choose File
                       </Button>
                     </label>
-                    {formData.selectedFile && (
+
+                    {formData.selectedFile && formData.selectedFile.name && (
                       <Typography variant="body2" sx={{ mt: 1 }}>
                         {formData.selectedFile.name}
                       </Typography>
@@ -166,6 +174,7 @@ export const UpdateNews = () => {
                   </Box>
                 </div>
               </div>
+
               <div className="p-2">
                 <Button
                   variant="contained"
@@ -175,7 +184,11 @@ export const UpdateNews = () => {
                   size="small"
                   style={{ textTransform: "none" }}
                 >
-                  Update News
+                  {buttonLoading ? (
+                    <CircularProgress size="25px" sx={{ color: "white" }} />
+                  ) : (
+                    "Update News"
+                  )}
                 </Button>
               </div>
             </form>

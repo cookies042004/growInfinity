@@ -17,10 +17,12 @@ import MailOutlinedIcon from "@mui/icons-material/MailOutlined";
 import LocalPhoneOutlinedIcon from "@mui/icons-material/LocalPhoneOutlined";
 import EastOutlinedIcon from "@mui/icons-material/EastOutlined";
 import { Button } from "@mui/material";
+import { MailOutlineOutlined, PersonOutlineOutlined, Phone } from "@mui/icons-material";
+  
 
 export const Contact = () => {
   const apiUrl = `${process.env.BASE_URL}/api/v1/contact`;
-  console.log(apiUrl)
+  console.log(apiUrl);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -88,7 +90,7 @@ export const Contact = () => {
       console.error("Error submitting form:", error);
       toast.error("Error submitting form. Please try again.");
     } finally {
-      toast.success("Message sent successfully!")
+      toast.success("Message sent successfully!");
       setLoading(false); // Set loading state back to false after submission
     }
   };
@@ -108,200 +110,104 @@ export const Contact = () => {
           </div>
         </div>
 
-        <div className="bg-gray-200">
-          <div className="max-w-[1280px] mx-auto">
-            <div className="grid sm:grid-cols-12 py-10">
-              <div className="col-span-12 md:col-span-6 lg:col-span-4 flex justify-center bg-white m-5 px-3 lg:px-4 py-4 lg:py-6 rounded-[24px] shadow-lg">
-                <div className="flex flex-col gap-3 lg:gap-5 justify-center items-center">
-                  <div className="flex items-center justify-center p-5 bg-[#15247a] rounded-[50%] h-[50px] w-[50px] lg:h-[70px] lg:w-[70px]">
-                    <EmailIcon
-                      sx={{
-                        fontSize: { sm: "20px", lg: "40px" },
-                        color: "white",
-                      }}
-                    />
-                  </div>
-
-                  <p className="font-dmsans font-semibold text-lg">
-                    Chat to us
-                  </p>
-                  <p className="font-roboto text-lg text-[#0529ff]">
-                    Our friendly team is here to help.
-                  </p>
-                  <p className="font-roboto text-md text-center">
-                    growinfinityrealtor1@gmail.com, info@growinfinityrealtors.in
-                  </p>
+        <div className="bg-gray-100 py-12">
+      <div className="max-w-6xl mx-auto px-4">
+        
+        {/* Contact Info Cards */}
+        <div className="grid sm:grid-cols-12 gap-6">
+          {[
+            { icon: <EmailIcon fontSize="large" />, title: "Chat to us", subtitle: "Our friendly team is here to help.", text: "growinfinityrealtor1@gmail.com, info@growinfinityrealtors.in" },
+            { icon: <LocationOnIcon fontSize="large" />, title: "Office", subtitle: "Come say hello at our HQ.", text: "Plot No. BL-34, II Floor, Near Fitness Gym, Sector-116, Noida, Uttar Pradesh-201305" },
+            { icon: <LocalPhoneIcon fontSize="large" />, title: "Phone", subtitle: "Mon-Sun from 8am to 6pm", text: "+91-9990052554" }
+          ].map((card, index) => (
+            <div key={index} className="col-span-12 md:col-span-6 lg:col-span-4">
+              <div className="flex flex-col items-center bg-white p-6 rounded-3xl shadow-lg transition-all duration-300 hover:shadow-2xl hover:-translate-y-2">
+                <div className="flex items-center justify-center bg-darkBlue text-white rounded-full w-16 h-16 lg:w-20 lg:h-20">
+                  {card.icon}
                 </div>
-              </div>
-              <div className="col-span-12 md:col-span-6 lg:col-span-4 flex justify-center bg-white m-5 px-3 lg:px-4 py-4 lg:py-6 rounded-[24px] shadow-lg">
-                <div className="flex flex-col gap-3 lg:gap-5  justify-center items-center">
-                  <div className="flex items-center justify-center p-5 bg-[#15247a] rounded-[50%] h-[50px] w-[50px] lg:h-[70px] lg:w-[70px]">
-                    <LocationOnIcon
-                      sx={{
-                        fontSize: { sm: "20px", lg: "40px" },
-                        color: "white",
-                      }}
-                    />
-                  </div>
-
-                  <p className="font-dmsans font-semibold text-lg">Office</p>
-                  <p className="font-roboto text-lg text-[#0529ff]">
-                    Come say hello at our office HQ.
-                  </p>
-                  <p className="font-roboto text-md text-center">
-                    Plot No. BL-34, II Floor, Near Fitness Gym, Sector-116,
-                    Noida, Uttar Pradesh-201305
-                  </p>
-                </div>
-              </div>
-              <div className="col-span-12 md:col-span-6 lg:col-span-4 flex justify-center bg-white m-5 px-2 lg:px-4 py-4 lg:py-6 rounded-[24px] shadow-lg">
-                <div className="flex flex-col gap-3 lg:gap-5  justify-center items-center">
-                  <div className="flex items-center justify-center p-3 lg:p-5 bg-[#15247a] rounded-[50%] h-[50px] w-[50px] lg:h-[70px] lg:w-[70px]">
-                    <LocalPhoneIcon
-                      sx={{
-                        fontSize: { sm: "20px", lg: "40px" },
-                        color: "white",
-                      }}
-                    />
-                  </div>
-
-                  <p className="font-dmsans font-semibold text-lg">Phone</p>
-                  <p className="font-roboto text-lg text-[#0529ff]">
-                    Mon-Sun from 8am to 6pm
-                  </p>
-                  <p className="font-roboto text-md">+91-9990052554</p>
-                </div>
+                <p className="font-semibold text-xl mt-4">{card.title}</p>
+                <p className="text-lg text-primary">{card.subtitle}</p>
+                <p className="text-md text-center text-gray-600 mt-2">{card.text}</p>
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
-        <div className="max-w-[1280px] mx-auto">
-          <div className="grid sm:grid-cols-12 my-5 lg:my-10">
-            <div className="col-span-12 lg:col-span-6 p-3 m-5">
-              <h1 className="text-2xl lg:text-4xl font-medium font-roboto text-center">
-                Let's Get In Touch
-              </h1>
-              <p className="text-center text-lg font-roboto py-3">
-                Or just reach manually to{" "}
-                <span className="text-[#0529ff]">
-                  <a href="mailto:info@growinfinityrealtors.in">
-                    info@growinfinityrealtors.in
-                  </a>
-                </span>
-              </p>
+        {/* Contact Form & Map */}
+        <div className="grid sm:grid-cols-12 gap-6 mt-10">
+          
+          {/* Contact Form */}
+          <div className="col-span-12 lg:col-span-6 bg-white shadow-lg rounded-3xl p-8">
+            <h1 className="text-3xl font-semibold text-center">Let's Get In Touch</h1>
+            <p className="text-center text-lg py-3">
+              Or reach us at{" "}
+              <a href="mailto:info@growinfinityrealtors.in" className="text-primary font-medium">
+                info@growinfinityrealtors.in
+              </a>
+            </p>
 
-              <form className="mt-5">
-                <div className="grid sm:grid-cols-12 font-roboto gap-5">
-                  <div className="col-span-12">
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="name" className="ps-2">
-                        Full Name
-                      </label>
-                      <div className="flex items-center border rounded-[24px]">
-                        <PersonOutlineOutlinedIcon
-                          sx={{ marginLeft: "15px" }}
-                        />
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter your full name..."
-                          className="p-3 outline-none w-[80%] lg:w-[90%]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-span-12">
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="email" className="ps-2">
-                        Email Address
-                      </label>
-                      <div className="flex items-center border rounded-[24px]">
-                        <MailOutlinedIcon sx={{ marginLeft: "15px" }} />
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter your email address..."
-                          className="p-3 outline-none w-[80%] lg:w-[90%]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-span-12">
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="phone" className="ps-2">
-                        Phone Number
-                      </label>
-                      <div className="flex items-center border rounded-[24px]">
-                        <LocalPhoneOutlinedIcon sx={{ marginLeft: "15px" }} />
-                        <input
-                          type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          required
-                          maxLength={10}
-                          minLength={10}
-                          placeholder="Enter your phone number..."
-                          className="p-3 outline-none w-[80%] lg:w-[90%]"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-span-12">
-                    <div className="flex flex-col gap-2">
-                      <label htmlFor="message" className="ps-2">
-                        Message
-                      </label>
-                      <textarea
-                        rows={5}
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        required
-                        placeholder="Enter your message here..."
-                        className="p-3 outline-none border rounded-[24px]"
-                      ></textarea>
-                    </div>
-                  </div>
-                  <div className="col-span-12 flex justify-center">
-                    <Button
-                      type="submit"
-                      onClick={handleSubmit}
-                      endIcon={<EastOutlinedIcon />}
-                      variant="contained"
-                      size="large"
-                      sx={{
-                        borderRadius: "24px",
-                        textTransform: "none",
-                        backgroundColor: "#15247a",
-                      }}
-                      disabled={loading} 
-                    >
-                      {loading ? "Submitting..." : "Submit Form"}
-                    </Button>
+            <form onSubmit={handleSubmit} className="mt-5">
+              <div className="grid gap-5">
+                
+                {/* Full Name */}
+                <div>
+                  <label className="block text-gray-700 font-medium">Full Name</label>
+                  <div className="flex items-center border border-gray-300 rounded-3xl bg-gray-50 px-4 py-3 shadow-md hover:shadow-lg transition-all">
+                    <PersonOutlineOutlined className="text-gray-500" />
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required placeholder="Enter your full name..." className="ml-2 bg-transparent w-full outline-none" />
                   </div>
                 </div>
-              </form>
-            </div>
 
-            <div className="col-span-12 lg:col-span-6 flex items-center justify-center p-3">
+                {/* Email Address */}
+                <div>
+                  <label className="block text-gray-700 font-medium">Email Address</label>
+                  <div className="flex items-center border border-gray-300 rounded-3xl bg-gray-50 px-4 py-3 shadow-md hover:shadow-lg transition-all">
+                    <MailOutlineOutlined className="text-gray-500" />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} required placeholder="Enter your email..." className="ml-2 bg-transparent w-full outline-none" />
+                  </div>
+                </div>
+
+                {/* Phone Number */}
+                <div>
+                  <label className="block text-gray-700 font-medium">Phone Number</label>
+                  <div className="flex items-center border border-gray-300 rounded-3xl bg-gray-50 px-4 py-3 shadow-md hover:shadow-lg transition-all">
+                    <Phone className="text-gray-500" />
+                    <input type="text" name="phone" value={formData.phone} onChange={handleChange} required maxLength={10} minLength={10} placeholder="Enter your phone..." className="ml-2 bg-transparent w-full outline-none" />
+                  </div>
+                </div>
+
+                {/* Message */}
+                <div>
+                  <label className="block text-gray-700 font-medium">Message</label>
+                  <textarea name="message" value={formData.message} onChange={handleChange} required placeholder="Enter your message here..." className="w-full p-3 border border-gray-300 rounded-3xl bg-gray-50 shadow-md hover:shadow-lg transition-all outline-none" rows={5}></textarea>
+                </div>
+
+                {/* Submit Button */}
+                <div className="flex justify-center">
+                  <button type="submit" className="bg-darkBlue text-white px-6 py-3 rounded-3xl hover:bg-primary transition-all duration-300" disabled={loading}>
+                    {loading ? "Submitting..." : "Submit Form"}
+                  </button>
+                </div>
+
+              </div>
+            </form>
+          </div>
+
+          {/* Google Map */}
+          <div className="col-span-12 lg:col-span-6 flex justify-center">
+            <div className="w-full shadow-lg rounded-3xl overflow-hidden">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14016.248411720519!2d77.3950231!3d28.5678978!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2f7b6f8aa4bbbca1%3A0xcd4a6a4f021202d4!2sGrow%20Infinity%20Realtors!5e0!3m2!1sen!2sin!4v1730825249194!5m2!1sen!2sin"
-                height="500"
-                style={{ border: "0", width: "100%" }}
+                className="border-0 w-full h-[690px]"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
               ></iframe>
             </div>
           </div>
+
         </div>
+      </div>
+    </div>
       </Layout>
     </>
   );

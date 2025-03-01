@@ -1,62 +1,84 @@
 /* Remove default Slick.js arrows */
-.slick-prev:before, .slick-next:before {
-  content: "" !important; /* Remove unwanted text */
-  display: none !important; /* Hide default arrows */
+.slick-prev:before,
+.slick-next:before {
+  content: none !important; 
+  display: none !important;
 }
 
-/* Style for the next arrow */
+/* Custom navigation arrows */
+.slick-prev,
 .slick-next {
-  right: 10px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  color: white; /* Arrow color */
-  font-size: 20px;
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
+  background-color: #333;
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
 }
 
+/* Hover effect for arrows */
+.slick-prev:hover,
 .slick-next:hover {
-  background-color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+  background-color: rgba(0, 0, 0, 0.6);
+  transform: translateY(-50%) scale(1.1);
 }
 
-/* Style for the previous arrow */
+/* Positioning for previous arrow */
 .slick-prev {
-  left: 10px;
-  z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  color: white; /* Arrow color */
-  font-size: 20px;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
-  transition: background-color 0.3s ease;
+  left: -20px;
 }
 
-.slick-prev:hover {
-  background-color: rgba(0, 0, 0, 0.8); /* Darker on hover */
+/* Positioning for next arrow */
+.slick-next {
+  right: -20px;
 }
 
-/* Custom arrow symbols */
-.slick-next::after {
-  font-size: 20px;
-  color: white;
-}
-
+/* Custom arrow icons */
 .slick-prev::after {
-  font-size: 20px;
+  content: "⟵"; /* Unicode left arrow */
+  font-size: 24px;
   color: white;
 }
 
-/* Optional: Style for when arrows are disabled */
-.slick-prev.slick-disabled, .slick-next.slick-disabled {
-  background-color: rgba(0, 0, 0, 0.2); /* Lighter background when disabled */
+.slick-next::after {
+  content: "⟶"; /* Unicode right arrow */
+  font-size: 24px;
+  color: white;
+}
+
+/* Disabled arrows */
+.slick-prev.slick-disabled,
+.slick-next.slick-disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .slick-prev,
+  .slick-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .slick-prev {
+    left: -10px;
+  }
+
+  .slick-next {
+    right: -10px;
+  }
+
+  .slick-prev::after,
+  .slick-next::after {
+    font-size: 20px;
+  }
 }

@@ -3,10 +3,10 @@ import { Cancel } from "@mui/icons-material";
 import { Button, Typography, Modal, Box } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
 import PhoneIcon from "@mui/icons-material/Phone";
-import MessageIcon from '@mui/icons-material/Message';
+import MessageIcon from "@mui/icons-material/Message";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export const EnquiryHome = () => {
   const [formData, setFormData] = useState({
@@ -82,7 +82,7 @@ export const EnquiryHome = () => {
             onClick={() => setIsOpen(!isOpen)}
           >
             <p
-              className="font-medium uppercase py-4 px-2"
+              className="font-medium uppercase py-1"
               style={{
                 writingMode: "vertical-rl",
                 transform: "rotate(180deg)",
@@ -93,7 +93,15 @@ export const EnquiryHome = () => {
             {isOpen ? (
               <Cancel color="error" sx={{ fontSize: "35px" }} />
             ) : (
-              <span className="text-2xl px-1">📩</span>
+              <span
+                className=""
+                style={{
+                  writingMode: "vertical-rl",
+                  transform: "rotate(270deg)",
+                }}
+              >
+                📧
+              </span>
             )}
           </div>
         </div>
@@ -176,14 +184,14 @@ export const EnquiryHome = () => {
                   <div className="col-span-12">
                     <div className="flex border rounded-lg items-center bg-white">
                       <MessageIcon sx={{ color: "gray", margin: 1 }} />
-                    <textarea
-                      name="message"
-                      className="outline-none p-3 rounded-lg w-full"
-                      placeholder="Message"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                    />
+                      <textarea
+                        name="message"
+                        className="outline-none p-3 rounded-lg w-full"
+                        placeholder="Message"
+                        value={formData.message}
+                        onChange={handleChange}
+                        required
+                      />
                     </div>
                   </div>
                   <div className="col-span-12">

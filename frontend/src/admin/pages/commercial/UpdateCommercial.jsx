@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { AdminLayout } from "../../components/AdminLayout";
 import {
   Box,
@@ -15,85 +15,101 @@ import {
   Select,
   TextField,
   Typography,
+  IconButton,
 } from "@mui/material";
 import { useFetchData } from "../../../hooks/useFetchData";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CloseIcon from "@mui/icons-material/Close";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import "./AddProperty.css";
-import { toWords } from "number-to-words";
+import { useParams } from "react-router-dom";
 
-export const AddProperty = () => {
-  document.title = "Add Property";
-
-  const [loading, setLoading] = useState(false);
-  const [sizeUnit, setSizeUnit] = useState("sqFt");
-
-  // Fetch categories and amenities data
-  const {
-    data: categoriesData,
-    error: categoryError,
-    loading: categoryLoading,
-    refetch: refetchCategories,
-  } = useFetchData(`${process.env.BASE_URL}/api/v1/category`);
-
-  const categories = categoriesData?.category || [];
+export const UpdateCommercial = () => {
+  document.title = "Update Property";
+  const { id } = useParams();
+  const [buttonLoading, setButtonLoading] = useState(false);
+  // Fetching the property data by ID
+  const { data, loading, error, refetch } = useFetchData(
+    `${process.env.BASE_URL}/api/v1/commercial/${id}`
+  );
+  console.log("DATA IS", data?.property);
 
   const {
     data: amenitiesData,
     error: amenitiesError,
     loading: amenitiesLoading,
     refetch: refetchAmenities,
-  } = useFetchData(`${process.env.BASE_URL}/api/v1/amenities`);
+  } = useFetchData(`${process.env.BASE_URL}/api/v1/commercial-amenities`);
 
   const amenities = amenitiesData?.amenity || [];
 
   // State to manage form data
   const [formData, setFormData] = useState({
-    category: "",
-    name: "",
+    propertyType: "",
+    title: "",
     builder: "",
     unit: "",
     size: "",
+    sizeUnit: "",
     price: "",
     location: "",
     address: "",
     description: "",
-    furnishType: "",
-    societyAmenities: [],
-    flatAmenities: [],
-    locationAdvantages: [],
-    propertyType: "",
-    projectStatus: "",
     projectSize: "",
-    totalUnits: "",
+    projectStatus: "",
+    amenities: [],
   });
-
-  // State to manage select all
-  const [selectAllSociety, setSelectAllSociety] = useState(false);
-  const [selectAllFlat, setSelectAllFlat] = useState(false);
-  const [selectAllLocation, setSelectAllLocation] = useState(false);
 
   // State to track uploaded images and brochure
   const [uploadedImages, setUploadedImages] = useState([]);
-  // State to track uploaded video
   const [uploadedVideos, setUploadedVideos] = useState(null);
-  // State to track uploaded dp image
   const [uploadedDpImage, setUploadedDpImage] = useState(null);
+  const [selectAll, setSelectAll] = useState(false);
 
   // Ref to the file input element
   const imageInputRef = useRef();
   const videoInputRef = useRef();
   const dpInputRef = useRef();
 
+  // Load property data into formData when property is fetched
+  useEffect(() => {
+    if (data?.property) {
+      const property = data.property;
+      setFormData({
+        propertyType: property.propertyType || "", //PROPERTY TYPE ADDED HERE
+        title: property.title || "",
+        builder: property.builder || "",
+        unit: property.unit || "",
+        size: property.size || "",
+        price: property.price || "",
+        location: property.location || "",
+        address: property.address || "",
+        description: property.description || "",
+        projectSize: property.projectSize || "",
+        projectStatus: property.projectStatus || "",
+        sizeUnit: property.sizeUnit || "",
+        amenities: property.amenities || [],
+      });
+      setUploadedImages(property.images || []);
+      // setUploadedVideos(property.video || null  );
+      // setSizeUnit(property.sizeUnit);
+      setUploadedDpImage(property.dp || null);
+    }
+  }, [data]);
+
+  console.log(amenities);
+
+  console.log("nothing", data.property?.amenities);
+  console.log("data is", data.property);
+
   // Handle form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "sizeUnit") {
-      setSizeUnit(value);
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    console.log(value);
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   // Handle select changes
@@ -105,48 +121,31 @@ export const AddProperty = () => {
   };
 
   // Handle checkbox changes
-  const handleCheckboxChange = (event, type) => {
-    const { name, checked } = event.target; // Use name instead of value
-
-    if (name === "selectAll") {
-      console.log("Select All");
-      if (type === "societyAmenities") setSelectAllSociety(checked);
-      if (type === "flatAmenities") setSelectAllFlat(checked);
-      if (type === "locationAdvantages") setSelectAllLocation(checked);
-
-      setFormData({
-        ...formData,
-        [type]: checked
-          ? amenities
-              .filter((amenity) => amenity.type === amenityTypeMap[type])
-              .map((amenity) => amenity._id)
-          : [],
-      });
-    } else {
-      const updatedAmenities = checked
-        ? [...formData[type], name] // Using `name` instead of `value`
-        : formData[type].filter((amenity) => amenity !== name);
-
-      setFormData({ ...formData, [type]: updatedAmenities });
-
-      // Check if all checkboxes are selected, then auto-check "Select All"
-      const allSelected =
-        updatedAmenities.length ===
-        amenities.filter((amenity) => amenity.type === getAmenityType(type))
-          .length;
-
-      if (type === "societyAmenities") setSelectAllSociety(allSelected);
-      if (type === "flatAmenities") setSelectAllFlat(allSelected);
-      if (type === "locationAdvantages") setSelectAllLocation(allSelected);
-    }
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+  
+    setFormData((prevFormData) => {
+      const currentAmenities = Array.isArray(prevFormData.amenities) ? prevFormData.amenities : [];
+  
+      let updatedAmenities;
+      
+      if (name === "selectAll") {
+        updatedAmenities = checked ? amenities.map((a) => a._id) : [];
+      } else {
+        updatedAmenities = checked
+          ? [...currentAmenities, name] // Add checked amenity
+          : currentAmenities.filter((id) => id !== name); // Remove unchecked amenity
+      }
+      
+      setTimeout(() => {
+        setSelectAll(updatedAmenities.length === amenities.length);
+      }, 0);
+  
+      return { ...prevFormData, amenities: updatedAmenities };
+    });
   };
+  
 
-  // dynamic amenity type mapping
-  const getAmenityType = (type) => {
-    return type === "locationAdvantages"
-      ? "location_advantages"
-      : type.replace("Amenities", "_amenity");
-  };
 
   // radio button handler
   const handleRadioChange = (event, type) => {
@@ -171,7 +170,14 @@ export const AddProperty = () => {
     });
   };
 
-  // Handler for image uploading
+  // dynamic amenity type mapping
+  const getAmenityType = (type) => {
+    return type === "locationAdvantages"
+      ? "location_advantages"
+      : type.replace("Amenities", "_amenity");
+  };
+
+  // Handler for uploading images
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     const maxSize = 2 * 1024 * 1024; // 2 MB
@@ -206,7 +212,6 @@ export const AddProperty = () => {
       }
     }
   };
-
   const handleDescriptionUpload = (event) => {
     const file = event.target.files[0];
     let maxSize = 1024 * 1024 * 2; // 2Mb max
@@ -227,15 +232,59 @@ export const AddProperty = () => {
     }
   };
 
+  const renderDescriptionPreview = () => {
+    if (!uploadedDpImage || !(uploadedDpImage instanceof File)) return null; // Ensure it's a valid File
+
+    return (
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          width: 100,
+          height: 100,
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          "&:hover .delete-image": { opacity: 1 },
+        }}
+      >
+        <img
+          src={URL.createObjectURL(uploadedDpImage)}
+          alt="Preview"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
+        />
+        <IconButton
+          className="delete-image"
+          onClick={() => setUploadedDpImage(null)}
+          sx={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            width: 20,
+            height: 20,
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+          }}
+        >
+          <CloseIcon sx={{ fontSize: 14 }} />
+        </IconButton>
+      </Box>
+    );
+  };
+
   // Function to remove image
   const removeImage = (index) => {
     setUploadedImages((prevImages) =>
       prevImages.filter((image, i) => i !== index)
     );
-  };
-
-  const removeDpImage = () => {
-    setUploadedDpImage(null);
   };
 
   const removeVideo = () => {
@@ -245,106 +294,142 @@ export const AddProperty = () => {
   // Function to display image previews
   const renderImagePreviews = () => {
     return uploadedImages.map((image, index) => (
-      <div
+      <Box
         key={index}
-        style={{ position: "relative", display: "inline-block" }}
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          width: 100,
+          height: 100,
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          marginRight: 1,
+          marginBottom: 1,
+          "&:hover .delete-image": { opacity: 1 },
+        }}
       >
         <img
           src={URL.createObjectURL(image)}
           alt="Preview"
-          className="image-preview"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
         />
-        <button
-          type="button"
+        <IconButton
           className="delete-image"
           onClick={() => removeImage(index)}
+          sx={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            width: 20,
+            height: 20,
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+          }}
         >
-          X
-        </button>
-      </div>
+          <CloseIcon sx={{ fontSize: 14 }} />
+        </IconButton>
+      </Box>
     ));
   };
 
   // Function for display video previews
   const renderVideoPreview = () => {
-    return uploadedVideos ? (
-      <div className="preview">
-        <video controls>
-          <source src={URL.createObjectURL(uploadedVideos)} type="video/mp4" />
+    if (!uploadedVideos) return null; // Prevent errors if there's no video
+
+    let videoSrc = null;
+    if (uploadedVideos instanceof File) {
+      videoSrc = URL.createObjectURL(uploadedVideos);
+    } else if (typeof uploadedVideos === "string") {
+      videoSrc = uploadedVideos; // Directly use URL if it's already uploaded
+    }
+
+    if (!videoSrc) return null; // If still invalid, return nothing
+
+    return (
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          width: "250px",
+          height: "140px",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+          marginTop: 2,
+          "&:hover .delete-video": { opacity: 1 },
+        }}
+      >
+        <video
+          src={videoSrc}
+          controls
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
+        >
           Your browser does not support the video tag.
         </video>
-        <button
-          type="button"
-          className="delete-video"
-          onClick={() => removeVideo()}
-        >
-          X
-        </button>
-      </div>
-    ) : null;
-  };
 
-  const renderDescriptionPreview = () => {
-    return uploadedDpImage ? (
-      <div className="preview">
-        <img
-          src={URL.createObjectURL(uploadedDpImage)}
-          alt="Preview"
-          className="image-preview"
-        />
-        <button
-          type="button"
-          className="delete-image"
-          onClick={() => removeDpImage()}
+        <IconButton
+          className="delete-video"
+          onClick={removeVideo}
+          sx={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            width: 24,
+            height: 24,
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+          }}
         >
-          X
-        </button>
-      </div>
-    ) : null;
+          <CloseIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+      </Box>
+    );
   };
 
   // Handle form submission
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setLoading(true);
-    const allSelectedAmenities = [
-      ...formData.societyAmenities,
-      ...formData.flatAmenities,
-      ...formData.locationAdvantages,
-    ];
+    setButtonLoading(true);
 
     const formDataToSend = new FormData();
 
     // Append form fields to FormData
     Object.keys(formData).forEach((key) => {
-      if (
-        Array.isArray(formData[key]) &&
-        (key === "societyAmenities" ||
-          key === "flatAmenities" ||
-          key === "locationAdvantages")
-      ) {
-        formData[key].forEach((item) =>
-          formDataToSend.append("amenities", item)
-        );
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
+      formDataToSend.append(key, formData[key]);
     });
-
-    formDataToSend.append("sizeUnit", sizeUnit);
 
     // Append uploaded images
     uploadedImages.forEach((image) => {
       formDataToSend.append("images", image);
     });
 
-    formDataToSend.append("video", uploadedVideos);
+    // Append uploaded video
+    if (uploadedVideos) {
+      formDataToSend.append("video", uploadedVideos);
+    }
 
     formDataToSend.append("image", uploadedDpImage);
 
     try {
-      const response = await axios.post(
-        `${process.env.BASE_URL}/api/v1/property`,
+      const response = await axios.patch(
+        `${process.env.BASE_URL}/api/v1/commercial/${id}`,
         formDataToSend,
         {
           headers: {
@@ -353,45 +438,16 @@ export const AddProperty = () => {
         }
       );
 
-      if (response.status === 201) {
-        toast.success("Property added successfully!");
-        setFormData({
-          category: "",
-          name: "",
-          builder: "",
-          unit: "",
-          size: "",
-          price: "",
-          location: "",
-          address: "",
-          description: "",
-          furnishType: "",
-          societyAmenities: [],
-          flatAmenities: [],
-          locationAdvantages: [],
-          propertyType: "",
-          projectStatus: "",
-          projectSize: "",
-          totalUnits: "",
-        });
-        setSizeUnit("sqFt");
-        setSelectAllFlat(false);
-        setSelectAllLocation(false);
-        setSelectAllSociety(false);
-        setUploadedVideos(false);
-        setUploadedImages([]);
-        setUploadedDpImage("");
-
-        // Reset the file input after submission
-        if (imageInputRef.current) {
-          imageInputRef.current.value = ""; // Reset the file input
-        }
+      if (response.status === 200) {
+        toast.success("Property updated successfully!");
+        refetch(); // Refetch the property data
       }
-      setLoading(false);
+      setButtonLoading(false);
+      setUploadedVideos(null);
     } catch (error) {
-      setLoading(false);
-      console.error("Error adding property:", error);
-      toast.error("Failed to add property.", error);
+      setButtonLoading(false);
+      console.error("Error updating property:", error);
+      toast.error("Failed to update property.");
     }
   };
 
@@ -483,7 +539,7 @@ export const AddProperty = () => {
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
           <h2 className="text-xl font-bold p-2 text-center sm:text-left">
-            Add Property
+            Update Commercial Property
           </h2>
           <div className="container mx-auto">
             <form onSubmit={handleSubmit}>
@@ -509,23 +565,6 @@ export const AddProperty = () => {
                   Property Details
                 </Typography>
 
-                {/* Property Category Dropdown */}
-                <FormControl color="secondary" size="small" fullWidth>
-                  <InputLabel>Property Category*</InputLabel>
-                  <Select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleSelectChange}
-                    label="Property Category*"
-                  >
-                    {categories.map((category) => (
-                      <MenuItem key={category._id} value={category._id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
                 {/* Property Type */}
                 <TextField
                   label="Property Type (e.g., RERA)"
@@ -544,8 +583,8 @@ export const AddProperty = () => {
                   variant="outlined"
                   color="secondary"
                   size="small"
-                  name="name"
-                  value={formData.name}
+                  name="title"
+                  value={formData.title}
                   onChange={handleChange}
                   fullWidth
                 />
@@ -624,7 +663,7 @@ export const AddProperty = () => {
                 </Typography>
                 {/* Unit Input */}
                 <TextField
-                  label="Unit (e.g., 2 BHK - bhk/BHK)*"
+                  label="Unit (e.g., 2 bhk/BHK)*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -730,150 +769,52 @@ export const AddProperty = () => {
                   onChange={handleChange}
                   fullWidth
                 />
-
-                {/* Total Units Input */}
-                <TextField
-                  label="Total Units (e.g. 200, only numeric values)*"
-                  variant="outlined"
-                  color="secondary"
-                  size="small"
-                  name="totalUnits"
-                  value={formData.totalUnits}
-                  onChange={handleChange}
-                  fullWidth
-                />
               </Box>
 
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
-                  gap: 3,
-                  mt: 3,
-                  p: 3,
-                  border: "1px solid #E0E0E0",
-                  borderRadius: "12px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
-                  maxWidth: "600px",
-                  margin: "auto",
+                  flexWrap: "wrap",
+                  gap: "12px",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
-                >
-                  Amenity Details
-                </Typography>
-                {/* Furnish Type */}
-                <FormControl>
-                  <FormLabel
-                    sx={{
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      color: "#333",
-                      mb: 1,
-                    }}
-                  >
-                    Furnish Type
-                  </FormLabel>
-                  <RadioGroup
-                    name="furnishType"
-                    value={formData.furnishType}
-                    onChange={handleChange}
-                    sx={{ gap: 1 }}
-                  >
-                    {["Fully Furnished", "Semi Furnished", "Unfurnished"].map(
-                      (type) => (
-                        <FormControlLabel
-                          key={type}
-                          value={type}
-                          control={<Radio color="secondary" />}
-                          label={type}
-                          sx={{
-                            backgroundColor: "#f9f9f9",
-                            padding: "10px",
-                            borderRadius: "8px",
-                            border: "1px solid #ddd",
-                          }}
-                        />
-                      )
-                    )}
-                  </RadioGroup>
-                </FormControl>
+                {/* Select All Checkbox */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="secondary"
+                      checked={selectAll}
+                      name="selectAll"
+                      onChange={handleCheckboxChange}
+                    />
+                  }
+                  label="Select All"
+                />
 
-                {/* Render Amenity Sections */}
-                {[
-                  {
-                    label: "Society Amenities",
-                    type: "society_amenity",
-                    stateKey: "societyAmenities",
-                  },
-                  {
-                    label: "Flat Amenities",
-                    type: "flat_amenity",
-                    stateKey: "flatAmenities",
-                  },
-                  {
-                    label: "Location Advantages",
-                    type: "location_advantages",
-                    stateKey: "locationAdvantages",
-                  },
-                ].map(({ label, type, stateKey }) => (
-                  <FormControl key={type} component="fieldset">
-                    <FormLabel
+                {/* Prevent error by ensuring `allAmenities` exists */}
+                {amenities.length > 0 &&
+                  amenities.map((amenity) => (
+                    <FormControlLabel
+                      key={amenity._id}
+                      control={
+                        <Checkbox
+                          color="secondary"
+                          name={amenity._id}
+                          checked={formData.amenities?.includes(amenity._id)}
+                          onChange={handleCheckboxChange}
+                        />
+                      }
+                      label={amenity.name}
                       sx={{
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        color: "#333",
-                        mb: 1,
+                        backgroundColor: "#f5f5f5",
+                        padding: "8px 12px",
+                        borderRadius: "6px",
                       }}
-                    >
-                      {label}
-                    </FormLabel>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "12px",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: "1px solid #ddd",
-                      }}
-                    >
-                      <FormControlLabel
-                        control={<Checkbox color="secondary" />}
-                        label="Select All"
-                        onChange={(e) => handleRadioChange(e, stateKey)}
-                      />
-                      {amenities
-                        .filter((amenity) => amenity.type === type)
-                        .map((amenity) => (
-                          <FormControlLabel
-                            key={amenity._id}
-                            control={
-                              <Checkbox
-                                color="secondary"
-                                name={amenity._id}
-                                checked={formData[stateKey]?.includes(
-                                  amenity._id
-                                )}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, stateKey)
-                                }
-                              />
-                            }
-                            label={amenity.name}
-                            sx={{
-                              backgroundColor: "#f5f5f5",
-                              padding: "8px 12px",
-                              borderRadius: "6px",
-                            }}
-                          />
-                        ))}
-                    </Box>
-                  </FormControl>
-                ))}
+                    />
+                  ))}
               </Box>
 
               <Box
@@ -1017,10 +958,10 @@ export const AddProperty = () => {
                     ":hover": { backgroundColor: "#d32f2f" },
                   }}
                 >
-                  {loading ? (
+                  {buttonLoading ? (
                     <CircularProgress size="25px" sx={{ color: "white" }} />
                   ) : (
-                    "Add Property"
+                    "Update Property"
                   )}
                 </Button>
               </Box>

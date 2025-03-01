@@ -215,6 +215,7 @@ export const Home = () => {
                 backgroundColor: "#03002e",
                 color: "white",
                 textTransform: "none",
+                borderBottom: "2px solid orange",
               }}
             >
               View all
@@ -224,109 +225,52 @@ export const Home = () => {
       </div>
 
       {/* How it Works */}
-      <div className="mx-auto max-w-[1280px] my-10">
-        <div className="grid sm:grid-cols-12">
-          <div className="hidden md:flex col-span-12 md:col-span-6 lg:col-span-7 justify-center">
-            <div className="grid sm:grid-cols-12">
-              <div className="col-span-12">
-                <div className="grid sm:grid-cols-12">
-                  <div className="col-span-8 m-5">
-                    <img
-                      src={findRealEstate}
-                      alt=""
-                      className="rounded-lg h-[250px] w-[1000px] object-fill"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="col-span-12">
-                <div className="grid sm:grid-cols-12">
-                  <div className="col-span-5 mx-5">
-                    <img
-                      src={realtor}
-                      alt=""
-                      className="rounded-lg h-[260px] w-full object-cover"
-                    />
-                  </div>
-                  <div className="col-span-5">
-                    <img
-                      src={keys}
-                      alt=""
-                      className="rounded-lg h-[260px] w-full object-fill"
-                    />
-                  </div>
-                </div>
-              </div>
+      <div className="mx-auto max-w-[1280px] my-16 px-6 lg:px-12">
+      <div className="grid sm:grid-cols-12 gap-12 items-center">
+        {/* Left Section - Images */}
+        <div className="hidden md:flex col-span-12 md:col-span-6 lg:col-span-7 justify-center">
+          <div className="grid sm:grid-cols-12 gap-6">
+            <div className="col-span-12 flex justify-center">
+              <img src={findRealEstate} alt="Find Real Estate" className="rounded-lg object-cover shadow-lg w-full max-h-[300px]" />
+            </div>
+            <div className="col-span-12 grid sm:grid-cols-2 gap-6">
+              <img src={realtor} alt="Realtor" className="rounded-lg object-cover shadow-md w-full max-h-[250px]" />
+              <img src={keys} alt="Keys" className="rounded-lg object-cover shadow-md w-full max-h-[215px]" />
             </div>
           </div>
-          <div className="col-span-12 md:col-span-6  lg:col-span-5 flex flex-col justify-center lg:ps-14">
-            <h1 className="px-5 text-[#1A1A1A] font-roboto  text-2xl lg:text-4xl font-medium text-center lg:text-start mt-4 lg:mt-0">
-              How It works? <br />
-              Find a perfect home
-            </h1>
-            <p className="text-md lg:text-lg px-5 mt-5">
-              Discover your ideal home with ease. Browse listings, get expert
-              advice, and find the perfect match for your lifestyle.
-            </p>
-            <ul className="my-10 flex flex-col gap-10 lg:mx-0 mx-5 ps-6 lg:ps-4">
-              <li>
-                <div className="flex gap-5">
-                  <div className="relative basis-[10%]">
-                    <img src={Icon1} alt="" className="w-[35px] h-[35px]" />
-                    <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[8%]"></div>
-                  </div>
-                  <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-medium ">
-                      Find Real Estate
-                    </h1>
-                    <p className="mt-2 text-sm lg:text-[15px]">
-                      Finding your dream property has never been easier. With
-                      Grow Infinity Realtors, you access extensive listings, and
-                      expert guidance for a seamless real estate journey. Start
-                      exploring today and discover your perfect home.
-                    </p>
-                  </div>
+        </div>
+
+        {/* Right Section - Text Content */}
+        <div className="col-span-12 md:col-span-6 lg:col-span-5 text-center lg:text-left">
+          <h1 className="text-3xl lg:text-3xl font-bold text-gray-900 leading-tight">
+            How It Works?
+            <br /> Find Your Perfect Home
+          </h1>
+          <p className="text-lg text-gray-600 mt-4">
+            Discover your ideal home with ease. Browse listings, get expert advice, and find the perfect match for your lifestyle.
+          </p>
+
+          {/* Steps List */}
+          <div className="mt-8 space-y-6">
+            {[{ icon: Icon1, title: "Find Real Estate", description: "Access extensive listings and expert guidance for a seamless real estate journey." },
+              { icon: Icon2, title: "Meet Realtor", description: "Connect with trusted real estate professionals who understand your needs and priorities." },
+              { icon: Icon3, title: "Take the Keys", description: "Unlock your future with confidence. Step into your new beginning with expert support." }
+            ].map((step, index) => (
+              <div key={index} className="flex items-start gap-4">
+                <div className="relative w-12 h-12 flex justify-center items-center bg-[#e7c873b8] rounded-full">
+                  <img src={step.icon} alt={step.title} className="w-8 h-8" />
                 </div>
-              </li>
-              <li>
-                <div className="flex gap-5">
-                  <div className="relative basis-[10%]">
-                    <img src={Icon2} alt="" className="w-[35px] h-[35px]" />
-                    <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[10%]"></div>
-                  </div>
-                  <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-medium">
-                      Meet Realtor
-                    </h1>
-                    <p className="mt-2 text-sm lg:text-[15px]">
-                      Connect with trusted real estate professionals who
-                      understand your needs and priorities.
-                    </p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-gray-900">{step.title}</h3>
+                  <p className="text-gray-600 text-md mt-1">{step.description}</p>
                 </div>
-              </li>
-              <li>
-                <div className="flex gap-5">
-                  <div className="relative basis-[10%]">
-                    <img src={Icon3} alt="" className="w-[35px] h-[35px]" />
-                    <div className="bg-[#e7c873b8] absolute h-[30px] w-[30px] rounded-[50%] left-[-8px] top-[10%]"></div>
-                  </div>
-                  <div className="flex-col basis-[90%]">
-                    <h1 className="text-lg lg:text-xl font-medium">
-                      Take the keys
-                    </h1>
-                    <p className="mt-2 text-sm lg:text-[15px]">
-                      Unlock your future with confidence. Take the Home Keys and
-                      step into your new beginning with expert guidance and
-                      support.
-                    </p>
-                  </div>
-                </div>
-              </li>
-            </ul>
+              </div>
+            ))}
           </div>
         </div>
       </div>
+    </div>
+
 
       <Testimonials />
       <Choose />

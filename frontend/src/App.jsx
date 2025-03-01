@@ -29,6 +29,7 @@ import { ViewBrochure } from "./admin/pages/brochure/ViewBrochure.jsx";
 import { UpdateBrochure } from "./admin/pages/brochure/UpdateBrochure.jsx";
 import { Search } from "./pages/Search/Search.jsx";
 import { ProjectDetails } from "./pages/ProjectDetails/ProjectDetails.jsx";
+import { CommercialDetails } from "./pages/ProjectDetails/CommercialDetails.jsx";
 import { SingleProject } from "./pages/SingleProject/SingleProject.jsx";
 import { ViewPropertyEnquiry } from "./admin/pages/propertyEnquiry/ViewPropertyEnquiry.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy/PrivacyPolicy.jsx";
@@ -40,6 +41,13 @@ import { ViewAwards } from "./admin/pages/awards/ViewAwards.jsx";
 import { AddTestimonial } from "./admin/pages/testimonial/AddTestimonial.jsx";
 import { ViewTestimonial } from "./admin/pages/testimonial/ViewTestimonial.jsx";
 import { UpdateTestimonial } from "./admin/pages/testimonial/UpdateTestimonial.jsx";
+import { AddCommercial } from "./admin/pages/commercial/AddCommerical.jsx";
+import { ViewCommercial } from "./admin/pages/commercial/ViewCommercial.jsx";
+import { UpdateCommercial } from "./admin/pages/commercial/UpdateCommercial.jsx";
+import { Commercial } from "./pages/Commercial/Commercial.jsx";
+import { AddAmenityCommercial } from "./admin/pages/commercialAmentiy/CommercialAmenity.jsx";
+import { Update } from "./admin/pages/commercialAmentiy/Update.jsx";
+import { View } from "./admin/pages/commercialAmentiy/View.jsx";
 
 const App = () => {
   return (
@@ -50,6 +58,7 @@ const App = () => {
       <Route path="/event" element={<Event />} />
       <Route path="/event/:id" element={<SingleEvent />} />
       <Route path="/project/:slug" element={<ProjectDetails />} />
+      <Route path="/project/commercial/:slug" element={<CommercialDetails />} />
       <Route path="/services" element={<Services />} />
       <Route path="/news" element={<News />} />
       <Route path="/awards" element={<Awards />} />
@@ -57,6 +66,7 @@ const App = () => {
       <Route path="/brochure" element={<Brochure />} />
       <Route path="/search/:id" element={<Search />} />
       <Route path="/property/:id" element={<SingleProject />} />
+      <Route path="/commercial/:id" element={<Commercial />} />
 
       {/* Admin Routes  */}
       <Route path="/admin" element={<AdminLogin />} />
@@ -254,6 +264,59 @@ const App = () => {
         element={
           <PrivateRoute>
             <UpdateTestimonial />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/add-commercial"
+        element={
+          <PrivateRoute>
+            <AddCommercial />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/admin/view-commercial"
+        element={
+          <PrivateRoute>
+            <ViewCommercial />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/update-commercial/:id"
+        element={
+          <PrivateRoute>
+            <UpdateCommercial />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/add-amenity-commercial"
+        element={
+          <PrivateRoute>
+            <AddAmenityCommercial />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/view-amenity-commercial"
+        element={
+          <PrivateRoute>
+            <View />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/admin/update-amenity-commercial/:id"
+        element={
+          <PrivateRoute>
+            <Update />
           </PrivateRoute>
         }
       />

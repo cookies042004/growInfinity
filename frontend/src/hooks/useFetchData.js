@@ -8,7 +8,7 @@ export const useFetchData = (url) => {
 
   const fetchData = async () => {
     try {
-      setLoading(true);
+      setLoading(true); 
       const response = await axios.get(url);
       
       if (response.data.success) {

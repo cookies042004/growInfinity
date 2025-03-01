@@ -67,3 +67,14 @@
   }
 }
 
+@media (max-width: 300px) {
+  .navbar {
+    grid-template-columns: 1fr;
+  }
+  
+  .navbar a {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+}
+

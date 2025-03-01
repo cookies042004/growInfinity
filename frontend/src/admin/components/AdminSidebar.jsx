@@ -10,6 +10,7 @@ import EventIcon from "@mui/icons-material/Event";
 import QuestionAnswerIcon from "@mui/icons-material/QuestionAnswer";
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ReviewsIcon from '@mui/icons-material/Reviews';
+import StoreIcon from '@mui/icons-material/Store';
 
 export const AdminSidebar = ({ mobileMenu }) => {
   const [accordions, setAccordions] = useState([
@@ -21,7 +22,9 @@ export const AdminSidebar = ({ mobileMenu }) => {
     true,
     true,
     true,
-  ]); // Add more false values for more items
+    true,
+    true,
+  ]);
 
   const handleAccordion = (index) => {
     const newAccordions = [...accordions];
@@ -465,6 +468,109 @@ export const AdminSidebar = ({ mobileMenu }) => {
               </li>
             </ul>
           </li>
+
+          <li>
+            <button
+              type="button"
+              className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+              aria-controls="dropdown-example"
+              data-collapse-toggle="dropdown-example"
+              onClick={() => handleAccordion(8)}
+            >
+              <StoreIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
+              <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                Commercial
+              </span>
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 4 4 4-4"
+                />
+              </svg>
+            </button>
+            <ul
+              id="dropdown-example"
+              className={accordions[8] ? "hidden" : "py-2 space-y-2"}
+            >
+              <li>
+                <Link
+                  to="/admin/add-commercial"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >
+                  Add Commercial
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/view-commercial"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >
+                  View Commercial
+                </Link>
+              </li>
+            </ul>
+          </li>
+
+          <li>
+            <button
+              type="button"
+              className="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+              aria-controls="dropdown-example"
+              data-collapse-toggle="dropdown-example"
+              onClick={() => handleAccordion(9)}
+            >
+              <DesignServicesIcon className="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white" />
+              <span className="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">
+                Facilities
+              </span>
+              <svg
+                className="w-3 h-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 10 6"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="m1 1 4 4 4-4"
+                />
+              </svg>
+            </button>
+            <ul
+              id="dropdown-example"
+              className={accordions[9] ? "hidden" : "py-2 space-y-2"}
+            >
+              <li>
+                <Link
+                  to="/admin/add-amenity-commercial"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >
+                  Add Commercial Facilities
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/admin/view-amenity-commercial"
+                  className="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                >
+                  View Commercial Facilities
+                </Link>
+              </li>
+            </ul>
+          </li>
+
           <li>
             <Link
               to="/admin/view-contact"

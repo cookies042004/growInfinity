@@ -91,13 +91,14 @@ export const AddNews = () => {
       <AdminLayout />
 
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
+        <div className="p-6 border-2 border-gray-300 border-dashed rounded-lg shadow-md hover:shadow-lg transition-all dark:border-gray-700 mt-20 max-w-lg mx-auto bg-white">
           <div className="container mx-auto">
-            <h2 className="text-xl font-bold p-2 text-center sm:text-left">
+            <h2 className="text-xl font-bold p-2 text-center sm:text-left mb-4">
               Add News
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap my-5">
+                {/* News Title */}
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
                     id="outlined-basic"
@@ -111,6 +112,7 @@ export const AddNews = () => {
                     onChange={handleChange}
                   />
                 </div>
+                {/* News URL */}
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
                     id="outlined-basic"
@@ -130,7 +132,7 @@ export const AddNews = () => {
                   <Box sx={{ mt: 2 }}>
                     <Typography variant="body1" gutterBottom>
                       Upload News Image - (Only jpeg, jpg, png files are allowed
-                      Max size: 1 mb)
+                      Max size: 1 MB)
                     </Typography>
                     <input
                       accept="image/*"
@@ -146,7 +148,7 @@ export const AddNews = () => {
                         color="primary"
                         component="span"
                         size="small"
-                        style={{ textTransform: "none" }}
+                        className="mt-2 border-gray-400 text-gray-700 hover:border-gray-600 hover:text-gray-900 transition-all"
                       >
                         Choose File
                       </Button>
@@ -158,36 +160,15 @@ export const AddNews = () => {
                         <Typography variant="body2" gutterBottom>
                           Image Preview:
                         </Typography>
-                        <div
-                          style={{
-                            position: "relative",
-                            display: "inline-block",
-                          }}
-                        >
+                        <div className="relative inline-block">
                           <img
                             src={imagePreview}
                             alt="Preview"
-                            style={{
-                              maxWidth: "100%",
-                              height: "auto",
-                              borderRadius: "8px",
-                            }}
+                            className="max-w-full h-auto rounded-lg border border-gray-300"
                           />
                           <button
                             onClick={() => setImagePreview(null)} // Remove preview
-                            style={{
-                              position: "absolute",
-                              top: "5px",
-                              right: "5px",
-                              background: "red",
-                              color: "white",
-                              border: "none",
-                              borderRadius: "50%",
-                              width: "20px",
-                              height: "20px",
-                              cursor: "pointer",
-                              fontSize: "12px",
-                            }}
+                            className="absolute top-1 right-1 bg-red-600 text-white border-none rounded-full w-6 h-6 flex items-center justify-center text-xs cursor-pointer hover:bg-red-800 transition-all"
                           >
                             ✕
                           </button>
@@ -197,14 +178,17 @@ export const AddNews = () => {
                   </Box>
                 </div>
               </div>
-              <div className="p-2">
+
+              {/* Submit Button */}
+              <div className="p-2 flex justify-center">
                 <Button
                   variant="contained"
                   color="secondary"
                   startIcon={!loading && <AddCircleIcon />}
                   type="submit"
                   size="small"
-                  style={{ textTransform: "none", width: "130px" }}
+                  className="text-white text-sm font-medium rounded-lg transition-transform transform hover:scale-105 hover:bg-red-700"
+                  style={{ textTransform: "none", width: "150px" }}
                 >
                   {loading ? (
                     <CircularProgress size="25px" sx={{ color: "white" }} />

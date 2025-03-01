@@ -61,9 +61,9 @@ export const ViewNews = () => {
       <ToastContainer />
       <AdminLayout />
       <div className="p-4 sm:ml-64">
-        <div className="p-4 bg-white shadow-md rounded-lg border border-gray-200 mt-20">
-          <div className="flex items-center justify-between pb-6 border-b">
-            <h2 className="text-2xl font-bold text-center p-2 sm:text-left text-blue-600">
+        <div className="p-6 bg-white shadow-md rounded-lg border border-gray-200 mt-20">
+          <div className="flex items-center justify-between pb-6 border-b border-gray-300">
+            <h2 className="text-2xl font-bold p-2 sm:text-left text-blue-600">
               View News
             </h2>
             <div className="flex gap-4">
@@ -72,6 +72,7 @@ export const ViewNews = () => {
                 color="primary"
                 size="small"
                 onClick={refetch}
+                className="hover:bg-blue-700 transition-all"
                 sx={{ textTransform: "none" }}
               >
                 Refresh
@@ -95,13 +96,25 @@ export const ViewNews = () => {
                 <TableContainer>
                   <Table sx={{ minWidth: 650 }}>
                     <TableHead>
-                      <TableRow className="bg-gray-100">
-                        <TableCell>S No.</TableCell>
-                        <TableCell>Title</TableCell>
-                        <TableCell>URL</TableCell>
-                        <TableCell>Image</TableCell>
-                        <TableCell>Date</TableCell>
-                        <TableCell>Action</TableCell>
+                      <TableRow className="bg-gray-100 border-b border-gray-300">
+                        <TableCell className="px-4 py-3 font-semibold">
+                          S No.
+                        </TableCell>
+                        <TableCell className="px-4 py-3 font-semibold">
+                          Title
+                        </TableCell>
+                        <TableCell className="px-4 py-3 font-semibold">
+                          URL
+                        </TableCell>
+                        <TableCell className="px-4 py-3 font-semibold text-center">
+                          Image
+                        </TableCell>
+                        <TableCell className="px-4 py-3 font-semibold">
+                          Date
+                        </TableCell>
+                        <TableCell className="px-4 py-3 font-semibold text-center">
+                          Action
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -113,59 +126,49 @@ export const ViewNews = () => {
                         .map((article, i) => (
                           <TableRow
                             key={article._id}
-                            sx={{
-                              "&:hover": {
-                                backgroundColor: "#f1f1f1",
-                              },
-                            }}
+                            className="border-b border-gray-200 hover:bg-gray-100 transition-all"
                           >
-                            <TableCell>{i + 1}</TableCell>
-                            <TableCell>
+                            <TableCell className="px-4 py-3">{i + 1}</TableCell>
+                            <TableCell className="px-4 py-3">
                               {article.title.slice(0, 20) + "..."}
                             </TableCell>
-                            <TableCell>{article.url}</TableCell>
-                            <TableCell>
+                            <TableCell className="px-4 py-3">
+                              {article.url}
+                            </TableCell>
+                            <TableCell className="px-4 py-3 flex justify-center">
                               <img
                                 src={article.image}
                                 alt={article.title}
-                                style={{
-                                  height: "100px",
-                                  width: "150px",
-                                  objectFit: "contain",
-                                  borderRadius: "8px",
-                                  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-                                }}
+                                className="h-24 w-36 object-cover rounded-lg shadow-md"
                               />
                             </TableCell>
-                            <TableCell>
+                            <TableCell className="px-4 py-3">
                               {new Date(article.createdAt).toLocaleDateString()}
                             </TableCell>
-                            <TableCell>
-                              <div className="flex gap-2 justify-center">
-                                <Link
-                                  to={`/admin/update-news/${article._id}`}
-                                >
-                                  <Button
-                                    variant="outlined"
-                                    size="small"
-                                    color="primary"
-                                    startIcon={<EditIcon />}
-                                    sx={{ textTransform: "none" }}
-                                  >
-                                    Edit
-                                  </Button>
-                                </Link>
+                            <TableCell className="px-4 py-3 flex gap-2 justify-center">
+                              <Link to={`/admin/update-news/${article._id}`}>
                                 <Button
-                                  onClick={() => handleDelete(article._id)}
-                                  variant="contained"
+                                  variant="outlined"
                                   size="small"
-                                  color="error"
-                                  startIcon={<DeleteIcon />}
+                                  color="primary"
+                                  startIcon={<EditIcon />}
+                                  className="hover:border-blue-600 hover:text-blue-600 transition-all"
                                   sx={{ textTransform: "none" }}
                                 >
-                                  Delete
+                                  Edit
                                 </Button>
-                              </div>
+                              </Link>
+                              <Button
+                                onClick={() => handleDelete(article._id)}
+                                variant="contained"
+                                size="small"
+                                color="error"
+                                startIcon={<DeleteIcon />}
+                                className="hover:bg-red-700 transition-all"
+                                sx={{ textTransform: "none" }}
+                              >
+                                Delete
+                              </Button>
                             </TableCell>
                           </TableRow>
                         ))}

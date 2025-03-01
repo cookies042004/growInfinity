@@ -20,10 +20,8 @@ import { useFetchData } from "../../../hooks/useFetchData";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
-import "./AddProperty.css";
-import { toWords } from "number-to-words";
 
-export const AddProperty = () => {
+export const AddCommercial = () => {
   document.title = "Add Property";
 
   const [loading, setLoading] = useState(false);
@@ -44,14 +42,16 @@ export const AddProperty = () => {
     error: amenitiesError,
     loading: amenitiesLoading,
     refetch: refetchAmenities,
-  } = useFetchData(`${process.env.BASE_URL}/api/v1/amenities`);
+  } = useFetchData(`${process.env.BASE_URL}/api/v1/commercial-amenities`);
 
   const amenities = amenitiesData?.amenity || [];
 
+  console.log(amenities);
+
   // State to manage form data
   const [formData, setFormData] = useState({
-    category: "",
-    name: "",
+    amenities: [], // Initialize amenities here
+    title: "",
     builder: "",
     unit: "",
     size: "",
@@ -59,20 +59,12 @@ export const AddProperty = () => {
     location: "",
     address: "",
     description: "",
-    furnishType: "",
-    societyAmenities: [],
-    flatAmenities: [],
-    locationAdvantages: [],
     propertyType: "",
     projectStatus: "",
     projectSize: "",
-    totalUnits: "",
   });
 
-  // State to manage select all
-  const [selectAllSociety, setSelectAllSociety] = useState(false);
-  const [selectAllFlat, setSelectAllFlat] = useState(false);
-  const [selectAllLocation, setSelectAllLocation] = useState(false);
+  const [selectAll, setSelectAll] = useState(false); // Define selectAll state
 
   // State to track uploaded images and brochure
   const [uploadedImages, setUploadedImages] = useState([]);
@@ -105,41 +97,31 @@ export const AddProperty = () => {
   };
 
   // Handle checkbox changes
-  const handleCheckboxChange = (event, type) => {
-    const { name, checked } = event.target; // Use name instead of value
+  const handleCheckboxChange = (event) => {
+    const { name, checked } = event.target;
+  
+    setFormData((prevFormData) => {
+      const currentAmenities = Array.isArray(prevFormData.amenities) ? prevFormData.amenities : [];
+  
+      if (name === "selectAll") {
+        const allSelected = checked ? amenities.map((amenity) => amenity._id) : [];
+        
+        setSelectAll(checked);
+  
+        return { ...prevFormData, amenities: allSelected };
+      } else {
+        const updatedAmenities = checked
+          ? [...currentAmenities, name] // Add selected amenity
+          : currentAmenities.filter((id) => id !== name);
 
-    if (name === "selectAll") {
-      console.log("Select All");
-      if (type === "societyAmenities") setSelectAllSociety(checked);
-      if (type === "flatAmenities") setSelectAllFlat(checked);
-      if (type === "locationAdvantages") setSelectAllLocation(checked);
-
-      setFormData({
-        ...formData,
-        [type]: checked
-          ? amenities
-              .filter((amenity) => amenity.type === amenityTypeMap[type])
-              .map((amenity) => amenity._id)
-          : [],
-      });
-    } else {
-      const updatedAmenities = checked
-        ? [...formData[type], name] // Using `name` instead of `value`
-        : formData[type].filter((amenity) => amenity !== name);
-
-      setFormData({ ...formData, [type]: updatedAmenities });
-
-      // Check if all checkboxes are selected, then auto-check "Select All"
-      const allSelected =
-        updatedAmenities.length ===
-        amenities.filter((amenity) => amenity.type === getAmenityType(type))
-          .length;
-
-      if (type === "societyAmenities") setSelectAllSociety(allSelected);
-      if (type === "flatAmenities") setSelectAllFlat(allSelected);
-      if (type === "locationAdvantages") setSelectAllLocation(allSelected);
-    }
+        setSelectAll(updatedAmenities.length === amenities.length);
+  
+        return { ...prevFormData, amenities: updatedAmenities };
+      }
+    });
   };
+  
+  
 
   // dynamic amenity type mapping
   const getAmenityType = (type) => {
@@ -307,28 +289,11 @@ export const AddProperty = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
-    const allSelectedAmenities = [
-      ...formData.societyAmenities,
-      ...formData.flatAmenities,
-      ...formData.locationAdvantages,
-    ];
 
     const formDataToSend = new FormData();
 
-    // Append form fields to FormData
     Object.keys(formData).forEach((key) => {
-      if (
-        Array.isArray(formData[key]) &&
-        (key === "societyAmenities" ||
-          key === "flatAmenities" ||
-          key === "locationAdvantages")
-      ) {
-        formData[key].forEach((item) =>
-          formDataToSend.append("amenities", item)
-        );
-      } else {
-        formDataToSend.append(key, formData[key]);
-      }
+      formDataToSend.append(key, formData[key]);
     });
 
     formDataToSend.append("sizeUnit", sizeUnit);
@@ -344,7 +309,7 @@ export const AddProperty = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.BASE_URL}/api/v1/property`,
+        `${process.env.BASE_URL}/api/v1/commercial`,
         formDataToSend,
         {
           headers: {
@@ -353,11 +318,12 @@ export const AddProperty = () => {
         }
       );
 
+      console.log("Property added:", response.data);
+
       if (response.status === 201) {
         toast.success("Property added successfully!");
         setFormData({
-          category: "",
-          name: "",
+          title: "",
           builder: "",
           unit: "",
           size: "",
@@ -365,19 +331,11 @@ export const AddProperty = () => {
           location: "",
           address: "",
           description: "",
-          furnishType: "",
-          societyAmenities: [],
-          flatAmenities: [],
-          locationAdvantages: [],
           propertyType: "",
           projectStatus: "",
           projectSize: "",
-          totalUnits: "",
         });
         setSizeUnit("sqFt");
-        setSelectAllFlat(false);
-        setSelectAllLocation(false);
-        setSelectAllSociety(false);
         setUploadedVideos(false);
         setUploadedImages([]);
         setUploadedDpImage("");
@@ -483,7 +441,7 @@ export const AddProperty = () => {
       <div className="p-4 sm:ml-64">
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
           <h2 className="text-xl font-bold p-2 text-center sm:text-left">
-            Add Property
+            Add Commercial Property
           </h2>
           <div className="container mx-auto">
             <form onSubmit={handleSubmit}>
@@ -509,23 +467,6 @@ export const AddProperty = () => {
                   Property Details
                 </Typography>
 
-                {/* Property Category Dropdown */}
-                <FormControl color="secondary" size="small" fullWidth>
-                  <InputLabel>Property Category*</InputLabel>
-                  <Select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleSelectChange}
-                    label="Property Category*"
-                  >
-                    {categories.map((category) => (
-                      <MenuItem key={category._id} value={category._id}>
-                        {category.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-
                 {/* Property Type */}
                 <TextField
                   label="Property Type (e.g., RERA)"
@@ -544,8 +485,8 @@ export const AddProperty = () => {
                   variant="outlined"
                   color="secondary"
                   size="small"
-                  name="name"
-                  value={formData.name}
+                  name="title"
+                  value={formData.title}
                   onChange={handleChange}
                   fullWidth
                 />
@@ -730,149 +671,52 @@ export const AddProperty = () => {
                   onChange={handleChange}
                   fullWidth
                 />
-
-                {/* Total Units Input */}
-                <TextField
-                  label="Total Units (e.g. 200, only numeric values)*"
-                  variant="outlined"
-                  color="secondary"
-                  size="small"
-                  name="totalUnits"
-                  value={formData.totalUnits}
-                  onChange={handleChange}
-                  fullWidth
-                />
               </Box>
 
               <Box
                 sx={{
                   display: "flex",
-                  flexDirection: "column",
-                  gap: 3,
-                  mt: 3,
-                  p: 3,
-                  border: "1px solid #E0E0E0",
-                  borderRadius: "12px",
-                  backgroundColor: "#fff",
-                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
-                  maxWidth: "600px",
-                  margin: "auto",
+                  flexWrap: "wrap",
+                  gap: "12px",
+                  padding: "10px",
+                  borderRadius: "8px",
+                  border: "1px solid #ddd",
                 }}
               >
-                <Typography
-                  variant="h5"
-                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
-                >
-                  Amenity Details
-                </Typography>
-                {/* Furnish Type */}
-                <FormControl>
-                  <FormLabel
-                    sx={{
-                      fontSize: "16px",
-                      fontWeight: "bold",
-                      color: "#333",
-                      mb: 1,
-                    }}
-                  >
-                    Furnish Type
-                  </FormLabel>
-                  <RadioGroup
-                    name="furnishType"
-                    value={formData.furnishType}
-                    onChange={handleChange}
-                    sx={{ gap: 1 }}
-                  >
-                    {["Fully Furnished", "Semi Furnished", "Unfurnished"].map(
-                      (type) => (
-                        <FormControlLabel
-                          key={type}
-                          value={type}
-                          control={<Radio color="secondary" />}
-                          label={type}
-                          sx={{
-                            backgroundColor: "#f9f9f9",
-                            padding: "10px",
-                            borderRadius: "8px",
-                            border: "1px solid #ddd",
-                          }}
-                        />
-                      )
-                    )}
-                  </RadioGroup>
-                </FormControl>
+                {/* Select All Checkbox */}
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="secondary"
+                      name="selectAll"
+                      checked={selectAll}
+                      onChange={handleCheckboxChange}
+                    />
+                  }
+                  label="Select All"
+                />
 
-                {/* Render Amenity Sections */}
-                {[
-                  {
-                    label: "Society Amenities",
-                    type: "society_amenity",
-                    stateKey: "societyAmenities",
-                  },
-                  {
-                    label: "Flat Amenities",
-                    type: "flat_amenity",
-                    stateKey: "flatAmenities",
-                  },
-                  {
-                    label: "Location Advantages",
-                    type: "location_advantages",
-                    stateKey: "locationAdvantages",
-                  },
-                ].map(({ label, type, stateKey }) => (
-                  <FormControl key={type} component="fieldset">
-                    <FormLabel
-                      sx={{
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        color: "#333",
-                        mb: 1,
-                      }}
-                    >
-                      {label}
-                    </FormLabel>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: "12px",
-                        padding: "10px",
-                        borderRadius: "8px",
-                        border: "1px solid #ddd",
-                      }}
-                    >
-                      <FormControlLabel
-                        control={<Checkbox color="secondary" />}
-                        label="Select All"
-                        onChange={(e) => handleRadioChange(e, stateKey)}
+                {/* Individual Amenities */}
+                {amenities.map((amenity) => (
+                  <FormControlLabel
+                    key={amenity._id}
+                    control={
+                      <Checkbox
+                        color="secondary"
+                        name={amenity._id}
+                        checked={
+                          formData.amenities?.includes(amenity._id) || false
+                        }
+                        onChange={handleCheckboxChange}
                       />
-                      {amenities
-                        .filter((amenity) => amenity.type === type)
-                        .map((amenity) => (
-                          <FormControlLabel
-                            key={amenity._id}
-                            control={
-                              <Checkbox
-                                color="secondary"
-                                name={amenity._id}
-                                checked={formData[stateKey]?.includes(
-                                  amenity._id
-                                )}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, stateKey)
-                                }
-                              />
-                            }
-                            label={amenity.name}
-                            sx={{
-                              backgroundColor: "#f5f5f5",
-                              padding: "8px 12px",
-                              borderRadius: "6px",
-                            }}
-                          />
-                        ))}
-                    </Box>
-                  </FormControl>
+                    }
+                    label={amenity.name}
+                    sx={{
+                      backgroundColor: "#f5f5f5",
+                      padding: "8px 12px",
+                      borderRadius: "6px",
+                    }}
+                  />
                 ))}
               </Box>
 

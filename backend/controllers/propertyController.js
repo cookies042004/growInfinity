@@ -178,6 +178,9 @@ const updateProperty = async (req, res) => {
       address,
       furnishType,
       amenities,
+      projectStatus,
+      projectSize,
+      totalUnits,
     } = req.body;
 
     const property = await Property.findById(propertyId);
@@ -187,6 +190,7 @@ const updateProperty = async (req, res) => {
 
     const newImages = [];
     const newVideos = [];
+    const newDp = [];
 
     if (req.files && req.files.images) {
       req.files.images.forEach((file) => newImages.push(file.path));
@@ -194,6 +198,10 @@ const updateProperty = async (req, res) => {
 
     if(req.files && req.files.video){
       req.files.video.forEach((file) => newVideos.push(file.path));
+    }
+
+    if(req.files && req.files.image){
+      newDp.push(req.files.image[0].path);
     }
 
     if (newImages.length > 0 && property.image && property.image.length > 0) {
@@ -210,6 +218,15 @@ const updateProperty = async (req, res) => {
         const videoPath = path.join(__dirname, "../", ele);
         if (fs.existsSync(videoPath)) {
           fs.unlinkSync(videoPath);
+        }
+      });
+    }
+
+    if (newDp && property.dp && property.dp.length > 0) {
+      property.dp.forEach((ele) => {
+        const dpPath = path.join(__dirname, "../", ele);
+        if (fs.existsSync(dpPath)) {
+          fs.unlinkSync(dpPath);
         }
       });
     }
@@ -231,9 +248,15 @@ const updateProperty = async (req, res) => {
       amenities,
       image: newImages.length > 0 ? newImages : property.image,
       video: newVideos.length > 0 ? newVideos : property.video,
+      projectStatus,
+      projectSize,
+      totalUnits,
+      dp: newDp ? newDp : property.dp,
     });
 
     await property.save();
+
+    console.log("Property updated successfully", property); 
 
     res.status(200).json({
       success: true,

@@ -15,9 +15,11 @@ import {
   Select,
   TextField,
   Typography,
+  IconButton
 } from "@mui/material";
 import { useFetchData } from "../../../hooks/useFetchData";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
+import CloseIcon from "@mui/icons-material/Close";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
 import { useParams } from "react-router-dom";
@@ -61,7 +63,7 @@ export const UpdateProperty = () => {
     builder: "",
     unit: "",
     size: "",
-    sizeUnit: "", //SIZEUNIT ADDED HERE
+    sizeUnit: "",
     price: "",
     location: "",
     address: "",
@@ -70,20 +72,25 @@ export const UpdateProperty = () => {
     societyAmenities: [],
     flatAmenities: [],
     locationAdvantages: [],
+    projectSize: "",
+    projectStatus: "",
+    totalUnits: "",
   });
 
   // State to track uploaded images and brochure
   const [uploadedImages, setUploadedImages] = useState([]);
   const [uploadedVideos, setUploadedVideos] = useState(null);
+  const [uploadedDpImage, setUploadedDpImage] = useState(null);
   // State to manage select all
   const [selectAllSociety, setSelectAllSociety] = useState([]);
   const [selectAllFlat, setSelectAllFlat] = useState([]);
   const [selectAllLocation, setSelectAllLocation] = useState([]);
-  const [sizeUnit, setSizeUnit] = useState("");
+  // const [sizeUnit, setSizeUnit] = useState("");
 
   // Ref to the file input element
   const imageInputRef = useRef();
   const videoInputRef = useRef();
+  const dpInputRef = useRef();
 
   // Load property data into formData when property is fetched
   useEffect(() => {
@@ -110,10 +117,14 @@ export const UpdateProperty = () => {
         locationAdvantages: property.amenities
           ?.filter((amenity) => amenity.type === "location_advantages")
           ?.map((amenity) => amenity._id),
+          projectSize: property.projectSize || "",
+          projectStatus: property.projectStatus || "",
+          totalUnits: property.totalUnits || "",
+          sizeUnit: property.sizeUnit || "",
       });
       setUploadedImages(property.images || []);
       // setUploadedVideos(property.video || null  );
-      setSizeUnit(property.sizeUnit);
+      setUploadedDpImage(property.dp || null);
       setSelectAllSociety(
         property.amenities.filter((a) => a.type === "society_amenity")
           .length ===
@@ -135,12 +146,12 @@ export const UpdateProperty = () => {
   // Handle form input changes
   const handleChange = (event) => {
     const { name, value } = event.target;
-    if (name === "sizeUnit") {
-      setSizeUnit(value);
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
+  
 
   // Handle select changes
   const handleSelectChange = (event) => {
@@ -149,9 +160,10 @@ export const UpdateProperty = () => {
       [event.target.name]: event.target.value,
     });
   };
+
   // Handle checkbox changes
   const handleCheckboxChange = (event, type) => {
-    const { name, checked } = event.target; // Use name instead of
+    const { name, checked } = event.target;
 
     if (name === "selectAll") {
       if (type === "societyAmenities") setSelectAllSociety(checked);
@@ -250,6 +262,75 @@ export const UpdateProperty = () => {
       }
     }
   };
+    const handleDescriptionUpload = (event) => {
+      const file = event.target.files[0];
+      let maxSize = 1024 * 1024 * 2; // 2Mb max
+      if (file.size > maxSize) {
+        toast.error(`Dp size should be less than 2Mb`);
+      } else {
+        if (
+          file &&
+          (file.type === "image/jpeg" ||
+            file.type === "image/png" ||
+            file.type === "image/jpg" ||
+            file.type === "image/webp")
+        ) {
+          setUploadedDpImage(file);
+        } else {
+          toast.error(`Invalid image file.`);
+        }
+      }
+    };
+
+    const renderDescriptionPreview = () => {
+      if (!uploadedDpImage || !(uploadedDpImage instanceof File)) return null; // Ensure it's a valid File
+    
+      return (
+        <Box
+          sx={{
+            position: "relative",
+            display: "inline-block",
+            width: 100,
+            height: 100,
+            borderRadius: "8px",
+            overflow: "hidden",
+            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+            "&:hover .delete-image": { opacity: 1 },
+          }}
+        >
+          <img
+            src={URL.createObjectURL(uploadedDpImage)}
+            alt="Preview"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              borderRadius: "8px",
+            }}
+          />
+          <IconButton
+            className="delete-image"
+            onClick={() => setUploadedDpImage(null)}
+            sx={{
+              position: "absolute",
+              top: 5,
+              right: 5,
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              color: "white",
+              width: 20,
+              height: 20,
+              opacity: 0,
+              transition: "opacity 0.3s ease",
+              "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+            }}
+          >
+            <CloseIcon sx={{ fontSize: 14 }} />
+          </IconButton>
+        </Box>
+      );
+    };
+    
+    
 
   // Function to remove image
   const removeImage = (index) => {
@@ -265,56 +346,115 @@ export const UpdateProperty = () => {
   // Function to display image previews
   const renderImagePreviews = () => {
     return uploadedImages.map((image, index) => (
-      <div
+      <Box
         key={index}
-        style={{ position: "relative", display: "inline-block" }}
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          width: 100,
+          height: 100,
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+          marginRight: 1,
+          marginBottom: 1,
+          "&:hover .delete-image": { opacity: 1 },
+        }}
       >
         <img
           src={URL.createObjectURL(image)}
           alt="Preview"
-          className="image-preview"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
         />
-        <button
-          type="button"
+        <IconButton
           className="delete-image"
           onClick={() => removeImage(index)}
+          sx={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            width: 20,
+            height: 20,
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+          }}
         >
-          X
-        </button>
-      </div>
+          <CloseIcon sx={{ fontSize: 14 }} />
+        </IconButton>
+      </Box>
     ));
   };
 
   // Function for display video previews
   const renderVideoPreview = () => {
-    // Ensure uploadedVideos is valid before using it
-    if (!uploadedVideos) return null; // Prevents errors if it's null/undefined
-
+    if (!uploadedVideos) return null; // Prevent errors if there's no video
+  
     let videoSrc = null;
     if (uploadedVideos instanceof File) {
       videoSrc = URL.createObjectURL(uploadedVideos);
     } else if (typeof uploadedVideos === "string") {
-      videoSrc = uploadedVideos; // Use directly if it's a URL
+      videoSrc = uploadedVideos; // Directly use URL if it's already uploaded
     }
-
+  
     if (!videoSrc) return null; // If still invalid, return nothing
-
+  
     return (
-      <div className="preview">
-        <video controls>
-          <source src={videoSrc} type="video/mp4" />
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          width: "250px",
+          height: "140px",
+          borderRadius: "8px",
+          overflow: "hidden",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+          marginTop: 2,
+          "&:hover .delete-video": { opacity: 1 },
+        }}
+      >
+        <video
+          src={videoSrc}
+          controls
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "8px",
+          }}
+        >
           Your browser does not support the video tag.
         </video>
-        <button
-          type="button"
+  
+        <IconButton
           className="delete-video"
-          onClick={() => removeVideo()}
+          onClick={removeVideo}
+          sx={{
+            position: "absolute",
+            top: 5,
+            right: 5,
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            color: "white",
+            width: 24,
+            height: 24,
+            opacity: 0,
+            transition: "opacity 0.3s ease",
+            "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.7)" },
+          }}
         >
-          X
-        </button>
-      </div>
+          <CloseIcon sx={{ fontSize: 18 }} />
+        </IconButton>
+      </Box>
     );
   };
+  
 
   // Handle form submission
   const handleSubmit = async (event) => {
@@ -354,7 +494,7 @@ export const UpdateProperty = () => {
       formDataToSend.append("video", uploadedVideos);
     }
 
-    formDataToSend.append("sizeUnit", sizeUnit); //SIZEUNIT ADDED HERE
+    formDataToSend.append("image", uploadedDpImage);
 
     try {
       const response = await axios.patch(
@@ -386,7 +526,7 @@ export const UpdateProperty = () => {
 
   const inWords = (num) => {
     const price = Number(num);
-    
+
     const ones = [
       "Zero",
       "One",
@@ -427,11 +567,39 @@ export const UpdateProperty = () => {
       if (num === 0) return "";
       if (num < 10) return ones[num];
       if (num < 20) return teens[num - 10];
-      if (num < 100) return tens[Math.floor(num / 10) - 2] + " " + toWords(num % 10);
-      if (num < 1000) return ones[Math.floor(num / 100)] + " " + suffixes[1] + " " + toWords(num % 100);
-      if (num < 100000) return toWords(Math.floor(num / 1000)) + " " + suffixes[2] + " " + toWords(num % 1000);
-      if (num < 10000000) return toWords(Math.floor(num / 100000)) + " " + suffixes[3] + " " + toWords(num % 100000);
-      return toWords(Math.floor(num / 10000000)) + " " + suffixes[4] + " " + toWords(num % 10000000);
+      if (num < 100)
+        return tens[Math.floor(num / 10) - 2] + " " + toWords(num % 10);
+      if (num < 1000)
+        return (
+          ones[Math.floor(num / 100)] +
+          " " +
+          suffixes[1] +
+          " " +
+          toWords(num % 100)
+        );
+      if (num < 100000)
+        return (
+          toWords(Math.floor(num / 1000)) +
+          " " +
+          suffixes[2] +
+          " " +
+          toWords(num % 1000)
+        );
+      if (num < 10000000)
+        return (
+          toWords(Math.floor(num / 100000)) +
+          " " +
+          suffixes[3] +
+          " " +
+          toWords(num % 100000)
+        );
+      return (
+        toWords(Math.floor(num / 10000000)) +
+        " " +
+        suffixes[4] +
+        " " +
+        toWords(num % 10000000)
+      );
     };
 
     return toWords(price);
@@ -451,21 +619,29 @@ export const UpdateProperty = () => {
               <Box
                 sx={{
                   display: "flex",
-                  gap: 2,
                   flexDirection: "column",
-                  padding: "12px",
-                  border: "2px solid #ccc",
-                  borderRadius: "8px",
-                  backgroundColor: "#f9f9f9",
+                  gap: 3,
+                  mt: 3,
+                  p: 3,
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
+                  maxWidth: "600px",
+                  margin: "auto",
                 }}
               >
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
+                >
+                  Property Details
+                </Typography>
+
+                {/* Property Category Dropdown */}
                 <FormControl color="secondary" size="small" fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Property Category*
-                  </InputLabel>
+                  <InputLabel>Property Category*</InputLabel>
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
                     name="category"
                     value={formData.category}
                     onChange={handleSelectChange}
@@ -479,20 +655,21 @@ export const UpdateProperty = () => {
                   </Select>
                 </FormControl>
 
+                {/* Property Type */}
                 <TextField
-                  label="Enter Type of Property"
+                  label="Property Type (e.g., RERA)"
                   variant="outlined"
                   color="secondary"
                   size="small"
                   name="propertyType"
-                  className="w-48"
                   value={formData.propertyType}
                   onChange={handleChange}
                   fullWidth
                 />
 
+                {/* Property Name */}
                 <TextField
-                  label="Enter Property Name*"
+                  label="Property Name*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -502,8 +679,9 @@ export const UpdateProperty = () => {
                   fullWidth
                 />
 
+                {/* Builder Name */}
                 <TextField
-                  label="Enter Builder Name*"
+                  label="Builder Name*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -513,8 +691,9 @@ export const UpdateProperty = () => {
                   fullWidth
                 />
 
+                {/* Location */}
                 <TextField
-                  label="Enter Property Location*"
+                  label="Property Location*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -524,8 +703,9 @@ export const UpdateProperty = () => {
                   fullWidth
                 />
 
+                {/* Address */}
                 <TextField
-                  label="Enter Property Address*"
+                  label="Property Address*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -535,8 +715,9 @@ export const UpdateProperty = () => {
                   fullWidth
                 />
 
+                {/* Description */}
                 <TextField
-                  label="Enter Property Description*"
+                  label="Property Description*"
                   variant="outlined"
                   color="secondary"
                   size="small"
@@ -544,192 +725,258 @@ export const UpdateProperty = () => {
                   value={formData.description}
                   onChange={handleChange}
                   multiline
-                  fullWidth
                   minRows={4}
+                  fullWidth
                 />
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 2,
-                  mt: 2,
-                  padding: "12px",
-                  border: "2px solid #ccc",
-                  borderRadius: "8px",
-                  backgroundColor: "#f9f9f9",
-                }}
-              >
-                <TextField
-                  label="Enter Unit (in BHK)*"
-                  variant="outlined"
-                  color="secondary"
-                  size="small"
-                  name="unit"
-                  value={formData.unit}
-                  onChange={handleChange}
-                  style={{ width: "50%" }}
-                />
-
-                <TextField
-                  label="Enter Size*"
-                  variant="outlined"
-                  color="secondary"
-                  size="small"
-                  name="size"
-                  value={formData.size}
-                  onChange={handleChange}
-                  style={{ width: "50%" }}
-                />
-
-                <FormControl variant="outlined" size="small" 
-                    style={{ width: "10%" }}>
-                  <InputLabel id="size-input-label">Unit Type</InputLabel>
-                  <Select
-                    labelId="size-input-label"
-                    id="size-input"
-                    name="sizeUnit"
-                    value={sizeUnit}
-                    onChange={handleChange}
-                    label="Size Unit"
-                  >
-                    <MenuItem value="sqFt">Sqft</MenuItem>
-                    <MenuItem value="yard">yard</MenuItem>
-                  </Select>
-                </FormControl>
-
-                  <TextField
-                    label="Enter Price (in digits)*"
-                    variant="outlined"
-                    color="secondary"
-                    size="small"
-                    name="price"
-                    value={formData.price}
-                    onChange={handleChange}
-                    style={{ width: "50%" }}
-                  />
-                  <Typography variant="body2">
-                    Price in words: {formData.price ? inWords(Number(formData.price)) : "N/A"}
-                  </Typography>
               </Box>
 
               <Box
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: 2,
-                  mt: 2,
-                  padding: "12px",
-                  border: "2px solid #ccc",
-                  borderRadius: "8px",
-                  backgroundColor: "#f9f9f9",
+                  gap: 3,
+                  mt: 3,
+                  p: 3,
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
+                  maxWidth: "600px",
+                  margin: "auto",
                 }}
               >
-                {/* Furnish Type */}
-                <FormControl
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    margin: "10px ",
-                  }}
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
                 >
-                  {/* Title */}
+                  Size & Price
+                </Typography>
+                {/* Unit Input */}
+                <TextField
+                  label="Unit (e.g., 2 bhk/BHK)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="unit"
+                  value={formData.unit}
+                  onChange={handleChange}
+                  fullWidth
+                />
+
+                {/* Property Size Input */}
+                <TextField
+                  type="number"
+                  label="Size of Property (in digits)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="size"
+                  value={formData.size}
+                  onChange={handleChange}
+                  fullWidth
+                />
+
+                {/* Size Unit Selection */}
+                <FormControl variant="outlined" size="small" fullWidth>
+                  <InputLabel>Unit Type</InputLabel>
+                  <Select
+                    name="sizeUnit"
+                    value={formData.sizeUnit}
+                    onChange={handleChange}
+                    label="Size Unit"
+                  >
+                    <MenuItem value="sqFt">Sqft</MenuItem>
+                    <MenuItem value="yard">Yard</MenuItem>
+                  </Select>
+                </FormControl>
+
+                {/* Price Input */}
+                <TextField
+                  type="number"
+                  label="Enter Price (in digits)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  fullWidth
+                />
+
+                {/* Price in Words Display */}
+                <Typography
+                  variant="body2"
+                  sx={{ color: "#333", fontWeight: "500", mt: -1 }}
+                >
+                  Price in words:{" "}
+                  {formData.price ? inWords(Number(formData.price)) : "N/A"}
+                </Typography>
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  mt: 3,
+                  p: 3,
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
+                  maxWidth: "600px",
+                  margin: "auto",
+                }}
+              >
+                {/* Title */}
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
+                >
+                  Project Details
+                </Typography>
+
+                {/* Project Size Input */}
+                <TextField
+                  label="Project Size (e.g. 50 acres)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="projectSize"
+                  value={formData.projectSize}
+                  onChange={handleChange}
+                  fullWidth
+                />
+
+                {/* Project Status Input */}
+                <TextField
+                  label="Project Status (e.g. Under Construction, Completed)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="projectStatus"
+                  value={formData.projectStatus}
+                  onChange={handleChange}
+                  fullWidth
+                />
+
+                {/* Total Units Input */}
+                <TextField
+                  label="Total Units (e.g. 200, only numeric values)*"
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  name="totalUnits"
+                  value={formData.totalUnits}
+                  onChange={handleChange}
+                  fullWidth
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  mt: 3,
+                  p: 3,
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
+                  maxWidth: "600px",
+                  margin: "auto",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
+                >
+                  Amenity Details
+                </Typography>
+                {/* Furnish Type */}
+                <FormControl>
                   <FormLabel
-                    color="secondary"
-                    style={{
+                    sx={{
                       fontSize: "16px",
                       fontWeight: "bold",
-                      marginBottom: "10px",
                       color: "#333",
+                      mb: 1,
                     }}
                   >
                     Furnish Type
                   </FormLabel>
-
-                  {/* Radio Buttons */}
                   <RadioGroup
                     name="furnishType"
                     value={formData.furnishType}
                     onChange={handleChange}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "10px",
-                    }}
+                    sx={{ gap: 1 }}
                   >
-                    <FormControlLabel
-                      value="Fully Furnished"
-                      control={<Radio color="secondary" />}
-                      label="Fully Furnished"
-                      style={{
-                        backgroundColor: "#ffffff",
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        border: "1px solid #ddd",
-                      }}
-                    />
-                    <FormControlLabel
-                      value="Semi Furnished"
-                      control={<Radio color="secondary" />}
-                      label="Semi Furnished"
-                      style={{
-                        backgroundColor: "#ffffff",
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        border: "1px solid #ddd",
-                      }}
-                    />
-                    <FormControlLabel
-                      value="Unfurnished"
-                      control={<Radio color="secondary" />}
-                      label="Unfurnished"
-                      style={{
-                        backgroundColor: "#ffffff",
-                        padding: "8px 12px",
-                        borderRadius: "6px",
-                        border: "1px solid #ddd",
-                      }}
-                    />
+                    {["Fully Furnished", "Semi Furnished", "Unfurnished"].map(
+                      (type) => (
+                        <FormControlLabel
+                          key={type}
+                          value={type}
+                          control={<Radio color="secondary" />}
+                          label={type}
+                          sx={{
+                            backgroundColor: "#f9f9f9",
+                            padding: "10px",
+                            borderRadius: "8px",
+                            border: "1px solid #ddd",
+                          }}
+                        />
+                      )
+                    )}
                   </RadioGroup>
                 </FormControl>
 
-                {/* Society Amenitie */}
-                <FormControl component="fieldset">
-                  <FormLabel color="secondary">Society Amenities</FormLabel>
-                  <RadioGroup
-                    value={selectAllSociety ? "selectAll" : "individual"}
-                    onChange={(e) => handleRadioChange(e, "societyAmenities")}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      backgroundColor: "#ffffff",
-                      padding: "8px 12px",
-                      borderRadius: "6px",
-                      border: "1px solid #ddd",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}
+                {/* Render Amenity Sections */}
+                {[
+                  {
+                    label: "Society Amenities",
+                    type: "society_amenity",
+                    stateKey: "societyAmenities",
+                  },
+                  {
+                    label: "Flat Amenities",
+                    type: "flat_amenity",
+                    stateKey: "flatAmenities",
+                  },
+                  {
+                    label: "Location Advantages",
+                    type: "location_advantages",
+                    stateKey: "locationAdvantages",
+                  },
+                ].map(({ label, type, stateKey }) => (
+                  <FormControl key={type} component="fieldset">
+                    <FormLabel
+                      sx={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        color: "#333",
+                        mb: 1,
+                      }}
+                    >
+                      {label}
+                    </FormLabel>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "12px",
+                        padding: "10px",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                      }}
                     >
                       <FormControlLabel
-                        control={
-                          <Radio
-                            color="secondary"
-                            value="selectAll"
-                            onChange={(e) =>
-                              handleRadioChange(e, "societyAmenities")
-                            }
-                          />
-                        }
+                        control={<Checkbox color="secondary" />}
                         label="Select All"
-                        style={{ marginBottom: "8px" }} // Inline style
+                        onChange={(e) => handleRadioChange(e, stateKey)}
                       />
-
                       {amenities
-                        .filter((amenity) => amenity.type === "society_amenity")
+                        .filter((amenity) => amenity.type === type)
                         .map((amenity) => (
                           <FormControlLabel
                             key={amenity._id}
@@ -737,156 +984,54 @@ export const UpdateProperty = () => {
                               <Checkbox
                                 color="secondary"
                                 name={amenity._id}
-                                checked={formData.societyAmenities?.includes(
+                                checked={formData[stateKey]?.includes(
                                   amenity._id
                                 )}
                                 onChange={(e) =>
-                                  handleCheckboxChange(e, "societyAmenities")
+                                  handleCheckboxChange(e, stateKey)
                                 }
                               />
                             }
                             label={amenity.name}
-                            style={{
+                            sx={{
                               backgroundColor: "#f5f5f5",
-                              padding: "6px 12px",
-                              borderRadius: "5px",
+                              padding: "8px 12px",
+                              borderRadius: "6px",
                             }}
                           />
                         ))}
-                    </div>
-                  </RadioGroup>
-                </FormControl>
-
-                {/* Flat Amenities */}
-                <FormControl component="fieldset">
-                  <FormLabel color="secondary">Flat Amenities</FormLabel>
-                  <RadioGroup
-                    value={selectAllFlat ? "selectAll" : "individual"}
-                    onChange={(e) => handleRadioChange(e, "flatAmenities")}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      backgroundColor: "#ffffff",
-                      padding: "8px 12px",
-                      borderRadius: "6px",
-                      border: "1px solid #ddd",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}
-                    >
-                      <FormControlLabel
-                        control={
-                          <Radio
-                            color="secondary"
-                            value="selectAll"
-                            onChange={(e) =>
-                              handleRadioChange(e, "flatAmenities")
-                            }
-                          />
-                        }
-                        label="Select All"
-                      />
-
-                      {amenities
-                        .filter((amenity) => amenity.type === "flat_amenity")
-                        .map((amenity) => (
-                          <FormControlLabel
-                            key={amenity._id}
-                            control={
-                              <Checkbox
-                                color="secondary"
-                                name={amenity._id}
-                                checked={formData.flatAmenities?.includes(
-                                  amenity._id
-                                )}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, "flatAmenities")
-                                }
-                              />
-                            }
-                            label={amenity.name}
-                            style={{
-                              backgroundColor: "#f5f5f5",
-                              padding: "6px 12px",
-                              borderRadius: "5px",
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </RadioGroup>
-                </FormControl>
-
-                {/* Location Advantages */}
-                <FormControl component="fieldset">
-                  <FormLabel color="secondary">Location Advantages</FormLabel>
-                  <RadioGroup
-                    value={selectAllLocation ? "selectAll" : "individual"}
-                    onChange={(e) => handleRadioChange(e, "locationAdvantages")}
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: "8px",
-                      backgroundColor: "#ffffff",
-                      padding: "8px 12px",
-                      borderRadius: "6px",
-                      border: "1px solid #ddd",
-                    }}
-                  >
-                    <div
-                      style={{ display: "flex", flexWrap: "wrap", gap: "12px" }}
-                    >
-                      <FormControlLabel
-                        control={
-                          <Radio
-                            color="secondary"
-                            value="selectAll"
-                            onChange={(e) =>
-                              handleRadioChange(e, "locationAdvantages")
-                            }
-                          />
-                        }
-                        label="Select All"
-                      />
-
-                      {amenities
-                        .filter(
-                          (amenity) => amenity.type === "location_advantages"
-                        )
-                        .map((amenity) => (
-                          <FormControlLabel
-                            key={amenity._id}
-                            control={
-                              <Checkbox
-                                color="secondary"
-                                name={amenity._id}
-                                checked={formData.locationAdvantages?.includes(
-                                  amenity._id
-                                )}
-                                onChange={(e) =>
-                                  handleCheckboxChange(e, "locationAdvantages")
-                                }
-                              />
-                            }
-                            label={amenity.name}
-                            style={{
-                              backgroundColor: "#f5f5f5",
-                              padding: "6px 12px",
-                              borderRadius: "5px",
-                            }}
-                          />
-                        ))}
-                    </div>
-                  </RadioGroup>
-                </FormControl>
+                    </Box>
+                  </FormControl>
+                ))}
               </Box>
 
-              <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                <FormControl component="fieldset">
-                  <FormLabel id="image-upload">
-                    Upload Property Images - (Only jpeg, jpg, png files are
-                    allowed Max size: 2 mb)
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  mt: 3,
+                  p: 3,
+                  border: "1px solid #E0E0E0",
+                  borderRadius: "12px",
+                  backgroundColor: "#fff",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.08)",
+                  maxWidth: "600px",
+                  margin: "auto",
+                }}
+              >
+                <Typography
+                  variant="h5"
+                  sx={{ textAlign: "center", fontWeight: "600", color: "#333" }}
+                >
+                  Upload
+                </Typography>
+                {/* Image Upload */}
+                <FormControl
+                  sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                >
+                  <FormLabel>
+                    Upload Property Images (JPEG, JPG, PNG - Max 2MB)
                   </FormLabel>
                   <input
                     accept="image/*"
@@ -902,59 +1047,104 @@ export const UpdateProperty = () => {
                       variant="outlined"
                       component="span"
                       size="small"
-                      style={{ textTransform: "none" }}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: "8px",
+                        ":hover": { backgroundColor: "#f5f5f5" },
+                      }}
                     >
                       Choose Images
                     </Button>
                   </label>
-
-                  <div className="flex flex-wrap mt-2">
+                  <Box
+                    sx={{ display: "flex", flexWrap: "wrap", mt: 2, gap: 1 }}
+                  >
                     {renderImagePreviews()}
-                  </div>
-
+                  </Box>
                   <Typography variant="body2">
                     {uploadedImages.length} images selected
                   </Typography>
                 </FormControl>
 
-                <FormControl component="fieldset">
-                  <FormLabel id="video-upload">
-                    Upload Property Videos - (Only mp4, webm, ogg files are
-                    required)
-                  </FormLabel>
+                {/* Video Upload */}
+                <FormControl
+                  sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                >
+                  <FormLabel>Upload Property Video (MP4, WEBM, OGG)</FormLabel>
                   <input
                     accept="video/*"
                     style={{ display: "none" }}
-                    id="video-input-upload"
+                    id="video-upload-input"
                     type="file"
                     ref={videoInputRef}
                     onChange={handleVideoUpload}
                   />
-                  <label htmlFor="video-input-upload">
+                  <label htmlFor="video-upload-input">
                     <Button
                       variant="outlined"
                       component="span"
                       size="small"
-                      style={{ textTransform: "none" }}
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: "8px",
+                        ":hover": { backgroundColor: "#f5f5f5" },
+                      }}
                     >
                       Choose Video
                     </Button>
                   </label>
-                  <div className="flex flex-wrap mt-2">
-                    {renderVideoPreview()}
-                  </div>
+                  <Box sx={{ mt: 2 }}>{renderVideoPreview()}</Box>
                   <Typography variant="body2">
                     {uploadedVideos ? "1 video selected" : "No video selected"}
                   </Typography>
                 </FormControl>
 
+                {/* Description Upload */}
+                <FormControl
+                  sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                >
+                  <FormLabel>Upload Dealer Logo's</FormLabel>
+                  <input
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    id="description-upload-input"
+                    type="file"
+                    ref={dpInputRef}
+                    onChange={handleDescriptionUpload}
+                  />
+                  <label htmlFor="description-upload-input">
+                    <Button
+                      variant="outlined"
+                      component="span"
+                      size="small"
+                      sx={{
+                        textTransform: "none",
+                        borderRadius: "8px",
+                        ":hover": { backgroundColor: "#f5f5f5" },
+                      }}
+                    >
+                      Enter Property DP
+                    </Button>
+                  </label>
+                  <Box sx={{ mt: 2 }}>{renderDescriptionPreview()}</Box>
+                </FormControl>
+
+                {/* Submit Button */}
                 <Button
                   variant="contained"
                   color="secondary"
-                  startIcon={!buttonLoading && <AddCircleIcon />} // Conditional rendering for the icon
+                  startIcon={!loading && <AddCircleIcon />}
                   type="submit"
                   size="small"
-                  style={{ textTransform: "none", width: "150px" }}
+                  onClick={handleSubmit}
+                  sx={{
+                    width: "150px",
+                    alignSelf: "center",
+                    textTransform: "none",
+                    borderRadius: "8px",
+                    fontWeight: "500",
+                    ":hover": { backgroundColor: "#d32f2f" },
+                  }}
                 >
                   {buttonLoading ? (
                     <CircularProgress size="25px" sx={{ color: "white" }} />

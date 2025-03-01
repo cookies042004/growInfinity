@@ -7,12 +7,18 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useFetchData } from "../../../hooks/useFetchData";
 
-export const ViewProperty = () => {
+export const ViewCommercial = () => {
   document.title = "View Property";
-  const apiUrl = `${process.env.BASE_URL}/api/v1/property`;
+  const apiUrl = `${process.env.BASE_URL}/api/v1/commercial`;
+
+  console.log("apiUrl",apiUrl)
 
   const { data, loading, error, refetch } = useFetchData(apiUrl);
   const properties = data?.properties || [];
+
+  console.log("data is",data)
+
+  console.log("property",properties)
   
   const [selectedProperty, setSelectedProperty] = useState(null);
   const [visibleCount, setVisibleCount] = useState(6);
@@ -106,16 +112,14 @@ export const ViewProperty = () => {
               alt={selectedProperty.name}
               style={{ width: "100%", height: "250px", objectFit: "cover", borderRadius: "10px" }}
             />
-            <Typography variant="body1" style={{ marginTop: "10px" }}>Category: {selectedProperty.category?.name}</Typography>
             <Typography variant="body1">Builder: {selectedProperty.builder}</Typography>
             <Typography variant="body1">Location: {selectedProperty.location}</Typography>
             <Typography variant="body1">Size: {selectedProperty.size} {selectedProperty.sizeUnit}</Typography>
-            <Typography variant="body1">Furnish Type: {selectedProperty.furnishType}</Typography>
             <Typography variant="body1">Unit: {selectedProperty.unit}</Typography>
             <Typography variant="body1" style={{ marginBottom: "10px" }}>Price: ₹ {selectedProperty.price}</Typography>
             
             <Box style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-              <Link to={`/admin/update-property/${selectedProperty._id}`}>
+              <Link to={`/admin/update-commercial/${selectedProperty._id}`}>
                 <Button variant="contained" color="primary" startIcon={<EditIcon />}>Edit</Button>
               </Link>
               <Button

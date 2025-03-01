@@ -21,6 +21,8 @@ const awardsRoutes = require("./routes/awardsRoutes");
 const testimonialRoutes = require("./routes/testimonialRoutes");
 const emailRoutes = require("./routes/emailRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
+const commercialRoutes = require("./routes/commercialRoutes")
+const commercialAmenityRoutes = require("./routes/commercialAmentityRoutes");
 
 // Middleware
 const corsOptions = {
@@ -40,6 +42,7 @@ connectDb();
 app.use("/api/v1/contact", contactRoutes);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/amenities", amenityRoutes);
+app.use("/api/v1/commercial-amenities", commercialAmenityRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/news", newsRoutes);
 app.use("/api/v1/events", eventRoutes);
@@ -50,6 +53,7 @@ app.use("/api/v1/awards", awardsRoutes);
 app.use("/api/v1/testimonials", testimonialRoutes);
 app.use("/api/v1/email", emailRoutes);
 app.use("/api/reviews",reviewRoutes);
+app.use("/api/v1/commercial", commercialRoutes);
 
 
 app.listen(process.env.PORT, () => {

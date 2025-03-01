@@ -1,14 +1,13 @@
 import React from "react";
 import { Layout } from "../../components/Layout";
-import "./SingleProject.css";
 import { useParams } from "react-router-dom";
 import { useFetchData } from "../../hooks/useFetchData";
-import { PropertyCard } from "../../components/PropertyCard";
+import { CommercialCard } from "../../components/CommercialCard";
 import { CircularProgress } from "@mui/material";
 
-export const SingleProject = () => {
+export const Commercial = () => {
   const { id } = useParams();
-  const apiUrl = `${process.env.BASE_URL}/api/v1/property`;
+  const apiUrl = `${process.env.BASE_URL}/api/v1/commercial`;
   const { data, loading, error, refetch } = useFetchData(apiUrl);
   const properties = data.properties || [];
 
@@ -54,17 +53,13 @@ export const SingleProject = () => {
         )}
         {properties &&
           properties
-            .filter(
-              (property) =>
-                property.category.name == capitalizeWords(id.replace("-", " "))
-            )
             .map((property) => {
               return (
                 <div className="col-span-12 lg:col-span-3 m-3">
-                  <PropertyCard
+                  <CommercialCard
                     key={property._id}
                     id={property._id}
-                    name={property.name}
+                    name={property.title}
                     slug={property.slug}
                     image={property.image[0]}
                     location={property.location}

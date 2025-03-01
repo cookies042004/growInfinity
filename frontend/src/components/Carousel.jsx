@@ -118,7 +118,7 @@ const Carousel = ({ galleryImages }) => {
       {isModalOpen && modalImageIndex !== null && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-90 z-[1000]">
           {/* Background Overlay to ensure proper layout */}
-          <div className="absolute inset-0 flex justify-center items-center">
+          <div className="absolute inset-[-70px] flex justify-center items-center">
             <motion.img
               key={modalImageIndex}
               src={galleryImages[modalImageIndex]}
@@ -133,23 +133,23 @@ const Carousel = ({ galleryImages }) => {
           {/* Navigation Buttons */}
           <button
             onClick={prevModalSlide}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-3 rounded-full"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-1 lg:p-1 rounded-full"
           >
             <ChevronLeft size={32} />
           </button>
           <button
             onClick={nextModalSlide}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-3 rounded-full"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-white/50 p-1 lg:p-1 rounded-full"
           >
             <ChevronRight size={32} />
           </button>
 
           {/* Thumbnail Previews */}
-          <div className="absolute bottom-8 right-8 flex gap-3">
-            {galleryImages.map((img, index) => (
+          <div className="absolute bottom-8 right-2 lg:right-8 flex gap-3">
+            {galleryImages.slice(0, 3).map((img, index) => (
               <motion.div
                 key={index}
-                className={`relative w-20 h-16 rounded-lg cursor-pointer overflow-hidden ${
+                className={`relative w-20 lg:w-40 h-16 lg:h-20 rounded-lg cursor-pointer overflow-hidden ${
                   modalImageIndex === index ? "border-2 border-white" : ""
                 }`}
                 whileHover={{ scale: 1.1 }}
@@ -162,11 +162,29 @@ const Carousel = ({ galleryImages }) => {
                 />
               </motion.div>
             ))}
+
+            {galleryImages.length > 4 && (
+              <div
+                className="relative w-15 lg:w-40 h-16 lg:h-20 rounded-lg cursor-pointer overflow-hidden"
+                onClick={() => setModalImageIndex(4)}
+              >
+                <img
+                  src={galleryImages[3]}
+                  alt="More"
+                  className="w-full h-full object-cover blur-sm brightness-75"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-center justify-center pointer-events-none">
+                  <p className="text-white text-lg lg:text-2xl font-semibold">
+                    +{galleryImages.length - 3} Photos
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Close Button */}
           <button
-            className="absolute top-6 right-6 md:top-4 md:right-4 bg-white/70 p-3 rounded-full z-[60]"
+            className="absolute top-6 right-6 md:top-4 md:right-4 bg-white/70 p-1 lg:p-1 rounded-full z-[60]"
             onClick={closeModal}
           >
             ✖

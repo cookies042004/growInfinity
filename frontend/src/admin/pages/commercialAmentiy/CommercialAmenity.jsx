@@ -15,18 +15,17 @@ import {
 } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
-export const AddAmenity = () => {
+export const AddAmenityCommercial = () => {
   document.title = "Add Amenity";
 
   const [formData, setFormData] = useState({
-    type: "",
     name: "",
   });
   const [loading, setLoading] = useState(false);
   const [uploadedImage, setUploadedImage] = useState([]);
   const imageInputRef = useRef();
 
-  const apiUrl = `${process.env.BASE_URL}/api/v1/amenities`;
+  const apiUrl = `${process.env.BASE_URL}/api/v1/commercial-amenities`;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,7 +85,6 @@ export const AddAmenity = () => {
     e.preventDefault();
     setLoading(true);
     const formDataToSend = new FormData();
-    formDataToSend.append("type", formData.type);
     formDataToSend.append("name", formData.name);
 
     // Append uploaded images
@@ -135,33 +133,10 @@ export const AddAmenity = () => {
         <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
           <div className="container mx-auto">
             <h2 className="text-xl font-bold p-2 text-center sm:text-left">
-              Add Amenity
+              Add Commercial Amenity
             </h2>
             <form onSubmit={handleSubmit}>
               <div className="flex flex-wrap my-5">
-                <div className="w-full sm:w-1/2 mb-4 p-2">
-                  <FormControl color="secondary" size="small" fullWidth>
-                    <InputLabel id="demo-simple-select-label">
-                      Enter Amenity Type*
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      name="type" // Add name to control the select input
-                      value={formData.type} // Controlled by formData
-                      label="Enter Amenity Type*"
-                      onChange={handleChange}
-                    >
-                      <MenuItem value={"flat_amenity"}>Flat Amenity</MenuItem>
-                      <MenuItem value={"society_amenity"}>
-                        Society Amenity
-                      </MenuItem>
-                      <MenuItem value={"location_advantages"}>
-                        Location Advantages
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
                 <div className="w-full sm:w-1/2 mb-4 p-2">
                   <TextField
                     id="outlined-basic"

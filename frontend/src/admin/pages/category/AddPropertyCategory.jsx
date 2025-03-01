@@ -48,9 +48,9 @@ export const AddPropertyCategory = () => {
       <ToastContainer />
       <AdminLayout />
       <div className="p-4 sm:ml-64">
-        <div className="p-4 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-20">
+        <div className="p-6 border-2 border-gray-300 border-dashed rounded-lg shadow-md hover:shadow-lg transition-all dark:border-gray-700 mt-20 max-w-lg mx-auto bg-white">
           <div className="container mx-auto">
-            <h2 className="text-xl font-bold text-center sm:text-left">
+            <h2 className="text-xl font-bold text-center sm:text-left mb-4">
               Add a Property Category
             </h2>
             <form onSubmit={handleSubmit}>
@@ -68,20 +68,23 @@ export const AddPropertyCategory = () => {
                   />
                 </div>
               </div>
-              <Button
-                variant="contained"
-                color="secondary"
-                startIcon={!loading && <AddCircleIcon />}
-                type="submit"
-                size="small"
-                style={{ textTransform: "none", width: "130px"  }}
-              >
-                {loading ? (
-                  <CircularProgress size="25px" sx={{ color: "white" }} />
-                ) : (
-                  "Add Category"
-                )}
-              </Button>
+              <div className="flex justify-center">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  startIcon={!loading && <AddCircleIcon />}
+                  type="submit"
+                  size="small"
+                  className="text-white text-sm font-medium rounded-lg transition-transform transform hover:scale-105 hover:bg-red-700"
+                  style={{ textTransform: "none", width: "150px" }}
+                >
+                  {loading ? (
+                    <CircularProgress size="25px" sx={{ color: "white" }} />
+                  ) : (
+                    "Add Category"
+                  )}
+                </Button>
+              </div>
             </form>
           </div>
         </div>
